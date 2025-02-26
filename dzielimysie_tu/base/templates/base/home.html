@@ -2,6 +2,27 @@
 
 {%block content%}
 
-<h1>Home page</h1>
+<h1>Strona główna </h1>
+
+<div>
+    <!-- Categories -->
+    <div>
+        {%for category in categories%}
+        <a href="{%url 'category_page' category.id%}">
+            <h2>{{category}}</h2>
+        </a>
+        {%endfor%}
+    </div>
+
+    <hr>
+
+    <!-- Top offers -->
+    <div>
+        {%for top_offer in top_offers%}
+        <a href="{%url 'offer_page' top_offer.id%}">
+            <h2>{{top_offer}}</h2>
+            {%endfor%}
+    </div>
+</div>
 
 {%endblock content%}
