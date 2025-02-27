@@ -5,7 +5,7 @@ from django.conf import settings
 # Create your models here.
 
 class User(AbstractUser):
-    # legal_name = models.CharField(max_length=100)
+    legal_name = models.CharField(max_length=100)
     username = models.CharField(max_length=200, unique=True)
     email = models.EmailField(unique=True)
     avatar = models.ImageField(null=True, default='avatars/default_avatar.png', upload_to='avatars/')

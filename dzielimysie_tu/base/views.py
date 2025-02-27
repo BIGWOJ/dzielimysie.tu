@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import *
-from django.contrib.auth.forms import UserCreationForm
+from .forms import My_User_Creation_Form
 
 # q = query
 
@@ -56,42 +56,41 @@ def login_page(request):
     page = 'login'
 
     # If user is already logged in, redirect to home page from login page
-    # if request.user.is_authenticated:
-    #     return redirect('home_page')
+    if request.user.is_authenticated:
+        return redirect('home_page')
     
     if request.method == 'POST':
         email = request.POST.get('email')
-        password = request.POST.get('password')
-
+        # password = request.POST.get('password')
+        username = request.POST.get('username')
         try:
             user = User.objects.get(email=email)
         except:
             messages.error(request, 'User does not exist')
 
-        user = authenticate(request, email=email, password=password)
-
+        # print(email, password)
+        user = authenticate(request, username=username, email=email)
+        # print(user)
         if user is not None:
             login(request, user)
             return redirect('home_page')
         else:
-            messages.error(request, 'Username or password is incorrect')
+            messages.error(request, 'Email or password is incorrect')
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
 
 def register_page(request):
     page = 'register'
-    form = UserCreationForm()
+    form = My_User_Creation_Form()
     context = {'form': form, 'page': page}
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = My_User_Creation_Form(request.POST)
         if form.is_valid():
             # Commit=false -> not saving to database yet, firstly clearing up data and logging up on the page
             user = form.save(commit=False)
-            user.username = user.username
-            if not user.bio:
-                user.bio = "Write something about you!"
+            # user.username = user.username
             user.save()
             login(request, user)
             return redirect('home')

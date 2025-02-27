@@ -2,24 +2,22 @@
 {%block content%}
 
 <div>
-    <form method='POST'>
-        {%if page == 'login'%}
-
+    <form method='POST' action="">
         {%csrf_token%}
-        <h1>Zaloguj się</h1>
+
+        {%if page == 'login'%}
         <input type="text" name="email" placeholder="E-mail">
         <input type="text" name="password" placeholder="Hasło">
-        <input type="submit" value="Zatwierdź">
+        <input type="submit" value="Zaloguj się">
         <a href="{%url 'register_page'%}">
             <h3>Nie masz konta? Zarejestruj się</h3>
         </a>
 
         {%elif page == 'register'%}
-        <h1>Stwórz konto</h1>
         <input type="text" name="legal_name" placeholder="Imię i nazwisko">
         <input type="text" name="email" placeholder="Email">
         <input type="text" name="password" placeholder="Hasło">
-        <input type="submit" value="Zatwierdź">
+        <input type="submit" value="Zarejestruj się">
         <a href="{%url 'login_page'%}">
             <h3>Masz już konto? Zaloguj się</h3>
         </a>
