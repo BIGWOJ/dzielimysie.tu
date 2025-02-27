@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
 
-# W konwencji dawajmy _page na końcu widoku w name
+# By convention, add _page at the end of the view in name
+
 
 urlpatterns = [
     path('', views.home, name='home_page'),

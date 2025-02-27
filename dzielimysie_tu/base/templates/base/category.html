@@ -4,4 +4,14 @@
 
 <h1>{{category}}</h1>
 
+<!-- Situation when filtering -> without any category, just filtered offers -->
+
+{%for offer in offers%}
+
+<a href="{%url 'offer_page' offer.id%}">
+    <h2>{{offer}}</h2>
+</a>
+
+{%endfor%}
+
 {%endblock content%}

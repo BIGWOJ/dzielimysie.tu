@@ -15,6 +15,10 @@ class Offer(models.Model):
     description = models.TextField(max_length=1000)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
+
+    # Figure out how to upload photos 
+    # photos = models.ImageField(upload_to='offer_photos/', null=True, blank=True)
+    
     # models.CASCADE - when the user is deleted, all offers are deleted
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 

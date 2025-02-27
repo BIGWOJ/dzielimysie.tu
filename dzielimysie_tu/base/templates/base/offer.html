@@ -6,6 +6,6 @@
 <p>{{offer.description}}</p>
 <p>Cena: {{offer.price}}</p>
 <p>Autor: {{offer.creator}}</p>
-<p>Kategoria: {{offer.category}}</p>
+<p>Kategoria: <a href="{%url 'category_page' offer.category.id%}">{{offer.category}}</a></p>
 
 {%endblock content%}
