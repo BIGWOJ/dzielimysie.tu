@@ -5,10 +5,10 @@ from django.conf import settings
 # Create your models here.
 
 class User(AbstractUser):
+    # legal_name = models.CharField(max_length=100)
     username = models.CharField(max_length=200, unique=True)
     email = models.EmailField(unique=True)
-    import os
-    avatar = models.ImageField(null=True, default='/default_avatar.png')
+    avatar = models.ImageField(null=True, default='avatars/default_avatar.png', upload_to='avatars/')
 
 class Category(models.Model):
     name = models.CharField(max_length=200)

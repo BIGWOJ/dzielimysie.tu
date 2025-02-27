@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from .models import *
+from django.contrib.auth.forms import UserCreationForm
 
 # q = query
 
@@ -48,3 +51,56 @@ def user_profile(request, pk):
     user = User.objects.get(pk=pk)
     context = {'user': user}
     return render(request, 'base/profile.html', context)
+
+def login_page(request):
+    page = 'login'
+
+    # If user is already logged in, redirect to home page from login page
+    # if request.user.is_authenticated:
+    #     return redirect('home_page')
+    
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except:
+            messages.error(request, 'User does not exist')
+
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home_page')
+        else:
+            messages.error(request, 'Username or password is incorrect')
+
+    context = {'page': page}
+    return render(request, 'base/login_register.html', context)
+
+def register_page(request):
+    page = 'register'
+    form = UserCreationForm()
+    context = {'form': form, 'page': page}
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            # Commit=false -> not saving to database yet, firstly clearing up data and logging up on the page
+            user = form.save(commit=False)
+            user.username = user.username
+            if not user.bio:
+                user.bio = "Write something about you!"
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Something went wrong during registration')
+
+    return render(request, 'base/login_register.html', context)
+
+def logout_user(request):
+    logout(request)
+    return redirect('home_page')
+
