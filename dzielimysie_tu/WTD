@@ -1,6 +1,7 @@
-NAJWAŻNIEJSZE
-1. Logowanie/rejestracja nie działa
+==========NAJWAŻNIEJSZE==========
 
-
-MAŁO WAŻNE
+==========ŚREDNIO WAŻNE==========
 1. Jak z dodawaniem zdjęć do ogłoszenia
+
+==========MAŁO WAŻNE==========
+2. Zamiast from .models import * to importować tylko te co się używa, bo później jak będzie więcej modeli to po co wszystkie importować

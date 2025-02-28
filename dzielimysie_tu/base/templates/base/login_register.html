@@ -1,29 +1,44 @@
-{%extends 'main.html'%}
-{%block content%}
+{% extends 'main.html'%}
 
+{% block content %}
+
+{%if page == 'login'%}
 <div>
-    <form method='POST' action="">
+    <form method="POST" action="">
         {%csrf_token%}
 
-        {%if page == 'login'%}
-        <input type="text" name="email" placeholder="E-mail">
-        <input type="text" name="password" placeholder="Hasło">
+        <label>Email</label>
+        <input type="text" id="username" name="email">
+
+        <label>Hasło</label>
+        <input id="password" name="password" type="password"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
         <input type="submit" value="Zaloguj się">
-        <a href="{%url 'register_page'%}">
-            <h3>Nie masz konta? Zarejestruj się</h3>
-        </a>
-
-        {%elif page == 'register'%}
-        <input type="text" name="legal_name" placeholder="Imię i nazwisko">
-        <input type="text" name="email" placeholder="Email">
-        <input type="text" name="password" placeholder="Hasło">
-        <input type="submit" value="Zarejestruj się">
-        <a href="{%url 'login_page'%}">
-            <h3>Masz już konto? Zaloguj się</h3>
-        </a>
-
-        {%endif%}
     </form>
+
+    <a href="{%url 'register_page'%}">
+        <p>Nie masz konta? Zarejestruj się</p>
+    </a>
 </div>
+
+{%else%}
+<div>
+    <form method="POST" action="">
+        {%csrf_token%}
+
+        {%for field in register_form%}
+        <label>{{field.label}}</label>
+        {{field}}
+        {%endfor%}
+
+        <input type="submit" value="Register">
+    </form>
+
+    <a href="{%url 'login_page'%}">
+        <p>Już masz konto? Zaloguj się</p>
+    </a>
+</div>
+
+{%endif%}
 
 {%endblock content%}

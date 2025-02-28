@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import *
@@ -17,7 +17,7 @@ def home(request):
         q = request.GET.get('q')
         offers = Offer.objects.filter(title__icontains=q)
         context['offers'] = offers
-        print(offers)
+
         return render(request, 'base/category.html', context)
     else:
         q = ''
@@ -54,28 +54,30 @@ def user_profile(request, pk):
 
 def login_page(request):
     page = 'login'
-
     # If user is already logged in, redirect to home page from login page
     if request.user.is_authenticated:
-        return redirect('home_page')
-    
+        return redirect('home')
+
     if request.method == 'POST':
         email = request.POST.get('email')
-        # password = request.POST.get('password')
-        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        error_message = False
+
         try:
             user = User.objects.get(email=email)
         except:
-            messages.error(request, 'User does not exist')
+            error_message = True
+            messages.error(request, 'Hasło albo mail jest niepoprawne')
 
-        # print(email, password)
-        user = authenticate(request, username=username, email=email)
-        # print(user)
+        user = authenticate(request, username=email, password=password)
+
         if user is not None:
             login(request, user)
             return redirect('home_page')
         else:
-            messages.error(request, 'Email or password is incorrect')
+            if not error_message:
+                messages.error(request, 'Hasło albo mail jest niepoprawne')
 
     context = {'page': page}
     return render(request, 'base/login_register.html', context)
@@ -83,7 +85,8 @@ def login_page(request):
 def register_page(request):
     page = 'register'
     form = My_User_Creation_Form()
-    context = {'form': form, 'page': page}
+    
+    context = {'register_form': form, 'page': page}
 
     if request.method == 'POST':
         form = My_User_Creation_Form(request.POST)
@@ -93,9 +96,9 @@ def register_page(request):
             # user.username = user.username
             user.save()
             login(request, user)
-            return redirect('home')
+            return redirect('home_page')
         else:
-            messages.error(request, 'Something went wrong during registration')
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
 
     return render(request, 'base/login_register.html', context)
 

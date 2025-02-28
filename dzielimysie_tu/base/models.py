@@ -5,10 +5,13 @@ from django.conf import settings
 # Create your models here.
 
 class User(AbstractUser):
-    legal_name = models.CharField(max_length=100)
-    username = models.CharField(max_length=200, unique=True)
-    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=200, null=True)
+    email = models.EmailField(unique=True, null=True)
     avatar = models.ImageField(null=True, default='avatars/default_avatar.png', upload_to='avatars/')
+
+    # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
