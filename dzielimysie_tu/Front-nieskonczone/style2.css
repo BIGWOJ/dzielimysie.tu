@@ -1,0 +1,154 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+
+/* Nagłówek */
+header {
+    background-color: #002b45;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+/* 
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+} */
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin-left: 20px;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.add-offer, .account {
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: auto;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.account {
+    background-color: #ccc;
+    margin-left: 10px;
+}
+
+/* Główna sekcja */
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image img {
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.details {
+    margin-left: 20px;
+    flex: 1;
+}
+
+h1 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.category {
+    display: inline-block;
+    background-color: #ffd700;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.location {
+    margin-top: 5px;
+    color: gray;
+}
+
+.buttons {
+    margin-top: 15px;
+}
+
+.apply, .message {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.apply {
+    background-color: #ff7f00;
+    color: white;
+}
+
+.message {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Opis */
+.description {
+    margin-top: 15px;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+h3 {
+    margin-bottom: 5px;
+}
+
+/* Stopka */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #002b45;
+    color: white;
+    /* margin-top: 30px; */
+}
