@@ -4,4 +4,7 @@
 1. Jak z dodawaniem zdjęć do ogłoszenia
 
 ==========MAŁO WAŻNE==========
-2. Zamiast from .models import * to importować tylko te co się używa, bo później jak będzie więcej modeli to po co wszystkie importować
+1. Wywalić null=True z models w miejscach, gdzie są wymagane. True jest do testowania ciągłego, żeby nie przerabiać danych. Tak samo blank
+
+==========WARTO DODAĆ/ZMIENIĆ==========
+1. W formularzu tworzenia/edytowania ogłoszenia dodać przyciski typu "Oddam" albo "Zamienię się"
