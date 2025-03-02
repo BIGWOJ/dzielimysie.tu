@@ -135,9 +135,50 @@ def create_offer(request):
             for image in images:
                 photo = Photo(offer=offer, photo=image)
                 photo.save()
-            return redirect('home_page')
+            return redirect('offer_page', pk=offer.id)
         else:
             messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
 
     context = {'form': form, 'categories': categories}
     return render(request, 'base/create_offer.html', context)
+
+@login_required(login_url='login_page')
+def edit_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    form = Offer_Form(instance=offer)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        form = Offer_Form(request.POST, request.FILES, instance=offer)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            if offer.place == None:
+                offer.place = "Nie podano"
+            offer.creator = request.user
+
+            offer.save()
+
+            current_photos = Photo.objects.filter(offer=offer)
+            for photo in current_photos:
+                photo.delete()
+
+            images = request.FILES.getlist('photos')
+            for image in images:
+                photo = Photo(offer=offer, photo=image)
+                photo.save()
+            return redirect('offer_page', pk=offer.id)
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'form': form, 'categories': categories, 'offer': offer}
+    return render(request, 'base/edit_offer.html', context)
+
+@login_required(login_url='login_page')
+def delete_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    if request.method == 'POST':
+        offer.delete()
+        return redirect('home_page')
+    
+    context = {'deleting_obj': offer}
+    return render(request, 'base/delete_form.html', context)

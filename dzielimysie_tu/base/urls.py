@@ -10,6 +10,9 @@ urlpatterns = [
     path('register/', views.register_page, name='register_page'),
 
     path('create_offer/', views.create_offer, name='create_offer_page'),
+    path('edit_offer/<str:pk>', views.edit_offer, name='edit_offer_page'),
+    path('delete_offer/<str:pk>', views.delete_offer, name='delete_offer_page'),
+
     path('take_offer/<str:pk>', views.take_offer, name='take_offer_page'),
     path('offer/<str:pk>', views.offer, name='offer_page'),
     path('category/<str:pk>', views.category, name='category_page'),

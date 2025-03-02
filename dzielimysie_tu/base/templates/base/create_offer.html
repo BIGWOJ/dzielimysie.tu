@@ -3,6 +3,7 @@
 {%block content%}
 
 <h1>Dodaj ogłoszenie</h1>
+
 <div>
     <form method="POST" enctype="multipart/form-data">
         {%csrf_token%}
@@ -13,9 +14,9 @@
         <label>Kategoria</label>
         <select name="category" required>
             <option value="" disabled selected>Wybierz kategorię</option>
-            {% for category in categories %}
+            {%for category in categories%}
             <option value="{{category.id}}">{{category.name}}</option>
-            {% endfor %}
+            {%endfor%}
         </select><br>
 
         <label>Dodaj zdjęcia</label>
@@ -31,10 +32,10 @@
         <input type="text" value="{{request.user.place|default_if_none:''}}" name="place" required><br>
 
         <label>Imię</label>
-        <input type="text" value="{{request.user.first_name}}" name="creator_name" required><br>
+        <input type="text" value="{{request.user.first_name|default_if_none:''}}" name="creator_name" required><br>
 
         <label>Adres e-mail</label>
-        <input type="text" value="{{request.user.email}}" name="creator_email" required><br>
+        <input type="text" value="{{request.user.email|default_if_none:''}}" name="creator_email" required><br>
 
         <label>Numer telefonu</label>
         <input type="text" value="{{request.user.phone|default_if_none:''}}" name="creator_phone" required><br>

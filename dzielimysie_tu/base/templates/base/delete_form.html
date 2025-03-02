@@ -1,0 +1,15 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<!--Sending back user to the subpage where he came from-->
+<a href="{{request.META.HTTP_REFERER}}">
+    <p>Wróć</p>
+</a>
+
+<form method="POST">
+    {%csrf_token%}
+    <p>Czy na pewno chcesz usunąć "{{deleting_obj}}"?</p>
+    <input type="submit" value="Tak">
+</form>
+
+{%endblock content%}

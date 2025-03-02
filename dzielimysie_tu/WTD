@@ -8,3 +8,8 @@
 
 ==========WARTO DODAĆ/ZMIENIĆ==========
 1. W formularzu tworzenia/edytowania ogłoszenia dodać przyciski typu "Oddam" albo "Zamienię się"
+
+2. Zabezpieczyć przed wchodzeniem przez link bezpośrednio np. 
+/edit_offer/12 a nie przez przycisk, żeby inne osoby nie mogły edytować kogoś ogłoszenia itp.
+
+3. Przy edycji oferty można dodać przycisk "Usuń zdjęcie" przy każdym zdjęciu, żeby pojedyncze usuwać, bo teraz to za każdym razem nadpisuje aktualne zdjęcia

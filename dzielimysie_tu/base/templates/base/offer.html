@@ -7,6 +7,17 @@
 <p>Cena: {{offer.price}}</p>
 <p>{{offer.place}}</p>
 
+
+{%if offer.creator == request.user%}
+<a href="{%url 'edit_offer_page' offer.id%}">
+    <p>Edytuj</p>
+</a>
+
+<a href="{%url 'delete_offer_page' offer.id%}">
+    <p>Usuń</p>
+</a>
+
+{%else%}
 <a href="{%url 'take_offer_page' offer.id%}">
     <p>Zgłoś się</p>
 </a>
@@ -14,12 +25,13 @@
 <a href="{%url 'chat_page' offer.id%}">
     <p>Napisz wiadomość</p>
 </a>
+{%endif%}
 
 <p>Opis: {{offer.description}}</p>
 <p>Autor: {{offer.creator.username}}</p>
 
 {%for photo in offer.photo_set.all%}
-<img src="{{ photo.photo.url }}" alt="Offer Image">
+<img src="{{photo.photo.url}}" alt="Offer Image">
 {%endfor%}
 
 {%endblock content%}
