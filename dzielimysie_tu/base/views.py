@@ -107,6 +107,16 @@ def logout_user(request):
     logout(request)
     return redirect('home_page')
 
+def take_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/take_offer.html', context)
+
+def chat(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/chat.html', context)
+
 @login_required(login_url='login_page')
 def create_offer(request):
     form = Offer_Form(request.POST, request.FILES)
