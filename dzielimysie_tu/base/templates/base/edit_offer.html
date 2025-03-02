@@ -1,0 +1,62 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
+<h1>Edytuj ogłoszenie</h1>
+
+<div>
+    <form method="POST" enctype="multipart/form-data">
+        {%csrf_token%}
+
+        <label>Tytuł ogłoszenia</label>
+        <input type="text" value="{{offer.title|default_if_none:''}}" name="title" required><br>
+
+        <label>Kategoria</label>
+        <select name="category" required>
+            <option value="" disabled selected>Wybierz kategorię</option>
+            {%for category in categories%}
+            {%if category.id == offer.category.id%}
+            <option value="{{category.id}}" selected>{{category.name}}</option>
+
+            {%else%}
+            <option value="{{category.id}}">{{category.name}}</option>
+            {%endif%}
+
+            {%endfor%}
+        </select><br>
+
+        <label>Dodaj zdjęcia</label>
+        <input type="file" name="photos" multiple><br>
+
+        {% if offer.photo_set.all %}
+        <div>
+            <h3>Aktualne zdjęcia:</h3>
+            {% for photo in offer.photo_set.all %}
+            <img src="{{ photo.photo.url }}" style="max-width: 200px; max-height: 200px;">
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <label>Opis</label>
+        <textarea name="description" rows="10" cols="50" required>{{offer.description}}</textarea><br>
+
+        <label>Cena</label>
+        <input type="number" name="price" value="{{offer.price|default_if_none:''}}" required min="0"><br>
+
+        <label>Miejsce</label>
+        <input type="text" value="{{offer.place|default_if_none:''}}" name="place" required><br>
+
+        <label>Imię</label>
+        <input type="text" value="{{offer.creator_name|default_if_none:''}}" name="creator_name" required><br>
+
+        <label>Adres e-mail</label>
+        <input type="text" value="{{offer.creator_email|default_if_none:''}}" name="creator_email" required><br>
+
+        <label>Numer telefonu</label>
+        <input type="text" value="{{offer.creator_phone|default_if_none:''}}" name="creator_phone" required><br>
+
+        <input type="submit" value="Zapisz zmiany">
+    </form>
+</div>
+
+{%endblock content%}

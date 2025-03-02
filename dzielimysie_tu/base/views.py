@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 # from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import *
-from .forms import My_User_Creation_Form
+from django.contrib.auth.decorators import login_required
+from .models import Category, Offer, User, Photo
+from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
 
@@ -106,3 +107,78 @@ def logout_user(request):
     logout(request)
     return redirect('home_page')
 
+def take_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/take_offer.html', context)
+
+def chat(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/chat.html', context)
+
+@login_required(login_url='login_page')
+def create_offer(request):
+    form = Offer_Form(request.POST, request.FILES)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            offer = form.save(commit=False)
+            if offer.place == None:
+                offer.place = "Nie podano"
+            offer.creator = request.user
+
+            offer.save()
+
+            images = request.FILES.getlist('photos')
+            for image in images:
+                photo = Photo(offer=offer, photo=image)
+                photo.save()
+            return redirect('offer_page', pk=offer.id)
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'form': form, 'categories': categories}
+    return render(request, 'base/create_offer.html', context)
+
+@login_required(login_url='login_page')
+def edit_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    form = Offer_Form(instance=offer)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        form = Offer_Form(request.POST, request.FILES, instance=offer)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            if offer.place == None:
+                offer.place = "Nie podano"
+            offer.creator = request.user
+
+            offer.save()
+
+            current_photos = Photo.objects.filter(offer=offer)
+            for photo in current_photos:
+                photo.delete()
+
+            images = request.FILES.getlist('photos')
+            for image in images:
+                photo = Photo(offer=offer, photo=image)
+                photo.save()
+            return redirect('offer_page', pk=offer.id)
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'form': form, 'categories': categories, 'offer': offer}
+    return render(request, 'base/edit_offer.html', context)
+
+@login_required(login_url='login_page')
+def delete_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    if request.method == 'POST':
+        offer.delete()
+        return redirect('home_page')
+    
+    context = {'deleting_obj': offer}
+    return render(request, 'base/delete_form.html', context)
