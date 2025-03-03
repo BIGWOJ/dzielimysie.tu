@@ -8,6 +8,9 @@ from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
 
+def not_done(request):
+    return render(request, 'base/not_done_yet.html')
+
 def home(request):
     categories = Category.objects.all()
     top_offers = Offer.objects.all()[:10]
@@ -48,10 +51,15 @@ def category(request, pk):
 
     return render(request, 'base/category.html', context)
 
-def user_profile(request, pk):
+def user_profile(request, pk):  
     user = User.objects.get(pk=pk)
     context = {'user': user}
     return render(request, 'base/profile.html', context)
+
+def user_offers(request, pk):
+    offers = Offer.objects.filter(creator=pk)
+    context = {'offers': offers}
+    return render(request, 'base/user_offers.html', context)
 
 def login_page(request):
     page = 'login'
@@ -107,11 +115,13 @@ def logout_user(request):
     logout(request)
     return redirect('home_page')
 
+# TO DO
 def take_offer(request, pk):
     offer = Offer.objects.get(pk=pk)
     context = {'offer': offer}
     return render(request, 'base/take_offer.html', context)
 
+# TO DO
 def chat(request, pk):
     offer = Offer.objects.get(pk=pk)
     context = {'offer': offer}
@@ -182,3 +192,5 @@ def delete_offer(request, pk):
     
     context = {'deleting_obj': offer}
     return render(request, 'base/delete_form.html', context)
+
+ 

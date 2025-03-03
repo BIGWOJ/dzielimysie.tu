@@ -4,6 +4,8 @@ from . import views
 # By convention, add _page at the end of the view in name
 
 urlpatterns = [
+    path('not_done/', views.not_done, name='not_done_yet_page'),
+
     path('', views.home, name='home_page'),
     path('login/', views.login_page, name='login_page'),
     path('logout/', views.logout_user, name='logout_page'),
@@ -18,5 +20,6 @@ urlpatterns = [
     path('category/<str:pk>', views.category, name='category_page'),
 
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
+    path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
     path('chat/<str:pk>', views.chat, name='chat_page'),
 ]

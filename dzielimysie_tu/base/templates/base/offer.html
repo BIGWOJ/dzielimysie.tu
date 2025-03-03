@@ -18,17 +18,22 @@
 </a>
 
 {%else%}
-<a href="{%url 'take_offer_page' offer.id%}">
+<a href="{%url 'not_done_yet_page'%}">
     <p>Zgłoś się</p>
 </a>
 
-<a href="{%url 'chat_page' offer.id%}">
+<a href="{%url 'not_done_yet_page'%}">
     <p>Napisz wiadomość</p>
 </a>
 {%endif%}
 
 <p>Opis: {{offer.description}}</p>
-<p>Autor: {{offer.creator.username}}</p>
+
+<p>Autor:
+    <a href="{%url 'user_profile_page' offer.creator.id%}">
+        {{offer.creator.username}}
+</p>
+</a>
 
 {%for photo in offer.photo_set.all%}
 <img src="{{photo.photo.url}}" alt="Offer Image">
