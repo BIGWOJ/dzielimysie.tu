@@ -8,6 +8,9 @@
 
 body {
     background-color: #f5f5f5;
+    height: 100%;
+    flex-direction: column;
+    display: flex;
 }
 
 
@@ -26,11 +29,6 @@ nav {
     align-items: center;
     width: 100%;
 }
-/* 
-.logo {
-    font-size: 18px;
-    font-weight: bold;
-} */
 
 nav ul {
     list-style: none;
@@ -64,6 +62,7 @@ nav ul li a {
 
 /* Główna sekcja */
 main {
+    flex: 1;
     max-width: 900px;
     margin: 30px auto;
     background-color: white;
@@ -71,17 +70,22 @@ main {
     border-radius: 10px;
     display: flex;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    align-items: flex-start;
+}
+
+.image{
+    width: 250px;
 }
 
 .image img {
-    width: 250px;
+    width: 100%;
     height: auto;
     border-radius: 10px;
 }
 
 .details {
     margin-left: 20px;
-    flex: 1;
+    flex-grow: 1;
 }
 
 h1 {
@@ -111,6 +115,8 @@ h1 {
 
 .buttons {
     margin-top: 15px;
+    display: flex;
+    gap: 10px;
 }
 
 .apply, .message {
@@ -119,7 +125,6 @@ h1 {
     cursor: pointer;
     font-size: 14px;
     border-radius: 5px;
-    margin-right: 10px;
 }
 
 .apply {
@@ -150,5 +155,5 @@ footer {
     padding: 10px;
     background-color: #002b45;
     color: white;
-    /* margin-top: 30px; */
+
 }
