@@ -1,0 +1,51 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Ulubione</h1>
+<form method="GET">
+    <input type="next" name="q" placeholder="Jeszcze nie działa">
+</form>
+
+<!-- DLACZEGO TUTAJ MUSI BYĆ PODAWANE W '' A offer.id już nie? -->
+
+<a href="{%url 'following_page' 'offers'%}">
+    <p>Ogłoszenia</p>
+</a>
+
+<a href="{%url 'following_page' 'users'%}">
+    <p>Użytkownicy</p>
+</a>
+<hr>
+
+{%if page == 'offers'%}
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Najnowsze</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Cena od najwyższej</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Cena od najwyższej</p>
+</a>
+
+{%for offer in offers%}
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer.title}}</p>
+<p>{{offer.price}}</p>
+{%endfor%}
+
+{%else%}
+{%for user in followed_users%}
+<a href="{%url 'user_profile_page' user.id%}">
+    <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;">
+</a>
+<p>{{user.username}}</p>
+{%endfor%}
+
+{%endif%}
+
+{%endblock content%}

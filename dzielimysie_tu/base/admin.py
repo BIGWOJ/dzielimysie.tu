@@ -8,4 +8,6 @@ admin.site.register(Category)
 admin.site.register(Photo)
 admin.site.register(Offer)
 admin.site.register(Message)
+admin.site.register(Follow_user)
+admin.site.register(Follow_offer)
 

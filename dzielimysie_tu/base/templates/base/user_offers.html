@@ -17,8 +17,10 @@
 
 {%for offer in offers%}
 <a href="{%url 'offer_page' offer.id%}">
-    <p>{{offer.title}}</p>
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
 </a>
+<p>{{offer.title}}</p>
+<p>{{offer.price}}</p>
 {%endfor%}
 
 {%endblock content%}

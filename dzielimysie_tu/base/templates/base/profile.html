@@ -4,9 +4,16 @@
 <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;"><br>
 {{user.username}} <p>Online - jak będzie czas to zrobić</p>
 
+{%if request.user == user%}
 <a href="{%url 'not_done_yet_page'%}">
+    <p>Ustawienia</p>
+</a>
+
+{%else%}
+<a href="{%url 'follow_user' user.id%}">
     <p>Obserwuj</p>
 </a>
+{%endif%}
 
 <!-- https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#date -->
 <p>Na platformie od {{user.date_joined|date:"E Y"}}</p>
@@ -18,7 +25,5 @@
 <a href="{%url 'not_done_yet_page'%}">
     <p>Opinie</p>
 </a>
-
-<h1>=====OPINIE=====</h1>
 
 {%endblock content%}

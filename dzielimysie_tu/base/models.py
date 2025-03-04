@@ -10,6 +10,7 @@ class User(AbstractUser):
     avatar = models.ImageField(null=True, default='avatars/default_avatar.png', upload_to='avatars/')
     phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=100, null=True)
+    followers = models.ManyToManyField('User', related_name='user_followers', blank=True)
 
     # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
     USERNAME_FIELD = 'email'
@@ -28,6 +29,14 @@ class Photo(models.Model):
     def __str__(self):
         return self.offer.title
 
+class Follow_user(models.Model):
+    following_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='following')
+    followed_user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='followed_by')
+
+class Follow_offer(models.Model):
+    following_user = models.ForeignKey('User', on_delete=models.CASCADE)
+    followed_offer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+
 class Offer(models.Model):
     title = models.CharField(max_length=200)
 
@@ -41,6 +50,8 @@ class Offer(models.Model):
     creator_email = models.EmailField(null=True)
     creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')
+
+    followers = models.ManyToManyField('User', related_name='offer_followers', blank=True)
 
     def __str__(self):
         return self.title

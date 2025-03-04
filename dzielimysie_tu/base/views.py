@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, Offer, User, Photo
+from .models import Category, Offer, User, Photo, Follow_user, Follow_offer
 from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
@@ -35,6 +35,39 @@ def offer(request, pk):
     context = {"offer": offer}
     return render(request, 'base/offer.html', context)
 
+@login_required(login_url='login_page')
+def follow_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    if request.user in offer.followers.all():
+        offer.followers.remove(request.user)
+    else:
+        offer.followers.add(request.user)
+    return redirect('offer_page', pk=pk)
+
+@login_required(login_url='login_page')
+def follow_user(request, pk):
+    followed_user = User.objects.get(pk=pk)
+    if request.user in followed_user.followers.all():
+        followed_user.followers.remove(request.user)
+    else:
+        followed_user.followers.add(request.user)
+    return redirect('user_profile_page', pk=pk)
+
+@login_required(login_url='login_page')
+def following(request, page):
+    try:
+        offers = Offer.objects.filter(followers=request.user)
+    except Offer.DoesNotExist:
+        offers = []
+
+    try:
+        followed_users = User.objects.filter(followers=request.user)
+    except User.DoesNotExist:
+        followed_users = []
+    print(followed_users)
+    context = {'offers': offers, 'page': page, 'followed_users': followed_users}
+    return render(request, 'base/following.html', context)
+
 def category(request, pk):
     category = Category.objects.get(pk=pk)
     offers = Offer.objects.filter(category=category)
@@ -58,7 +91,8 @@ def user_profile(request, pk):
 
 def user_offers(request, pk):
     offers = Offer.objects.filter(creator=pk)
-    context = {'offers': offers}
+    user = User.objects.get(pk=pk)
+    context = {'offers': offers, 'user': user}
     return render(request, 'base/user_offers.html', context)
 
 def login_page(request):
@@ -142,10 +176,15 @@ def create_offer(request):
             offer.save()
 
             images = request.FILES.getlist('photos')
-            for image in images:
-                photo = Photo(offer=offer, photo=image)
+            if len(images) == 0:
+                photo = Photo(offer=offer, photo='offer_photos/default_offer_photo.png')
                 photo.save()
+            else:
+                for image in images:
+                    photo = Photo(offer=offer, photo=image)
+                    photo.save()
             return redirect('offer_page', pk=offer.id)
+
         else:
             messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
 
