@@ -3,9 +3,46 @@
 {%block content%}
 
 <h1>{{offer.title}}</h1>
-<p>{{offer.description}}</p>
-<p>Cena: {{offer.price}}</p>
-<p>Autor: {{offer.creator}}</p>
+
+{%if offer.creator != request.user%}
+<a href="{% url 'follow_offer' offer.id %}">
+    <p>Obserwuj</p>
+</a>
+{%endif%}
+
 <p>Kategoria: <a href="{%url 'category_page' offer.category.id%}">{{offer.category}}</a></p>
+<p>Cena: {{offer.price}}</p>
+<p>{{offer.place}}</p>
+
+{%if offer.creator == request.user%}
+<a href="{%url 'edit_offer_page' offer.id%}">
+    <p>Edytuj</p>
+</a>
+
+<a href="{%url 'delete_offer_page' offer.id%}">
+    <p>Usuń</p>
+</a>
+
+{%else%}
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Zgłoś się</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Napisz wiadomość</p>
+</a>
+{%endif%}
+
+<p>Opis: {{offer.description}}</p>
+
+<p>Autor:
+    <a href="{%url 'user_profile_page' offer.creator.id%}">
+        {{offer.creator.username}}
+</p>
+</a>
+
+{%for photo in offer.photo_set.all%}
+<img src="{{photo.photo.url}}" style="width: 200px; height: 200px;">
+{%endfor%}
 
 {%endblock content%}

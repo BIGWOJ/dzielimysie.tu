@@ -1,0 +1,7 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Chat z użytkownikiem <a href="{%url 'user_profile_page' offer.creator.id%}">{{offer.creator.username}}</a></h1>
+<h2>Rozmawiasz odnośnie<br> <a href="{%url 'offer_page' offer.id%}">{{offer.title}}</a></h2>
+
+{%endblock content%}
