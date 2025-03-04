@@ -26,6 +26,7 @@ urlpatterns = [
     path('category/<str:pk>', views.category, name='category_page'),
 
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
+    path('settings/', views.user_settings, name='user_settings_page'),
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
     path('chat/<str:pk>', views.chat, name='chat_page'),
 ]

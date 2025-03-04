@@ -89,6 +89,66 @@ def user_profile(request, pk):
     context = {'user': user}
     return render(request, 'base/profile.html', context)
 
+@login_required(login_url='login_page')
+def user_settings(request):
+    user = request.user
+    print(request.FILES)
+    if request.method == 'POST':
+        # Changing password
+        if 'current_password' in request.POST:
+            password = request.POST.get('current_password')
+            if user.check_password(password):
+                password1 = request.POST.get('new_password')
+                password2 = request.POST.get('new_password_confirm')
+                if password1 == password2:
+                    user.set_password(password1)
+                    user.save()
+                    login(request, user)
+                else:
+                    messages.error(request, 'Nowe hasła nie są zgodne')
+            else:
+                messages.error(request, 'Obecne hasło jest niepoprawne')
+
+        # Changing email
+        elif 'new_email' in request.POST:
+            new_email = request.POST.get('new_email')
+            if new_email != user.email:
+                user.email = new_email
+                user.save()
+                login(request, user)
+            else:
+                messages.error(request, 'Nowy email jest taki sam jak obecny')
+
+        # Changing notifications
+        elif 'new_message_notification' in request.POST or 'price_change_notification' in request.POST or 'new_offer_notification' in request.POST:
+            user.new_message_notification = request.POST.get('new_message_notification') == 'on'
+            user.price_change_notification = request.POST.get('price_change_notification') == 'on'
+            user.new_offer_notification = request.POST.get('new_offer_notification') == 'on'
+
+            user.save()
+            messages.success(request, 'Powiadomienia zostały zapisane')
+        
+        # Changing avatar
+        elif 'new_avatar' in request.FILES:
+            avatar = request.FILES.get('new_avatar')
+            user.avatar = avatar
+            user.save()
+            messages.success(request, 'Zdjęcie profilowe zostało zmienione')
+
+        # Deleting account
+        elif 'delete_account_password' in request.POST:
+            password = request.POST.get('delete_account_password')
+            password_confirm = request.POST.get('delete_account_password_confirm')
+            if password == password_confirm and user.check_password(password):
+                user.delete()
+                messages.success(request, 'Konto zostało usunięte')
+                return redirect('home_page')
+            else:
+                messages.error(request, 'Hasła nie są zgodne lub obecne hasło jest niepoprawne')
+
+    context = {'user': user}
+    return render(request, 'base/user_settings.html', context)
+
 def user_offers(request, pk):
     offers = Offer.objects.filter(creator=pk)
     user = User.objects.get(pk=pk)
@@ -128,9 +188,7 @@ def login_page(request):
 def register_page(request):
     page = 'register'
     form = My_User_Creation_Form()
-    
-    context = {'register_form': form, 'page': page}
-
+        
     if request.method == 'POST':
         form = My_User_Creation_Form(request.POST)
         if form.is_valid():
@@ -143,6 +201,7 @@ def register_page(request):
         else:
             messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
 
+    context = {'register_form': form, 'page': page}
     return render(request, 'base/login_register.html', context)
 
 def logout_user(request):
@@ -183,7 +242,7 @@ def create_offer(request):
                 for image in images:
                     photo = Photo(offer=offer, photo=image)
                     photo.save()
-            return redirect('offer_page', pk=offer.id)
+            return redirect('offer_page', offer.id)
 
         else:
             messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')

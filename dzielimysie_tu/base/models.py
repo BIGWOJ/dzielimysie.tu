@@ -12,6 +12,11 @@ class User(AbstractUser):
     place = models.CharField(max_length=100, null=True)
     followers = models.ManyToManyField('User', related_name='user_followers', blank=True)
 
+    # Notifications
+    new_message_notification = models.BooleanField(default=False)
+    price_change_notification = models.BooleanField(default=False)
+    new_offer_notification = models.BooleanField(default=False)
+
     # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
