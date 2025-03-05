@@ -214,12 +214,6 @@ def logout_user(request):
     return redirect('home_page')
 
 # TO DO
-def take_offer(request, pk):
-    offer = Offer.objects.get(pk=pk)
-    context = {'offer': offer}
-    return render(request, 'base/take_offer.html', context)
-
-# TO DO
 def chat(request, pk):
     offer = Offer.objects.get(pk=pk)
     context = {'offer': offer}
@@ -235,8 +229,9 @@ def create_offer(request):
             offer = form.save(commit=False)
             if offer.place == None:
                 offer.place = "Nie podano"
-            offer.creator = request.user
 
+            offer.creator = request.user
+            offer.status = 'waiting'
             offer.save()
 
             images = request.FILES.getlist('photos')
@@ -296,4 +291,27 @@ def delete_offer(request, pk):
     context = {'deleting_obj': offer}
     return render(request, 'base/delete_form.html', context)
 
- 
+ # TO DO
+
+def take_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    # Dodać coś w stylu eager_user jako zgłaszający się na ofertę, pewnie w modelach będzie trzeba zmieniać, może dodać nowy model zgłoszeń
+    offer.status = 'pending'
+    offer.save()
+    messages.success(request, 'Zgłoszenie zostało wysłane. Oczekuj na zatwierdzenie przez autora oferty')
+    return redirect('offer_page', pk=pk)
+
+def update_offer_status(request, pk, status):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = status
+    offer.save()
+    return redirect('offer_page', pk=pk)
+
+def accept_offer(request, pk):
+    return update_offer_status(request, pk, 'in_progress')
+
+def cancel_offer(request, pk):
+    return update_offer_status(request, pk, 'cancelled')
+
+def finish_offer(request, pk):
+    return update_offer_status(request, pk, 'finished')
