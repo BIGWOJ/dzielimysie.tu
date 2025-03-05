@@ -13,7 +13,7 @@ def not_done(request):
 
 def home(request):
     categories = Category.objects.all()
-    top_offers = Offer.objects.all()[:10]
+    top_offers = Offer.objects.all()[:5]
     context = {"categories": categories, "top_offers": top_offers}
 
     # Filtering offers
@@ -34,6 +34,11 @@ def offer(request, pk):
         offer.price = "Za darmo"
     context = {"offer": offer}
     return render(request, 'base/offer.html', context)
+
+def offers(request, offers_layout):
+    offers = Offer.objects.all()
+    context = {"offers": offers, 'offers_layout': offers_layout}
+    return render(request, 'base/offers_page.html', context)
 
 @login_required(login_url='login_page')
 def follow_offer(request, pk):
@@ -92,7 +97,7 @@ def user_profile(request, pk):
 @login_required(login_url='login_page')
 def user_settings(request):
     user = request.user
-    print(request.FILES)
+
     if request.method == 'POST':
         # Changing password
         if 'current_password' in request.POST:

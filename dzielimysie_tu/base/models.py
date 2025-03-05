@@ -56,6 +56,14 @@ class Offer(models.Model):
     creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')
 
+    # statuses = [
+    #     ('waiting', 'Oczekujące'),
+    #     ('in_progress', 'W realizacji'),
+    #     ('cancelled', 'Anulowane'),
+    #     ('finished', 'Zakończone'),
+    # ]
+    # status = models.CharField(max_length=20, choices=statuses, default='waiting')
+
     followers = models.ManyToManyField('User', related_name='offer_followers', blank=True)
 
     def __str__(self):

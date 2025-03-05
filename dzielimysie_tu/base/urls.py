@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('take_offer/<str:pk>', views.take_offer, name='take_offer_page'),
     path('offer/<str:pk>', views.offer, name='offer_page'),
+    path('offers/<str:offers_layout>', views.offers, name='offers_page'),
 
     # Without _page because it's a function, not a view
     path('follow_offer/<str:pk>', views.follow_offer, name='follow_offer'),
