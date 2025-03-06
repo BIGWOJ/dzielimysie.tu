@@ -3,8 +3,7 @@
 
 <h1>Moje ogłoszenia</h1>
 
-<!-- .0 in typle => first element -->
-<!-- .1 in typle => second element -->
+<!-- .0 => first element -->
 {%for status in all_statuses%}
 {%if status.0 == offers_status%}
 <a href="{%url 'my_offers_page' status.0%}"></a>
@@ -12,7 +11,47 @@
 </a>
 
 {%for offer in offers%}
-<h2>{{offer.title}}</h2>
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer.title}}</p>
+<p>{{offer.price}}</p>
+
+<!-- Waiting offers -->
+{%if offers_status == 'waiting'%}
+<a href="{%url 'edit_offer_page' offer.id%}">
+    <p>Edytuj</p>
+</a>
+{%endif%}
+
+<!-- Pending (to accept/reject) offers -->
+{%if offers_status == 'pending'%}
+{% for offer, takers in offers_with_takers %}
+{% for taker in takers %}
+<br><a href="{% url 'user_profile_page' taker.id %}">
+    <p>{{ taker.username }}</p>
+</a>
+
+<a href="{% url 'reject_offer' offer.id %}">
+    <p>Odrzuć</p>
+</a>
+
+<a href="{% url 'accept_offer' offer.id taker.id %}">
+    <p>Akceptuj</p>
+</a>
+{% endfor %}
+{% endfor %}
+
+{%endif%}
+
+<!-- In progress (accepted) offers -->
+{%if offers_status == 'in_progress'%}
+<a href="{%url 'reject_offer' offer.id%}">
+    <p>Anuluj</p>
+</a>
+{%endif%}
+
+<hr>
 {%endfor%}
 
 {%else%}

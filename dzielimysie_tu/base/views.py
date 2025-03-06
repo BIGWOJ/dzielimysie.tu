@@ -300,7 +300,22 @@ def my_offers(request, status):
     statuses = Offer.statuses
 
     offers_filtered = offers.filter(status=status)
-    context = {'offers': offers_filtered, 'offers_status': status, 'all_statuses': statuses}
+
+    # __ allows to access the attributes of related models in the query
+    # offers_takers = User.objects.filter(take_offer__offer__creator=request.user).distinct()
+
+    # offers_takers = {offer.id: list(User.objects.filter(take_offer__offer=offer).distinct()) for offer in offers}
+
+    offers_with_takers = [(offer, User.objects.filter(take_offer__offer=offer).distinct()) for offer in offers]
+    print(offers_with_takers)
+    
+    context = {
+        'offers': offers_filtered,
+        'offers_status': status,
+        'all_statuses': statuses,
+        'offers_with_takers': offers_with_takers,
+    }
+    
     return render(request, 'base/my_offers.html', context)
 
 def take_offer(request, pk):
@@ -316,17 +331,37 @@ def take_offer(request, pk):
 
 def update_offer_status(request, pk, status):
     offer = Offer.objects.get(pk=pk)
+    previous_status = offer.status
     offer.status = status
     offer.save()
-    return redirect('offer_page', pk=pk)
+    print("offer", previous_status)
+    my_offers(request, status)
+    return redirect('my_offers_page', status=previous_status)
 
-def accept_offer(request, pk):
+def update_taking_offer_status(request, pk, taker, status):
+    offer = Offer.objects.get(pk=pk)
+    relation = Take_offer.objects.get(offer=offer, taker=taker)
+    print(relation)
+    relation.status = status
+    relation.save()
+    
+    previous_status = offer.status
+    print("taking", previous_status)
+    my_offers(request, status)
+    return redirect('my_offers_page', status=previous_status)
+
+def accept_offer(request, pk, taker):
+    update_taking_offer_status(request, pk, taker, 'accepted')
     return update_offer_status(request, pk, 'in_progress')
 
+def reject_offer(request, pk, taker):
+    update_taking_offer_status(request, pk, taker, 'rejected')
+    return update_offer_status(request, pk, 'waiting')
+
 def cancel_offer(request, pk):
-    relation = Take_offer.objects.get(offer=pk, taker=request.user)
-    relation.delete()
+    update_taking_offer_status(request, pk, request.user, 'cancelled')    
     return update_offer_status(request, pk, 'cancelled')
 
 def finish_offer(request, pk):
+    update_taking_offer_status(request, pk, request.user, 'finished')
     return update_offer_status(request, pk, 'finished')

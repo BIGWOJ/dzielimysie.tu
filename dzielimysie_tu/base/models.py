@@ -80,8 +80,14 @@ class Take_offer(models.Model):
     offer = models.ForeignKey(Offer, related_name='take_offer_set', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
 
-    # class Meta:
-    #     ordering = ['-created']
+    statuses = [
+        ('waiting', 'Oczekujące'),
+        ('accepted', 'Zaakceptowane'),
+        ('rejected', 'Odrzucone'),
+        ('cancelled', 'Anulowane'),
+        ('finished', 'Zakończone'),
+    ]
+    status = models.CharField(max_length=20, choices=statuses, default='waiting')
 
     def __str__(self):
         return self.offer.title
