@@ -24,11 +24,20 @@
 </a>
 
 {%else%}
-<a href="{%url 'take_offer' offer.id%}">
+
+{%if not user_is_taker%}
+<a href="{% url 'take_offer' offer.id %}">
     <p>Zgłoś się</p>
 </a>
 
-<a href="{%url 'not_done_yet_page'%}">
+{%else%}
+<a href="{% url 'cancel_offer' offer.id %}">
+    <p>Anuluj zgłoszenie</p>
+</a>
+
+{%endif%}
+
+<a href="{% url 'not_done_yet_page' %}">
     <p>Napisz wiadomość</p>
 </a>
 {%endif%}

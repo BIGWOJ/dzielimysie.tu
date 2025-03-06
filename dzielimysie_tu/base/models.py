@@ -4,6 +4,8 @@ from django.conf import settings
 
 # Create your models here.
 
+# __str__ - method that returns a string representation of the object, helpful in admin panel
+
 class User(AbstractUser):
     first_name = models.CharField(max_length=50, null=True)
     email = models.EmailField(unique=True, null=True)
@@ -20,6 +22,9 @@ class User(AbstractUser):
     # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -70,6 +75,17 @@ class Offer(models.Model):
     def __str__(self):
         return self.title
     
+class Take_offer(models.Model):
+    taker = models.ForeignKey(User, on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, related_name='take_offer_set', on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
+
+    # class Meta:
+    #     ordering = ['-created']
+
+    def __str__(self):
+        return self.offer.title
+
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 

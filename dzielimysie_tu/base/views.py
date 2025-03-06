@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, Offer, User, Photo, Follow_user, Follow_offer
+from .models import Category, Offer, User, Photo, Take_offer
 from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
@@ -32,7 +32,9 @@ def offer(request, pk):
     offer = Offer.objects.get(pk=pk)
     if offer.price == None:
         offer.price = "Za darmo"
-    context = {"offer": offer}
+    
+    user_is_taker = Take_offer.objects.filter(offer=offer, taker=request.user).exists()
+    context = {"offer": offer, 'user_is_taker': user_is_taker}
     return render(request, 'base/offer.html', context)
 
 def offers(request, offers_layout):
@@ -293,12 +295,23 @@ def delete_offer(request, pk):
 
  # TO DO
 
+def my_offers(request, status):
+    offers = Offer.objects.filter(creator=request.user)
+    statuses = Offer.statuses
+
+    offers_filtered = offers.filter(status=status)
+    context = {'offers': offers_filtered, 'offers_status': status, 'all_statuses': statuses}
+    return render(request, 'base/my_offers.html', context)
+
 def take_offer(request, pk):
     offer = Offer.objects.get(pk=pk)
-    # Dodać coś w stylu eager_user jako zgłaszający się na ofertę, pewnie w modelach będzie trzeba zmieniać, może dodać nowy model zgłoszeń
     offer.status = 'pending'
+
+    relation = Take_offer(offer=offer, taker=request.user)
     offer.save()
-    messages.success(request, 'Zgłoszenie zostało wysłane. Oczekuj na zatwierdzenie przez autora oferty')
+    relation.save()
+
+    messages.success(request, 'Zgłoszenie zostało wysłane. Oczekuj na zatwierdzenie przez autora oferty.')
     return redirect('offer_page', pk=pk)
 
 def update_offer_status(request, pk, status):
@@ -311,6 +324,8 @@ def accept_offer(request, pk):
     return update_offer_status(request, pk, 'in_progress')
 
 def cancel_offer(request, pk):
+    relation = Take_offer.objects.get(offer=pk, taker=request.user)
+    relation.delete()
     return update_offer_status(request, pk, 'cancelled')
 
 def finish_offer(request, pk):

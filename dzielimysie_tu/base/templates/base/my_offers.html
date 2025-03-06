@@ -1,0 +1,26 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Moje ogłoszenia</h1>
+
+<!-- .0 in typle => first element -->
+<!-- .1 in typle => second element -->
+{%for status in all_statuses%}
+{%if status.0 == offers_status%}
+<a href="{%url 'my_offers_page' status.0%}"></a>
+<p><b>{{status.1}}</b></p>
+</a>
+
+{%for offer in offers%}
+<h2>{{offer.title}}</h2>
+{%endfor%}
+
+{%else%}
+<a href="{%url 'my_offers_page' status.0%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%endif%}
+{%endfor%}
+
+{%endblock content%}
