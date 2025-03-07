@@ -3,43 +3,44 @@
 {%block content%}
 
 <h1>{{offer.title}}</h1>
+<p>Status: {{offer.status}}</p>
+<hr>
 
+{%if offer.status != 'cancelled' and offer.status != 'finished'%}
 {%if offer.creator != request.user%}
 <a href="{%url 'follow_offer' offer.id%}">
     <p>Obserwuj</p>
 </a>
+{%endif%}
 {%endif%}
 
 <p>Kategoria: <a href="{%url 'category_page' offer.category.id%}">{{offer.category}}</a></p>
 <p>Cena: {{offer.price}}</p>
 <p>{{offer.place}}</p>
 
+{%if offer.status != 'cancelled' and offer.status != 'finished'%}
 {%if offer.creator == request.user%}
-<a href="{%url 'edit_offer_page' offer.id%}">
+<a href="{% url 'edit_offer_page' offer.id %}">
     <p>Edytuj</p>
 </a>
 
-<a href="{%url 'delete_offer_page' offer.id%}">
+<a href="{% url 'delete_offer_page' offer.id %}">
     <p>Usuń</p>
 </a>
-
 {%else%}
-
 {%if not user_is_taker%}
 <a href="{% url 'take_offer' offer.id %}">
     <p>Zgłoś się</p>
 </a>
-
 {%else%}
-<a href="{% url 'cancel_offer' offer.id %}">
+<a href="{% url 'cancel_offer' offer.id request.user %}">
     <p>Anuluj zgłoszenie</p>
 </a>
-
 {%endif%}
-
 <a href="{% url 'not_done_yet_page' %}">
     <p>Napisz wiadomość</p>
 </a>
+{%endif%}
 {%endif%}
 
 <p>Opis: {{offer.description}}</p>

@@ -60,10 +60,10 @@ class Offer(models.Model):
     creator_email = models.EmailField(null=True)
     creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')
-
+    
     statuses = [
         ('waiting', 'Oczekujące'),
-        ('pending', 'Do akceptacji'),
+        ('pending', 'Zgłoszenia'),
         ('in_progress', 'W realizacji'),
         ('cancelled', 'Anulowane'),
         ('finished', 'Zakończone'),

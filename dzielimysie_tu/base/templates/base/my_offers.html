@@ -10,24 +10,33 @@
 <p><b>{{status.1}}</b></p>
 </a>
 
-{%for offer in offers%}
+{%for offer_filtered in offers_filtered%}
+{%if offers_status != 'pending' and offers_status != 'in_progress'%}
+<a href="{%url 'offer_page' offer_filtered.id%}">
+    <img src="{{offer_filtered.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer_filtered.title}}</p>
+<p>{{offer_filtered.price}}</p>
+<!-- Waiting offers -->
+{%if offers_status == 'waiting'%}
+<a href="{%url 'edit_offer_page' offer_filtered.id%}">
+    <p>Edytuj</p>
+</a>
+{%endif%}
+{%endif%}
+{%endfor%}
+{%for offer, takers in offers_with_takers%}
+
+<!-- Pending (to accept/reject) offers -->
+{%if offers_status == 'pending'%}
+{%if takers%}
 <a href="{%url 'offer_page' offer.id%}">
     <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
 </a>
 <p>{{offer.title}}</p>
 <p>{{offer.price}}</p>
 
-<!-- Waiting offers -->
-{%if offers_status == 'waiting'%}
-<a href="{%url 'edit_offer_page' offer.id%}">
-    <p>Edytuj</p>
-</a>
-{%endif%}
-
-<!-- Pending (to accept/reject) offers -->
-{%if offers_status == 'pending'%}
-{% for offer, takers in offers_with_takers %}
-{% for taker in takers %}
+{%for taker in takers%}
 <br><a href="{% url 'user_profile_page' taker.id %}">
     <p>{{ taker.username }}</p>
 </a>
@@ -39,20 +48,80 @@
 <a href="{% url 'accept_offer' offer.id taker.id %}">
     <p>Akceptuj</p>
 </a>
-{% endfor %}
-{% endfor %}
+<hr>
+{%endfor%}
+{%endif%}
 
 {%endif%}
 
 <!-- In progress (accepted) offers -->
-{%if offers_status == 'in_progress'%}
+<!-- {%if offers_status == 'in_progress'%}
+{%for taker in takers%}
+<br><a href="{% url 'user_profile_page' taker.id %}">
+    <p>{{ taker.username }}</p>
+</a>
+
 <a href="{%url 'reject_offer' offer.id%}">
     <p>Anuluj</p>
 </a>
+{%endfor%}
+{%endif%} -->
+
+
+{%endfor%}
+
+<!-- In progress (accepted) offers -->
+{%if offers_status == 'in_progress'%}
+{%for offer, takers in offers_with_takers_accepted%}
+
+{%if takers%}
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer.title}}</p>
+<p>{{offer.price}}</p>
+
+{%for taker in takers%}
+<a href="{%url 'user_profile_page' taker.id%}">
+    <img src="{{taker.avatar.url}}" style="width: 50px; height: 50px;">
+</a>
+<p>{{taker.username}}</p>
+<a href="{%url 'cancel_offer' offer.id taker.id%}">
+    <p>Anuluj</p>
+</a>
+
+<a href="{%url 'finish_offer' offer.id taker.id%}">
+    <p>Zakończ</p>
+</a>
+{%endfor%}
+<hr>
 {%endif%}
 
-<hr>
+
 {%endfor%}
+{%endif%}
+
+<!-- Cancelled offers -->
+{%if offers_status == 'cancelled'%}
+{%for offer, takers in offers_with_takers_cancelled%}
+
+{%if takers%}
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer.title}}</p>
+
+{%for taker in takers%}
+<a href="{%url 'user_profile_page' taker.id%}">
+    <img src="{{taker.avatar.url}}" style="width: 50px; height: 50px;">
+</a>
+
+<p>{{taker.username}}</p>
+{%endfor%}
+{%endif%}
+
+{%endfor%}
+{%endif%}
 
 {%else%}
 <a href="{%url 'my_offers_page' status.0%}">
@@ -61,5 +130,8 @@
 
 {%endif%}
 {%endfor%}
+
+
+
 
 {%endblock content%}
