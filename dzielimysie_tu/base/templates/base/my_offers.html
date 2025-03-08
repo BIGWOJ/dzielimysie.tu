@@ -4,7 +4,7 @@
 <h1>Moje ogłoszenia</h1>
 
 <!-- .0 => first element -->
-{%for status in all_statuses%}
+{%for status in offers_statuses%}
 {%if status.0 == offers_status%}
 <a href="{%url 'my_offers_page' status.0%}"></a>
 <p><b>{{status.1}}</b></p>
@@ -25,10 +25,11 @@
 {%endif%}
 {%endif%}
 {%endfor%}
-{%for offer, takers in offers_with_takers%}
 
 <!-- Pending (to accept/reject) offers -->
 {%if offers_status == 'pending'%}
+{%for offer, taking_status, takers in offers_with_takers_waiting%}
+
 {%if takers%}
 <a href="{%url 'offer_page' offer.id%}">
     <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
@@ -37,9 +38,22 @@
 <p>{{offer.price}}</p>
 
 {%for taker in takers%}
+
 <br><a href="{% url 'user_profile_page' taker.id %}">
     <p>{{ taker.username }}</p>
 </a>
+
+{%if taker == request.user%}
+<p><b>Moje zgłoszenie - na szaro tło</b></p>
+
+{% for key, value in taked_offers_statuses_dict.items %}
+{% if key == taking_status %}
+<p>Status: {{ value }}</p>
+{% endif %}
+{% endfor %}
+
+{%else%}
+<p><b>Zgłoszenie kogoś po naszą ofertę - na niebiesko tło</b></p>
 
 <a href="{% url 'reject_offer' offer.id %}">
     <p>Odrzuć</p>
@@ -48,27 +62,15 @@
 <a href="{% url 'accept_offer' offer.id taker.id %}">
     <p>Akceptuj</p>
 </a>
+{%endif%}
 <hr>
 {%endfor%}
-{%endif%}
 
 {%endif%}
 
-<!-- In progress (accepted) offers -->
-<!-- {%if offers_status == 'in_progress'%}
-{%for taker in takers%}
-<br><a href="{% url 'user_profile_page' taker.id %}">
-    <p>{{ taker.username }}</p>
-</a>
-
-<a href="{%url 'reject_offer' offer.id%}">
-    <p>Anuluj</p>
-</a>
 {%endfor%}
-{%endif%} -->
+{%endif%}
 
-
-{%endfor%}
 
 <!-- In progress (accepted) offers -->
 {%if offers_status == 'in_progress'%}

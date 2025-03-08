@@ -33,7 +33,7 @@ urlpatterns = [
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
     path('my_offers/<str:status>', views.my_offers, name='my_offers_page'),
-
     path('settings/', views.user_settings, name='user_settings_page'),
+
     path('chat/<str:pk>', views.chat, name='chat_page'),
 ]

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Category, Offer, User, Photo, Take_offer
 from .forms import My_User_Creation_Form, Offer_Form
 
@@ -297,24 +298,36 @@ def delete_offer(request, pk):
 
 def my_offers(request, status):
     offers = Offer.objects.filter(creator=request.user)
-    statuses = Offer.statuses
-
+    offers_statuses = Offer.statuses
+    taked_offers_statuses_dict = dict(Take_offer.statuses)
+    
+    taked_offers = Take_offer.objects.filter(taker=request.user)
     offers_filtered = offers.filter(status=status)
 
     # __ allows to access the attributes of related models in the query
-    offers_with_takers_waiting = [(offer, User.objects.filter(take_offer__offer=offer, take_offer__status='waiting').distinct()) for offer in offers]
-    # print(status)
+    # Need of Q usage cause of tuple distinct issues
+    offers_created_with_takers_waiting = [
+        (offer, Take_offer.objects.filter(status='waiting'), User.objects.filter(Q(take_offer__offer=offer) & Q(take_offer__status='waiting')).distinct())
+        for offer in offers
+    ]
+    
+    offers_taked_with_taker_waiting = [
+        (take_offer.offer, take_offer.status, User.objects.filter(take_offer__status='waiting', take_offer__taker=request.user))
+        for take_offer in taked_offers
+    ]
+
+    offers_with_takers_waiting = offers_created_with_takers_waiting + offers_taked_with_taker_waiting
     
     offers_with_takers_accepted = [(offer, User.objects.filter(take_offer__offer=offer, take_offer__status='accepted')) for offer in offers]
     
     offers_with_takers_cancelled = [(offer, User.objects.filter(take_offer__offer=offer, take_offer__status='cancelled')) for offer in offers]
-    print(offers_filtered)
-    print(offers_with_takers_cancelled)
+    
     context = {
         'offers_filtered': offers_filtered,
         'offers_status': status,
-        'all_statuses': statuses,
-        'offers_with_takers': offers_with_takers_waiting,
+        'offers_statuses': offers_statuses,
+        'taked_offers_statuses_dict': taked_offers_statuses_dict,
+        'offers_with_takers_waiting': offers_with_takers_waiting,
         'offers_with_takers_accepted': offers_with_takers_accepted,
         'offers_with_takers_cancelled': offers_with_takers_cancelled,
     }
