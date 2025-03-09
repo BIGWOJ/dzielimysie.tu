@@ -14,4 +14,4 @@
 
 3. Przy edycji oferty można dodać przycisk "Usuń zdjęcie" przy każdym zdjęciu, żeby pojedyncze usuwać, bo teraz to za każdym razem nadpisuje aktualne zdjęcia
 
-4. Dodać do take_offer i offer itd class Meta żeby były sortowane od najnowszych, żeby w zakładce anulowane itd były w kolejności
+4. Dodać do take_offer i offer itd class Meta żeby były sortowane od najnowszych, żeby w zakładce anulowane itd były w kolejności i tak samo sortowanie po statusie, najwyżej realizowane, potem anulowane itd.

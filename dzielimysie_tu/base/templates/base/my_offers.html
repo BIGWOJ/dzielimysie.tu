@@ -39,12 +39,12 @@
 
 {%for taker in takers%}
 
-<br><a href="{% url 'user_profile_page' taker.id %}">
-    <p>{{ taker.username }}</p>
-</a>
-
 {%if taker == request.user%}
 <p><b>Moje zgłoszenie - na szaro tło</b></p>
+
+<a href="{%url 'cancel_offer' offer.id request.user.id%}">
+    <p>Anuluj zgłoszenie</p>
+</a>
 
 {% for key, value in taked_offers_statuses_dict.items %}
 {% if key == taking_status %}
@@ -54,6 +54,10 @@
 
 {%else%}
 <p><b>Zgłoszenie kogoś po naszą ofertę - na niebiesko tło</b></p>
+
+<br><a href="{% url 'user_profile_page' taker.id %}">
+    <p>{{ taker.username }}</p>
+</a>
 
 <a href="{% url 'reject_offer' offer.id %}">
     <p>Odrzuć</p>
@@ -86,14 +90,22 @@
 
 {%if take_offer.taker == request.user%}
 <p><b>Moje zgłoszenie - na szaro tło</b></p>
-{%else%}
 
+{%else%}
 <a href="{%url 'user_profile_page' take_offer.taker.id%}">
     <p>{{take_offer.taker.username}}</p>
 </a>
 
 <p><b>Zgłoszenie kogoś po naszą ofertę - na niebiesko tło</b></p>
+
+<a href="{%url 'finish_offer' offer.id take_offer.taker.id%}">
+    <p>Zatwierdź wykonanie</p>
+</a>
 {%endif%}
+
+<a href="{%url 'cancel_offer' offer.id take_offer.taker.id%}">
+    <p>Anuluj zgłoszenie</p><br>
+</a>
 {%endfor%}
 
 {%endif%}
@@ -118,6 +130,17 @@
 
 <p>{{taker.username}}</p>
 {%endfor%}
+{%endif%}
+
+{%endfor%}
+{%endif%}
+
+<!-- Finished offers -->
+{%if offers_status == 'finished'%}
+{%for offer, takers in offers_with_takers_finished%}
+
+{%if takers%}
+
 {%endif%}
 
 {%endfor%}

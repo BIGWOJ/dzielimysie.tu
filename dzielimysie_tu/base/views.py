@@ -391,8 +391,8 @@ def reject_offer(request, pk, taker):
     return update_offer_status(request, pk, 'waiting')
 
 def cancel_offer(request, pk, taker):
-    update_taking_offer_status(request, pk=pk, taker=taker, status='cancelled')    
-    return update_offer_status(request, pk, 'cancelled')
+    return update_taking_offer_status(request, pk=pk, taker=taker, status='cancelled')    
+    # return update_offer_status(request, pk, 'cancelled')
 
 def finish_offer(request, pk, taker):
     update_taking_offer_status(request, pk, taker=taker, status='finished')
