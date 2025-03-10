@@ -288,68 +288,31 @@ def delete_offer(request, pk):
  # TO DO
 
 def my_offers(request, status):
-    offers = Offer.objects.filter(creator=request.user)
+    offers = Offer.objects.filter(creator=request.user, status=status)
     offers_statuses = Offer.statuses
-    taked_offers_statuses_dict = dict(Take_offer.statuses)
-    
-    taked_offers = Take_offer.objects.filter(taker=request.user)
-    offers_filtered = offers.filter(status=status)
+    # __ is used to access the field of the related model
+    offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
 
-    # __ allows to access the attributes of related models in the query
-    # Need of Q usage cause of tuple distinct issues
-    offers_created_with_takers_pending= [
-        (offer, Take_offer.objects.filter(status='waiting'), User.objects.filter(Q(take_offer__offer=offer) & Q(take_offer__status='waiting')).distinct())
-        for offer in offers
-    ]
-    
-    offers_taked_with_taker_pending = [
-        (take_offer.offer, take_offer.status, User.objects.filter(take_offer__status='waiting', take_offer__taker=request.user))
-        for take_offer in taked_offers
-    ]
-    offers_with_takers_pending = offers_created_with_takers_pending + offers_taked_with_taker_pending
-    
-    # print('created', offers_created_with_takers_pending,'\n')
-    # print('taked', offers_taked_with_taker_pending)
-    # print(offers_with_takers_waiting)
-
-    offers_created_with_takers_accepted = [(offer, Take_offer.objects.filter(status='accepted', offer__creator=request.user)) for offer in offers_filtered]
-
-    offers_taked_with_takers_accepted = [(take_offer.offer, Take_offer.objects.filter(status='accepted', offer=take_offer.offer)) for take_offer in taked_offers]
-
-    offers_with_takers_accepted = offers_created_with_takers_accepted + offers_taked_with_takers_accepted
-
-    print('accepted', offers_with_takers_accepted)
-
-    # offers_created_with_takers_accepted = [
-    #     (offer, Take_offer.objects.filter(status='accepted'), User.objects.filter(Q(take_offer__offer=offer) & Q(take_offer__status='accepted')).distinct())
-    #     for offer in offers
-    # ]
-    
-    # offers_taked_with_taker_accepted = [
-    #     (take_offer.offer, take_offer.status, User.objects.filter(take_offer__status='accepted', take_offer__taker=request.user))
-    #     for take_offer in taked_offers
-    # ]
-
-    # offers_with_takers_accepted = offers_created_with_takers_accepted + offers_taked_with_taker_accepted
-
-    # print('created', offers_created_with_takers_accepted)
-    # print('taked', offers_taked_with_taker_accepted)
-
-    # offers_with_takers_accepted = [(offer, User.objects.filter(take_offer__offer=offer, take_offer__status='accepted')) for offer in offers]
-    
-    offers_with_takers_cancelled = [(offer, User.objects.filter(take_offer__offer=offer, take_offer__status='cancelled')) for offer in offers]
-    
     context = {
-        'offers_filtered': offers_filtered,
+        'offers': offers,
         'offers_status': status,
         'offers_statuses': offers_statuses,
-        'taked_offers_statuses_dict': taked_offers_statuses_dict,
-        'offers_with_takers_pending': offers_with_takers_pending,
-        'offers_with_takers_accepted': offers_with_takers_accepted,
-        'offers_with_takers_cancelled': offers_with_takers_cancelled,
+        'offers_with_takers': offers_with_takers,
     }
     
     return render(request, 'base/my_offers.html', context)
+
+def my_take_offers(request, status):
+    take_offers = Take_offer.objects.filter(taker=request.user, status=status)
+    take_offers_statuses = Take_offer.statuses
+
+    context = {
+        'take_offers': take_offers, 
+        'take_offers_status': status, 
+        'take_offers_statuses': take_offers_statuses
+    }
+    
+    return render(request, 'base/my_take_offers.html', context)
 
 def take_offer(request, pk):
     offer = Offer.objects.get(pk=pk)

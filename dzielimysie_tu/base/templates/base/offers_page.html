@@ -29,6 +29,10 @@
     <p>Moje ogłoszenia</p>
 </a>
 
+<a href="{%url 'my_take_offers_page' 'waiting'%}">
+    <p>Moje zgłoszenia</p>
+</a>
+
 {%for offer in offers%}
 <a href="{%url 'offer_page' offer.id%}">
     <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">

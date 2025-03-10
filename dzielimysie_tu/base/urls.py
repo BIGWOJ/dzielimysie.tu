@@ -18,7 +18,7 @@ urlpatterns = [
 
     path('take_offer/<str:pk>', views.take_offer, name='take_offer'),  
     path('accept_offer/<str:pk>/<str:taker>/', views.accept_offer, name='accept_offer'),
-    path('reject_offer/<str:pk>', views.reject_offer, name='reject_offer'),  
+    path('reject_offer/<str:pk>/<str:taker>/', views.reject_offer, name='reject_offer'),  
     path('cancel_offer/<str:pk>/<str:taker>', views.cancel_offer, name='cancel_offer'),  
     path('finish_offer/<str:pk>/<str:taker>', views.finish_offer, name='finish_offer'),  
     
@@ -33,6 +33,7 @@ urlpatterns = [
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
     path('my_offers/<str:status>', views.my_offers, name='my_offers_page'),
+    path('my_take_offers/<str:status>', views.my_take_offers, name='my_take_offers_page'),
     path('settings/', views.user_settings, name='user_settings_page'),
 
     path('chat/<str:pk>', views.chat, name='chat_page'),

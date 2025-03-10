@@ -10,151 +10,49 @@
 <p><b>{{status.1}}</b></p>
 </a>
 
-{%for offer_filtered in offers_filtered%}
-{%if offers_status != 'pending' and offers_status != 'in_progress'%}
-<a href="{%url 'offer_page' offer_filtered.id%}">
-    <img src="{{offer_filtered.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer_filtered.title}}</p>
-<p>{{offer_filtered.price}}</p>
-<!-- Waiting offers -->
-{%if offers_status == 'waiting'%}
-<a href="{%url 'edit_offer_page' offer_filtered.id%}">
-    <p>Edytuj</p>
-</a>
-{%endif%}
-{%endif%}
-{%endfor%}
-
-<!-- Pending (to accept/reject) offers -->
-{%if offers_status == 'pending'%}
-{%for offer, taking_status, takers in offers_with_takers_pending%}
-
-{%if takers%}
-<a href="{%url 'offer_page' offer.id%}">
-    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer}}</p>
-<p>{{offer.price}}</p>
-
-{%for taker in takers%}
-
-{%if taker == request.user%}
-<p><b>Moje zgłoszenie - na szaro tło</b></p>
-
-<a href="{%url 'cancel_offer' offer.id request.user.id%}">
-    <p>Anuluj zgłoszenie</p>
-</a>
-
-{% for key, value in taked_offers_statuses_dict.items %}
-{% if key == taking_status %}
-<p>Status: {{ value }}</p>
-{% endif %}
-{% endfor %}
-
-{%else%}
-<p><b>Zgłoszenie kogoś po naszą ofertę - na niebiesko tło</b></p>
-
-<br><a href="{% url 'user_profile_page' taker.id %}">
-    <p>{{ taker.username }}</p>
-</a>
-
-<a href="{% url 'reject_offer' offer.id %}">
-    <p>Odrzuć</p>
-</a>
-
-<a href="{% url 'accept_offer' offer.id taker.id %}">
-    <p>Akceptuj</p>
-</a>
-{%endif%}
-<hr>
-{%endfor%}
-
-{%endif%}
-
-{%endfor%}
-{%endif%}
-
-<!-- In progress (accepted) offers -->
-{%if offers_status == 'in_progress'%}
-{%for offer, take_offers in offers_with_takers_accepted%}
-
-{%if take_offers%}
-{%for take_offer in take_offers%}
-
-<a href="{%url 'offer_page' offer.id%}">
-    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer}}</p>
-<p>{{offer.price}}</p>
-
-{%if take_offer.taker == request.user%}
-<p><b>Moje zgłoszenie - na szaro tło</b></p>
-
-{%else%}
-<a href="{%url 'user_profile_page' take_offer.taker.id%}">
-    <p>{{take_offer.taker.username}}</p>
-</a>
-
-<p><b>Zgłoszenie kogoś po naszą ofertę - na niebiesko tło</b></p>
-
-<a href="{%url 'finish_offer' offer.id take_offer.taker.id%}">
-    <p>Zatwierdź wykonanie</p>
-</a>
-{%endif%}
-
-<a href="{%url 'cancel_offer' offer.id take_offer.taker.id%}">
-    <p>Anuluj zgłoszenie</p><br>
-</a>
-{%endfor%}
-
-{%endif%}
-
-{%endfor%}
-{%endif%}
-
-<!-- Cancelled offers -->
-{%if offers_status == 'cancelled'%}
-{%for offer, takers in offers_with_takers_cancelled%}
-
-{%if takers%}
-<a href="{%url 'offer_page' offer.id%}">
-    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer}}</p>
-
-{%for taker in takers%}
-<a href="{%url 'user_profile_page' taker.id%}">
-    <img src="{{taker.avatar.url}}" style="width: 50px; height: 50px;">
-</a>
-
-<p>{{taker.username}}</p>
-{%endfor%}
-{%endif%}
-
-{%endfor%}
-{%endif%}
-
-<!-- Finished offers -->
-{%if offers_status == 'finished'%}
-{%for offer, takers in offers_with_takers_finished%}
-
-{%if takers%}
-
-{%endif%}
-
-{%endfor%}
-{%endif%}
-
 {%else%}
 <a href="{%url 'my_offers_page' status.0%}">
     <p>{{status.1}}</p>
 </a>
-
 {%endif%}
 {%endfor%}
 
+{%for offer, take_offers in offers_with_takers%}
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" alt="photo" style="width: 100px; height: 100px;">
+</a>
+<p>{{offer}}</p>
+<p>{{offer.price}}</p><br>
 
+{%if take_offers%}
+{%for take_offer in take_offers%}
 
+<a href="{%url 'user_profile_page' take_offer.taker.id%}">
+    <img src="{{take_offer.taker.avatar.url}}" alt="photo" style="width: 75; height: 75px;">
+</a>
+<p>{{take_offer.taker.username}}</p>
+
+{%if offers_status == 'pending'%}
+<a href="{%url 'accept_offer' offer.id take_offer.taker%}">
+    <p>Akceptuj</p>
+</a>
+
+<a href="{%url 'reject_offer' offer.id take_offer.taker%}">
+    <p>Odrzuć</p><br>
+</a>
+
+{%elif offers_status == 'in_progress'%}
+<a href="{%url 'finish_offer' offer.id take_offer.taker%}">
+    <p>Zakończ</p>
+</a>
+
+<a href="{%url 'cancel_offer' offer.id take_offer.taker%}">
+    <p>Anuluj</p><br>
+</a>
+{%endif%}
+{%endfor%}
+{%endif%}
+
+{%endfor%}
 
 {%endblock content%}

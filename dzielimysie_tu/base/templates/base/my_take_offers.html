@@ -1,0 +1,32 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Moje zgłoszenia</h1>
+
+{%for status in take_offers_statuses%}
+{%if status.0 == take_offers_status%}
+<a href="{%url 'my_take_offers_page' status.0%}"></a>
+<p><b>{{status.1}}</b></p>
+</a>
+
+{%for take_offer in take_offers%}
+
+<a href="{%url 'offer_page' take_offer.offer.id%}">
+    <img src="{{take_offer.offer.photo_set.first.photo.url}}" alt="photo" style="width: 100px; height: 100px;">
+</a>
+<p>{{take_offer.offer}}</p>
+<p>{{take_offer.offer.price}}</p>
+
+{%endfor%}
+
+{%else%}
+<a href="{%url 'my_take_offers_page' status.0%}">
+    <p>{{status.1}}</p>
+</a>
+{%endif%}
+
+{%endfor%}
+
+
+
+{%endblock content%}
