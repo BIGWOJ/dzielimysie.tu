@@ -26,13 +26,15 @@
 <a href="{% url 'delete_offer_page' offer.id %}">
     <p>Usuń</p>
 </a>
+
 {%else%}
+
 {%if not user_is_taker%}
 <a href="{% url 'take_offer' offer.id %}">
     <p>Zgłoś się</p>
 </a>
 {%else%}
-<a href="{% url 'cancel_offer' offer.id request.user %}">
+<a href="{% url 'cancel_take_offer' offer.id request.user.id False%}">
     <p>Anuluj zgłoszenie</p>
 </a>
 {%endif%}
@@ -40,6 +42,7 @@
     <p>Napisz wiadomość</p>
 </a>
 {%endif%}
+
 {%endif%}
 
 <p>Opis: {{offer.description}}</p>

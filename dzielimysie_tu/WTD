@@ -1,7 +1,7 @@
 ==========NAJWAŻNIEJSZE==========
+1. Żeby na głównej i w innych miejscach były wyświetlane tylko aktywne oferty, a nie wszystkie
 
 ==========ŚREDNIO WAŻNE==========
-1. Jak z dodawaniem zdjęć do ogłoszenia
 
 ==========MAŁO WAŻNE==========
 1. Wywalić null=True z models w miejscach, gdzie są wymagane. True jest do testowania ciągłego, żeby nie przerabiać danych. Tak samo blank

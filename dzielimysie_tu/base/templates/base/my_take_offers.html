@@ -17,6 +17,12 @@
 <p>{{take_offer.offer}}</p>
 <p>{{take_offer.offer.price}}</p>
 
+{%if status.0 == 'waiting' or status.0 == 'accepted'%}
+<a href="{%url 'cancel_take_offer' take_offer.offer.id request.user.id True%}">
+    <p>Anuluj zgłoszenie</p>
+</a>
+{%endif%}
+
 {%endfor%}
 
 {%else%}

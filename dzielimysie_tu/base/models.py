@@ -4,7 +4,7 @@ from django.conf import settings
 
 # Create your models here.
 
-# __str__ - method that returns a string representation of the object, helpful in admin panel
+# __str__ - method that returns a string representation of the object
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=50, null=True)
@@ -91,19 +91,3 @@ class Take_offer(models.Model):
 
     def __str__(self):
         return self.offer.title
-
-class Message(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
-    body = models.TextField(max_length=100)
-
-    # auto_now_add - when the message is created, the date is added
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        # -created - ascending order
-        ordering = ['-created']
-
-    def __str__(self):
-        return self.body

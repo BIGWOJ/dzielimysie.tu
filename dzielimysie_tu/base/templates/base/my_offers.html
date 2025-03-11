@@ -27,26 +27,28 @@
 {%if take_offers%}
 {%for take_offer in take_offers%}
 
+{%if offers_status != 'waiting'%}
 <a href="{%url 'user_profile_page' take_offer.taker.id%}">
-    <img src="{{take_offer.taker.avatar.url}}" alt="photo" style="width: 75; height: 75px;">
+    <img src="{{take_offer.taker.avatar.url}}" alt="photo" style="width: 75px; height: 75px;">
 </a>
 <p>{{take_offer.taker.username}}</p>
+{%endif%}
 
 {%if offers_status == 'pending'%}
-<a href="{%url 'accept_offer' offer.id take_offer.taker%}">
+<a href="{%url 'accept_take_offer' offer.id take_offer.taker.id%}">
     <p>Akceptuj</p>
 </a>
 
-<a href="{%url 'reject_offer' offer.id take_offer.taker%}">
+<a href="{%url 'reject_take_offer' offer.id take_offer.taker.id%}">
     <p>Odrzuć</p><br>
 </a>
 
 {%elif offers_status == 'in_progress'%}
-<a href="{%url 'finish_offer' offer.id take_offer.taker%}">
+<a href="{%url 'finish_offer' offer.id take_offer.taker.id%}">
     <p>Zakończ</p>
 </a>
 
-<a href="{%url 'cancel_offer' offer.id take_offer.taker%}">
+<a href="{%url 'cancel_take_offer' offer.id take_offer.taker.id False%}">
     <p>Anuluj</p><br>
 </a>
 {%endif%}

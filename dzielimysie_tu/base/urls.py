@@ -17,9 +17,9 @@ urlpatterns = [
     path('delete_offer/<str:pk>', views.delete_offer, name='delete_offer_page'),
 
     path('take_offer/<str:pk>', views.take_offer, name='take_offer'),  
-    path('accept_offer/<str:pk>/<str:taker>/', views.accept_offer, name='accept_offer'),
-    path('reject_offer/<str:pk>/<str:taker>/', views.reject_offer, name='reject_offer'),  
-    path('cancel_offer/<str:pk>/<str:taker>', views.cancel_offer, name='cancel_offer'),  
+    path('accept_take_offer/<str:pk>/<str:taker>/', views.accept_take_offer, name='accept_take_offer'),
+    path('reject_take_offer/<str:pk>/<str:taker>/', views.reject_take_offer, name='reject_take_offer'),  
+    path('cancel_take_offer/<str:pk>/<str:taker>/<str:redirect_take_offers>/', views.cancel_take_offer, name='cancel_take_offer'),  
     path('finish_offer/<str:pk>/<str:taker>', views.finish_offer, name='finish_offer'),  
     
     path('offer/<str:pk>', views.offer, name='offer_page'),
