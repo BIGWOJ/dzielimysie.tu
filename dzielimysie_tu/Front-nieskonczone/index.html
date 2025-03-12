@@ -6,9 +6,13 @@
     <title>Dzielimy się</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    
 </head>
 <body>
+   
     <header>
         <p>Dołącz do nas, <span class="highlight">dzielących się</span>, w 2 kliknięcia!</p>
     </header>
@@ -34,14 +38,68 @@
     <section class="categories">
         <h2>Kategorie</h2>
         <div class="category-list">
-
+            <div class="category category-one">
+                <i class="fa-solid fa-couch"></i>
+                <p>Dom</p>
+            </div>
+            <div class="category category-two">
+                <i class="fa-solid fa-shirt"></i>
+                <p>Moda</p>
+            </div>
+            <div class="category category-one">
+                <i class="fa-solid fa-basketball-ball"></i>
+                <p>Sport i Hobby</p>
+            </div>
+            <div class="category category-two">
+                <i class="fa-solid fa-briefcase"></i>
+                <p>Usługi</p>
+            </div>
+            <div class="category category-one">
+                <i class="fa-solid fa-car"></i>
+                <p>Motoryzacja</p>
+            </div>
+            <div class="category category-two">
+                <i class="fa-solid fa-paw"></i>
+                <p>Zwierzęta</p>
+            </div>
+            <div class="category category-one">
+                <i class="fa-solid fa-seedling"></i>
+                <p>Ogród</p>
+            </div>
+            <div class="category category-two">
+                <i class="fa-solid fa-headphones"></i>
+                <p>Elektronika</p>
+            </div>
         </div>
     </section>
     
+    
     <section class="listings">
         <h2>Ostatnie ogłoszenia</h2>
-        <div class="listings-container">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="" alt="Wyprowadzanie psa">
+                    <p><strong>Wyprowadzanie psa</strong></p>
+                    <p>Szczecin, pl. Grunwaldzki</p>
+                    <p class="price">10zł</p>
+                </div>
+                <div class="swiper-slide">
+                    <img src="" alt="Odbiór paczkomat">
+                    <p><strong>Odbiór paczkomat do 02.12 12:00</strong></p>
+                    <p>Szczecin, Chopina 1</p>
+                    <p class="price">5zł</p>
+                </div>
+                <div class="swiper-slide">
+                    <img src="" alt="Oddam szczeniaki">
+                    <p><strong>Oddam szczeniaki</strong></p>
+                    <p>Wrocław, Grodzka 999</p>
+                    <p class="price">Za darmo</p>
+                </div>
+            </div>
+
             
+    
         </div>
     </section>
     
