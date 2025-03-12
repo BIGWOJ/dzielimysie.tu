@@ -24,7 +24,8 @@ urlpatterns = [
     path('accept_take_offer/<str:pk>/<str:taker>/', views.accept_take_offer, name='accept_take_offer'),
     path('reject_take_offer/<str:pk>/<str:taker>/', views.reject_take_offer, name='reject_take_offer'),  
     path('cancel_take_offer/<str:pk>/<str:taker>/<str:redirect_take_offers>/', views.cancel_take_offer, name='cancel_take_offer'),  
-    path('finish_offer/<str:pk>/<str:taker>', views.finish_offer, name='finish_offer'),  
+    path('finish_take_offer/<str:pk>/<str:taker>', views.finish_take_offer, name='finish_take_offer'),  
+    path('finish_take_offer_end_offer/<str:pk>/<str:taker>', views.finish_take_offer_end_offer, name='finish_take_offer_end_offer'),  
     
     path('offer/<str:pk>', views.offer, name='offer_page'),
     path('offers/<str:offers_layout>', views.offers, name='offers_page'),
@@ -36,7 +37,7 @@ urlpatterns = [
 
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
-    path('my_offers/<str:status>', views.my_offers, name='my_offers_page'),
+    path('my_offers/<str:offers_status>/<str:take_offer_status>/', views.my_offers, name='my_offers_page'),
     path('my_take_offers/<str:status>', views.my_take_offers, name='my_take_offers_page'),
     path('settings/', views.user_settings, name='user_settings_page'),
 

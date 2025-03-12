@@ -291,15 +291,19 @@ def delete_offer(request, pk):
 
  # TO DO
 
-def my_offers(request, status):
-    offers = Offer.objects.filter(creator=request.user, status=status)
+def my_offers(request, offers_status, take_offer_status="None"):
+    offers = Offer.objects.filter(creator=request.user, status=offers_status)
     offers_statuses = Offer.statuses
-    # __ is used to access the field of the related model
-    offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
 
+    # __ is used to access field of the related model
+    if take_offer_status != "None":
+        offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, status=take_offer_status)) for offer in offers]
+    else:
+        offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
+    print('off with takers', offers_with_takers)
     context = {
         'offers': offers,
-        'offers_status': status,
+        'offers_status': offers_status,
         'offers_statuses': offers_statuses,
         'offers_with_takers': offers_with_takers,
     }
@@ -344,22 +348,34 @@ def update_offer_status(request, pk, status, redirect_take_offers=False):
     elif redirect_take_offers == "True":
         return my_take_offers(request, status)
     else:
-        return my_offers(request, previous_status)
+        return my_offers(request, offers_status=previous_status)
+
+def get_takers_after(offer, taker, status):
+    return Take_offer.objects.filter(offer=offer, status='waiting').exclude(taker=taker)
 
 def update_take_offer_status(request, pk, taker, status, previous_offers_status, redirect_take_offers=False):
     offer = Offer.objects.get(pk=pk)
     relation = Take_offer.objects.get(offer=offer, taker=taker)
     previous_take_status = relation.status
 
+    print("offer status in update_take", offer.status)
     relation.status = status
     relation.save()
+    print("offer status in update_take 2", offer.status)
+
+    if status == 'accepted':
+        takers_after = get_takers_after(offer, taker, relation.status)
+        if takers_after:
+            for take_offer in takers_after:
+                take_offer.status = 'cancelled'
+                take_offer.save()
 
     if redirect_take_offers == "offer_page":
         return redirect('offer_page', pk=pk)
     elif redirect_take_offers == "True":
         return my_take_offers(request, status=previous_take_status)
     else:
-        return my_offers(request, status=previous_offers_status)
+        return my_offers(request, offers_status=previous_offers_status, take_offer_status=previous_take_status)
 
 def accept_take_offer(request, pk, taker):
     previous_offers_status = get_previous_offer_status(pk)
@@ -367,9 +383,6 @@ def accept_take_offer(request, pk, taker):
     update_take_offer_status(request, pk, taker, 'accepted', previous_offers_status=previous_offers_status)
     
     return update_offer_status(request, pk, 'in_progress')
-
-def get_takers_after(offer, taker, status):
-    return Take_offer.objects.filter(offer=offer, status=status).exclude(taker=taker)
 
 def get_previous_offer_status(pk):
     return Offer.objects.get(pk=pk).status
@@ -387,10 +400,11 @@ def cancel_offer(request, pk):
     offer.status = 'cancelled'
     offer.save()
 
-    return my_offers(request, status='waiting')
+    return my_offers(request, offers_status='waiting')
 
 def cancel_take_offer(request, pk, taker,redirect_take_offers=False):
-    takers_after = get_takers_after(pk, taker, 'accepted')
+    take_offer = Take_offer.objects.get(offer=pk, taker=taker)
+    takers_after = get_takers_after(pk, taker, take_offer.status)
     previous_offers_status = get_previous_offer_status(pk)
 
     if not takers_after:
@@ -403,17 +417,21 @@ def finish_offer(request, pk):
     offer.status = 'finished'
     offer.save()
 
-    return my_offers(request, status='in_progress')
+def finish_take_offer_end_offer(request, pk, taker):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'finished'
+    offer.save()
+
+    return update_take_offer_status(request, pk, taker=taker, status='finished')
+    # return my_offers(request, offers_status='in_progress')
 
 def finish_take_offer(request, pk, taker):
-    takers_after = get_takers_after(pk, taker, 'accepted')
-
     previous_offers_status = get_previous_offer_status(pk)
-
-    if not takers_after:
-        finish_offer(request, pk)
-
-    return update_take_offer_status(request, pk, taker=taker, status='finished', previous_offers_status=previous_offers_status)
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'waiting'
+    offer.save()
+    print("offer status", offer.status)
+    return update_take_offer_status(request, pk=pk, taker=taker, status='finished', previous_offers_status=previous_offers_status)
 
 def republish_offer(request, pk):
     offer = Offer.objects.get(pk=pk)

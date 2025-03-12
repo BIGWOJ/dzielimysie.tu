@@ -6,18 +6,42 @@
 <!-- .0 => first element -->
 {%for status in offers_statuses%}
 {%if status.0 == offers_status%}
-<a href="{%url 'my_offers_page' status.0%}"></a>
+
 <p><b>{{status.1}}</b></p>
+
+{%else%}
+
+{%if status.0 == 'pending'%}
+<a href="{%url 'my_offers_page' status.0 'waiting'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'in_progress'%}
+<a href="{%url 'my_offers_page' status.0 'accepted'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'cancelled'%}
+<a href="{%url 'my_offers_page' status.0 'cancelled'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'finished'%}
+<a href="{%url 'my_offers_page' status.0 'finished'%}">
+    <p>{{status.1}}</p>
 </a>
 
 {%else%}
-<a href="{%url 'my_offers_page' status.0%}">
+<a href="{%url 'my_offers_page' status.0 'None'%}">
     <p>{{status.1}}</p>
 </a>
+
+{%endif%}
 {%endif%}
 {%endfor%}
 
 {%for offer, take_offers in offers_with_takers%}
+
 <a href="{%url 'offer_page' offer.id%}">
     <img src="{{offer.photo_set.first.photo.url}}" alt="photo" style="width: 100px; height: 100px;">
 </a>
@@ -28,13 +52,18 @@
 {%for take_offer in take_offers%}
 
 {%if offers_status != 'waiting'%}
+
+
 <a href="{%url 'user_profile_page' take_offer.taker.id%}">
     <img src="{{take_offer.taker.avatar.url}}" alt="photo" style="width: 75px; height: 75px;">
 </a>
 <p>{{take_offer.taker.username}}</p>
 {%endif%}
 
+
 {%if offers_status == 'pending'%}
+
+{%if take_offer.status == 'waiting'%}
 <a href="{%url 'accept_take_offer' offer.id take_offer.taker.id%}">
     <p>Akceptuj</p>
 </a>
@@ -42,15 +71,24 @@
 <a href="{%url 'reject_take_offer' offer.id take_offer.taker.id%}">
     <p>Odrzuć</p><br>
 </a>
+{%endif%}
 
 {%elif offers_status == 'in_progress'%}
-<a href="{%url 'finish_offer' offer.id take_offer.taker.id%}">
-    <p>Zakończ</p>
+
+{%if take_offer.status == 'accepted'%}
+<a href="{%url 'finish_take_offer' offer.id take_offer.taker.id%}">
+    <p>Potwierdź wykonanie</p>
+</a>
+
+<a href="{%url 'finish_take_offer_end_offer' offer.id take_offer.taker.id%}">
+    <p>Potwierdź wykonanie i zakończ ofertę</p>
 </a>
 
 <a href="{%url 'cancel_take_offer' offer.id take_offer.taker.id False%}">
     <p>Anuluj</p><br>
 </a>
+{%endif%}
+
 {%endif%}
 {%endfor%}
 {%endif%}
