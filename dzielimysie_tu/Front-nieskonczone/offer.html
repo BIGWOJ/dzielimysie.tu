@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oferta - Wyprowadzanie psa</title>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="style/style_offer.css">
+    <script src="script_offer.js"></script>
 </head>
 <body>
     <header>
@@ -15,15 +16,16 @@
                 <li><a href="#">Wiadomości</a></li>
             </ul>
             <button class="add-offer">Dodaj ogłoszenie</button>
-            <button class="account">Moje konto</button>
+            <button class="account">Moje konto</button>           
         </nav>
     </header>
-    <main>
+    <div class="container">
         <div class="offer-container">
             <div class="image">
-                <img src="images/pies.jpg" alt="Zdjęcie psa">
+                <img id="dogImage" src="images/pies.jpg" alt="Zdjęcie psa" onclick="changeImage()">
             </div>
-            <div class="details">
+           
+            <div class="details">              
                 <h1>Wyprowadzanie psa</h1>
                 <span class="category">Usługi</span>
                 <p class="price">10 zł</p>
@@ -37,8 +39,12 @@
                     <p>Potrzebuję chętnej osoby do wyprowadzania psa przez następny tydzień.</p>
                 </div>
             </div>
+            <div class="user-profile">
+                <img src="images/Avatar.png" alt="Profil użytkownika">
+                <p>Si_woo_111</p>
+            </div> 
         </div>
-    </main>
+    </div>
     <footer>
         <p>© 2024 dzielimysie.tu</p>
     </footer>
