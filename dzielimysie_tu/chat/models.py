@@ -1,20 +1,40 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
+from django.urls import reverse
+from django.conf import settings
+
+
+class Chat(models.Model):
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="chats")
+    offer = models.ForeignKey('base.Offer', on_delete=models.SET_NULL, null=True, blank=True,
+                              related_name='offer_chats')  # offer related to chat, it can be null if chat is not related to any offer
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Chat between {', '.join([str(p) for p in self.participants.all()])}"
+
+    def get_chat_url(self):
+        return reverse('chat:chat', args=[self.id])
 
 
 class Message(models.Model):
-    """
-    Model reprezentujący pojedynczą wiadomość na czacie.
-    """
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages')
-    content = models.TextField(verbose_name="Treść wiadomości")
-    timestamp = models.DateTimeField(default=timezone.now, verbose_name="Data i czas wysłania")
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="chat_messages")
+    timestamp = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+    file = models.FileField(upload_to='chat_files/', blank=True, null=True)  # for attachments
 
     class Meta:
         ordering = ['timestamp']
-        verbose_name = "Wiadomość"
-        verbose_name_plural = "Wiadomości"
 
     def __str__(self):
-        return f"Wiadomość od {self.author.username} ({self.timestamp.strftime('%Y-%m-%d %H:%M:%S')})"
+        return f"{self.sender} in {self.chat}: {self.text[:20]}"
+
+
+class OfferApplication(models.Model):
+    chat = models.OneToOneField(Chat, on_delete=models.CASCADE, related_name='application')
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
+    accepted = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.applicant} applied to {self.chat.offer}"

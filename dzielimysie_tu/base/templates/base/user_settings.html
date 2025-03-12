@@ -1,0 +1,78 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Ustawienia</h1>
+
+<!-- Change password -->
+<form method="POST">
+    {%csrf_token%}
+    <h3>Zmień hasło</h3>
+
+    <label>Obecne hasło</label>
+    <input type="password" name="current_password"><br>
+
+    <label>Nowe hasło</label>
+    <input type="password" name="new_password"><br>
+
+    <label>Potwierdź nowe hasło</label>
+    <input type="password" name="new_password_confirm"><br>
+
+    <input type="submit" value="Zmień hasło">
+</form>
+
+<!-- Change email -->
+<form method="POST">
+    {%csrf_token%}
+    <h3>Zmień e-mail</h3>
+
+    <label>Twój nowy e-mail</label>
+    <input type="email" name="new_email"><br>
+
+    <input type="submit" value="Zmień e-mail">
+</form>
+
+<!-- Notifications -->
+<form method="POST">
+    {%csrf_token%}
+    <h3>Powiadomienia</h3>
+
+    <label>Nowa wiadomość</label>
+    <input type="hidden" name="new_message_notification" value="off">
+    <input type="checkbox" name="new_message_notification" {% if user.new_message_notification %}checked{% endif %}>
+    <hr>
+
+    <label>Zmiana ceny</label>
+    <input type="checkbox" name="price_change_notification" {%if user.price_change_notification%} checked {%endif%}>
+    <hr>
+
+    <label>Nowe ogłoszenie</label>
+    <input type="checkbox" name="new_offer_notification" {%if user.new_offer_notification%} checked {%endif%}><br>
+
+    <input type="submit" value="Zapisz">
+</form>
+
+<!-- Change avatar -->
+<form method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <h3>Zmień avatar</h3>
+
+    <label>Avatar</label>
+    <input type="file" name="new_avatar"><br>
+
+    <input type="submit" value="Zmień avatar">
+</form>
+
+<!-- Delete account -->
+<form method="POST">
+    {%csrf_token%}
+    <h3>Usuń konto</h3>
+
+    <label>Podaj hasło</label>
+    <input type="password" name="delete_account_password"><br>
+
+    <label>Potwierdź hasło</label>
+    <input type="password" name="delete_account_password_confirm"><br>
+    <input type="submit" value="Usuń konto">
+</form>
+
+{%endblock content%}

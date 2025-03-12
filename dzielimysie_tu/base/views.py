@@ -1,8 +1,16 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from .models import *
+from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .models import Category, Offer, User, Photo, Follow_user, Follow_offer
+from .forms import My_User_Creation_Form, Offer_Form
+from chat.models import Chat, Message
 
 # q = query
+
+def not_done(request):
+    return render(request, 'base/not_done_yet.html')
 
 def home(request):
     categories = Category.objects.all()
@@ -14,7 +22,7 @@ def home(request):
         q = request.GET.get('q')
         offers = Offer.objects.filter(title__icontains=q)
         context['offers'] = offers
-        print(offers)
+
         return render(request, 'base/category.html', context)
     else:
         q = ''
@@ -27,6 +35,39 @@ def offer(request, pk):
         offer.price = "Za darmo"
     context = {"offer": offer}
     return render(request, 'base/offer.html', context)
+
+@login_required(login_url='login_page')
+def follow_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    if request.user in offer.followers.all():
+        offer.followers.remove(request.user)
+    else:
+        offer.followers.add(request.user)
+    return redirect('offer_page', pk=pk)
+
+@login_required(login_url='login_page')
+def follow_user(request, pk):
+    followed_user = User.objects.get(pk=pk)
+    if request.user in followed_user.followers.all():
+        followed_user.followers.remove(request.user)
+    else:
+        followed_user.followers.add(request.user)
+    return redirect('user_profile_page', pk=pk)
+
+@login_required(login_url='login_page')
+def following(request, page):
+    try:
+        offers = Offer.objects.filter(followers=request.user)
+    except Offer.DoesNotExist:
+        offers = []
+
+    try:
+        followed_users = User.objects.filter(followers=request.user)
+    except User.DoesNotExist:
+        followed_users = []
+    print(followed_users)
+    context = {'offers': offers, 'page': page, 'followed_users': followed_users}
+    return render(request, 'base/following.html', context)
 
 def category(request, pk):
     category = Category.objects.get(pk=pk)
@@ -44,7 +85,278 @@ def category(request, pk):
 
     return render(request, 'base/category.html', context)
 
-def user_profile(request, pk):
+def user_profile(request, pk):  
     user = User.objects.get(pk=pk)
     context = {'user': user}
     return render(request, 'base/profile.html', context)
+
+@login_required(login_url='login_page')
+def user_settings(request):
+    user = request.user
+    print(request.FILES)
+    if request.method == 'POST':
+        # Changing password
+        if 'current_password' in request.POST:
+            password = request.POST.get('current_password')
+            if user.check_password(password):
+                password1 = request.POST.get('new_password')
+                password2 = request.POST.get('new_password_confirm')
+                if password1 == password2:
+                    user.set_password(password1)
+                    user.save()
+                    login(request, user)
+                else:
+                    messages.error(request, 'Nowe hasła nie są zgodne')
+            else:
+                messages.error(request, 'Obecne hasło jest niepoprawne')
+
+        # Changing email
+        elif 'new_email' in request.POST:
+            new_email = request.POST.get('new_email')
+            if new_email != user.email:
+                user.email = new_email
+                user.save()
+                login(request, user)
+            else:
+                messages.error(request, 'Nowy email jest taki sam jak obecny')
+
+        # Changing notifications
+        elif 'new_message_notification' in request.POST or 'price_change_notification' in request.POST or 'new_offer_notification' in request.POST:
+            user.new_message_notification = request.POST.get('new_message_notification') == 'on'
+            user.price_change_notification = request.POST.get('price_change_notification') == 'on'
+            user.new_offer_notification = request.POST.get('new_offer_notification') == 'on'
+
+            user.save()
+            messages.success(request, 'Powiadomienia zostały zapisane')
+        
+        # Changing avatar
+        elif 'new_avatar' in request.FILES:
+            avatar = request.FILES.get('new_avatar')
+            user.avatar = avatar
+            user.save()
+            messages.success(request, 'Zdjęcie profilowe zostało zmienione')
+
+        # Deleting account
+        elif 'delete_account_password' in request.POST:
+            password = request.POST.get('delete_account_password')
+            password_confirm = request.POST.get('delete_account_password_confirm')
+            if password == password_confirm and user.check_password(password):
+                user.delete()
+                messages.success(request, 'Konto zostało usunięte')
+                return redirect('home_page')
+            else:
+                messages.error(request, 'Hasła nie są zgodne lub obecne hasło jest niepoprawne')
+
+    context = {'user': user}
+    return render(request, 'base/user_settings.html', context)
+
+def user_offers(request, pk):
+    offers = Offer.objects.filter(creator=pk)
+    user = User.objects.get(pk=pk)
+    context = {'offers': offers, 'user': user}
+    return render(request, 'base/user_offers.html', context)
+
+def login_page(request):
+    page = 'login'
+    # If user is already logged in, redirect to home page from login page
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        error_message = False
+
+        try:
+            user = User.objects.get(email=email)
+        except:
+            error_message = True
+            messages.error(request, 'Hasło albo mail jest niepoprawne')
+
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home_page')
+        else:
+            if not error_message:
+                messages.error(request, 'Hasło albo mail jest niepoprawne')
+
+    context = {'page': page}
+    return render(request, 'base/login_register.html', context)
+
+def register_page(request):
+    page = 'register'
+    form = My_User_Creation_Form()
+        
+    if request.method == 'POST':
+        form = My_User_Creation_Form(request.POST)
+        if form.is_valid():
+            # Commit=false -> not saving to database yet, firstly clearing up data and logging up on the page
+            user = form.save(commit=False)
+            # user.username = user.username
+            user.save()
+            login(request, user)
+            return redirect('home_page')
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'register_form': form, 'page': page}
+    return render(request, 'base/login_register.html', context)
+
+def logout_user(request):
+    logout(request)
+    return redirect('home_page')
+
+# TO DO
+def take_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/take_offer.html', context)
+
+# TO DO
+def chat(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    context = {'offer': offer}
+    return render(request, 'base/chat.html', context)
+
+@login_required(login_url='login_page')
+def create_offer(request):
+    form = Offer_Form(request.POST, request.FILES)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            offer = form.save(commit=False)
+            if offer.place == None:
+                offer.place = "Nie podano"
+            offer.creator = request.user
+
+            offer.save()
+
+            images = request.FILES.getlist('photos')
+            if len(images) == 0:
+                photo = Photo(offer=offer, photo='offer_photos/default_offer_photo.png')
+                photo.save()
+            else:
+                for image in images:
+                    photo = Photo(offer=offer, photo=image)
+                    photo.save()
+            return redirect('offer_page', offer.id)
+
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'form': form, 'categories': categories}
+    return render(request, 'base/create_offer.html', context)
+
+@login_required(login_url='login_page')
+def edit_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    form = Offer_Form(instance=offer)
+    categories = Category.objects.all()
+
+    if request.method == 'POST':
+        form = Offer_Form(request.POST, request.FILES, instance=offer)
+        if form.is_valid():
+            offer = form.save(commit=False)
+            if offer.place == None:
+                offer.place = "Nie podano"
+            offer.creator = request.user
+
+            offer.save()
+
+            current_photos = Photo.objects.filter(offer=offer)
+            for photo in current_photos:
+                photo.delete()
+
+            images = request.FILES.getlist('photos')
+            for image in images:
+                photo = Photo(offer=offer, photo=image)
+                photo.save()
+            return redirect('offer_page', pk=offer.id)
+        else:
+            messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
+
+    context = {'form': form, 'categories': categories, 'offer': offer}
+    return render(request, 'base/edit_offer.html', context)
+
+@login_required(login_url='login_page')
+def delete_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    if request.method == 'POST':
+        offer.delete()
+        return redirect('home_page')
+    
+    context = {'deleting_obj': offer}
+    return render(request, 'base/delete_form.html', context)
+
+@login_required
+def offer_detail(request, pk):
+    offer = get_object_or_404(Offer, pk=pk)
+    chat = Chat.objects.filter(offer=offer).first()
+    context = {'offer': offer, 'chat': chat}
+    return render(request, 'base/offer_detail.html', context)
+
+
+@login_required
+def send_message(request, offer_id):
+    if request.method == 'POST':
+        offer = get_object_or_404(Offer, pk=offer_id)
+        recipient_id = request.POST.get('recipient_id')
+        message_text = request.POST.get('message')
+        if message_text and recipient_id:
+            recipient = get_object_or_404(User, pk=recipient_id)
+            chat, created = Chat.objects.get_or_create(
+                offer=offer,
+                defaults={
+                    'participants': []
+                },
+            )
+            if created:
+                chat.participants.set([request.user, recipient])
+            Message.objects.create(chat=chat, sender=request.user, text=message_text)
+            return redirect(chat.get_chat_url())
+        else:
+             return redirect('offer_page', pk=offer_id)
+    else:
+        return redirect('offer_page', pk=offer_id)
+    
+@login_required
+def create_chat(request, offer_id):
+    offer = get_object_or_404(Offer, pk=offer_id)
+    recipient_id = request.POST.get('recipient_id')
+    recipient = get_object_or_404(User, pk=recipient_id)
+    if not request.user.is_authenticated:
+        return redirect('login_page')
+
+    chat = Chat.objects.filter(offer=offer).first()
+
+    if chat:
+        if request.user not in chat.participants.all() or recipient not in chat.participants.all():
+            chat.participants.add(request.user, recipient)
+            return redirect(chat.get_chat_url())
+        else:
+            return redirect(chat.get_chat_url())
+    else:
+        chat = Chat.objects.create(offer=offer)
+        chat.participants.add(request.user, recipient)
+        return redirect(chat.get_chat_url())
+    
+@login_required
+def offer_page(request,pk):
+    offer = get_object_or_404(Offer, pk=pk)
+    chat = Chat.objects.filter(offer=offer).first()
+    context = {'offer':offer, 'chat':chat}
+    return render(request, 'base/offer.html', context)
+
+@login_required
+def user_chats(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_chats = Chat.objects.filter(participants=user)
+    context = {
+        'user_chats': user_chats,
+        'user': user
+    }
+    return render(request, 'base/user_chats.html', context)

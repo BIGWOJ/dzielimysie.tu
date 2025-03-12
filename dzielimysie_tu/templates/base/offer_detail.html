@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ offer.title }}</title>
+</head>
+<body>
+    <h1>{{ offer.title }}</h1>
+    <p>{{ offer.description }}</p>  <!-- need to add rest of offer details-->
+
+    <div id="chat-messages"></div>
+    <input type="text" id="chat-message-input" placeholder="Wpisz wiadomość...">
+    <button id="chat-message-submit">Wyślij</button>
+
+    <script>
+        const chat_id = "{{ chat_id }}"; 
+        const user_id = "{{ request.user.id }}"; 
+    </script>
+    <script src="{% static 'chat/chat.js' %}"></script>
+</body>
+</html>

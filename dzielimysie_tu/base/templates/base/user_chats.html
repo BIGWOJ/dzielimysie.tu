@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <h1>{{ user.username }} - Twoje wiadomości</h1>
+    <ul>
+        {% for chat in user_chats %}
+            <li>
+                <a href="{% url 'chat:chat' chat.id %}">
+                Czat z:
+                {% for participant in chat.participants.all %}
+                {{ participant.username }}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                </a>
+            </li>
+        {% empty %}
+            <li>Nie masz jeszcze żadnych wiadomości</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

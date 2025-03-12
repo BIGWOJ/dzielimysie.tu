@@ -1,0 +1,127 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+
+        #chat-container {
+            width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #messages {
+            height: 300px; 
+            overflow-y: auto; 
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+
+        .message {
+          padding: 5px;
+          margin-bottom: 5px;
+          border-radius: 5px;
+        }
+
+        .message:nth-child(odd) {
+          background-color: #f0f0f0;
+        }
+
+        .message:nth-child(even) {
+          background-color: #e0e0e0;
+        }
+        #message {
+          width: 80%;
+          padding: 10px;
+        }
+        #send{
+          padding: 10px;
+          width: 15%;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-id" data-chat-id="{{ chat.id }}"></div>
+        <div id="messages">
+            {% for message in messages %}
+            <div class="message">
+                <p><b>{{ message.sender.username }}</b>: {{ message.text }}</p>
+                <p><small>Created {{ message.timestamp|naturaltime }}</small></p>
+            </div>
+            {% endfor %}
+        </div>
+        <div>
+            <input type="text" id="message" placeholder="Enter message here">
+            <input type="hidden" id="user_id" value="{{ user_id }}">
+            <button id="send">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chat_id = document.getElementById("chat-id").dataset.chatId;
+        const chatSocket = new WebSocket(
+            "ws://" +
+              window.location.host +
+              "/ws/chat/" +
+              chat_id +
+              "/"
+          );
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('message');
+        const user_id = document.getElementById('user_id').value;
+
+        function addMessageToChat(data) {
+            if (data.type === 'chat_message') {
+                messages.insertAdjacentHTML('beforeend', `<div class="message">
+                    <p><b>User ${data.sender_id}</b>: ${data.message}</p>
+                </div>`);
+            }
+        }
+
+        chatSocket.onmessage = function(e){
+            console.log('onmessage event triggered',e)
+            let data = JSON.parse(e.data)
+            console.log('Data:', data)
+            addMessageToChat(data)
+        }
+
+        chatSocket.onopen = function(e){
+            console.log('Open', e)
+        }
+        chatSocket.onerror = function(e){
+            console.log('Error', e)
+        }
+        chatSocket.onclose = function(e){
+            console.log('Close', e)
+        }
+        document.querySelector('#message').onkeyup = function(e) {
+             if (e.key === 'Enter') {
+                 document.querySelector('#send').click();
+             }
+         };
+        document.getElementById('send').onclick = function(e){
+            console.log('Send button clicked')
+            e.preventDefault()
+            let message = messageInput.value
+            console.log('Sending message:', message, user_id)
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender_id': user_id,
+                'type':'chat_message',
+            }))
+            messageInput.value = ''
+        }
+    </script>
+</body>
+</html>
