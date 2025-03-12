@@ -85,6 +85,8 @@ h2 {
 
 .category i {
     font-size: 60px; 
+    
+
 }
 
 .category:nth-child(1) i { color: #FFB701; } 
@@ -99,8 +101,9 @@ h2 {
 .category p {
     margin-top: 10px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     text-align: center;
+    font-family: 'Baloo 2', sans-serif; 
 }
 
 
