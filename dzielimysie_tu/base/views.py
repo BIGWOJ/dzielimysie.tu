@@ -323,7 +323,7 @@ def take_offer(request, pk):
 
     try:
         relation = Take_offer.objects.get(offer=offer, taker=request.user)
-        relation.status = 'pending'
+        relation.status = 'waiting'
     except Take_offer.DoesNotExist:
         relation = Take_offer(offer=offer, taker=request.user)
 
@@ -337,9 +337,11 @@ def update_offer_status(request, pk, status, redirect_take_offers=False):
     offer = Offer.objects.get(pk=pk)
     previous_status = offer.status
     offer.status = status
-
     offer.save()
-    if redirect_take_offers:
+
+    if redirect_take_offers == "offer_page":
+        return redirect('offer_page', pk=pk)
+    elif redirect_take_offers == "True":
         return my_take_offers(request, status)
     else:
         return my_offers(request, previous_status)
@@ -352,20 +354,25 @@ def update_take_offer_status(request, pk, taker, status, previous_offers_status,
     relation.status = status
     relation.save()
 
-    if redirect_take_offers:
-        print('redirect')
-        return redirect('my_take_offers_page', status=previous_take_status)
+    if redirect_take_offers == "offer_page":
+        return redirect('offer_page', pk=pk)
+    elif redirect_take_offers == "True":
+        return my_take_offers(request, status=previous_take_status)
     else:
-        print('no redirect')
-        return redirect('my_offers_page', status=previous_offers_status)
+        return my_offers(request, status=previous_offers_status)
 
 def accept_take_offer(request, pk, taker):
-    update_take_offer_status(request, pk, taker, 'accepted', redirect_take_offers=False)
-    print('zzz')
-    return update_offer_status(request, pk, 'in_progress', redirect_take_offers=False)
+    previous_offers_status = get_previous_offer_status(pk)
+
+    update_take_offer_status(request, pk, taker, 'accepted', previous_offers_status=previous_offers_status)
+    
+    return update_offer_status(request, pk, 'in_progress')
 
 def get_takers_after(offer, taker, status):
     return Take_offer.objects.filter(offer=offer, status=status).exclude(taker=taker)
+
+def get_previous_offer_status(pk):
+    return Offer.objects.get(pk=pk).status
 
 def reject_take_offer(request, pk, taker):
     takers_after = get_takers_after(pk, taker, 'accepted')
@@ -375,21 +382,42 @@ def reject_take_offer(request, pk, taker):
 
     return update_take_offer_status(request, pk, taker, 'rejected')
 
+def cancel_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'cancelled'
+    offer.save()
+
+    return my_offers(request, status='waiting')
+
 def cancel_take_offer(request, pk, taker,redirect_take_offers=False):
     takers_after = get_takers_after(pk, taker, 'accepted')
+    previous_offers_status = get_previous_offer_status(pk)
 
     if not takers_after:
-        update_offer_status(request, pk, 'waiting', redirect_take_offers=True)
+        update_offer_status(request, pk, 'waiting', redirect_take_offers=redirect_take_offers)
 
-    return update_take_offer_status(request, pk=pk, taker=taker, redirect_take_offers=redirect_take_offers, status='cancelled')    
+    return update_take_offer_status(request, pk=pk, taker=taker, redirect_take_offers=redirect_take_offers, status='cancelled', previous_offers_status=previous_offers_status)    
 
-def finish_offer(request, pk, taker):
+def finish_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'finished'
+    offer.save()
+
+    return my_offers(request, status='in_progress')
+
+def finish_take_offer(request, pk, taker):
     takers_after = get_takers_after(pk, taker, 'accepted')
 
-    offer = Offer.objects.get(pk=pk)
-    previous_offers_status = offer.status
+    previous_offers_status = get_previous_offer_status(pk)
 
     if not takers_after:
-        update_offer_status(request, pk, 'finished')
+        finish_offer(request, pk)
 
     return update_take_offer_status(request, pk, taker=taker, status='finished', previous_offers_status=previous_offers_status)
+
+def republish_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'waiting'
+    offer.save()
+
+    return redirect('offer_page', pk=pk)

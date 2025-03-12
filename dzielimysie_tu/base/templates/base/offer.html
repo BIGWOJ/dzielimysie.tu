@@ -24,7 +24,15 @@
 </a>
 
 <a href="{% url 'delete_offer_page' offer.id %}">
-    <p>Usuń</p>
+    <p>Usuń ofertę</p>
+</a>
+
+<a href="{% url 'cancel_offer' offer.id %}">
+    <p>Anuluj ofertę</p>
+</a>
+
+<a href="{% url 'finish_offer' offer.id %}">
+    <p>Zakończ ofertę</p>
 </a>
 
 {%else%}
@@ -34,12 +42,20 @@
     <p>Zgłoś się</p>
 </a>
 {%else%}
-<a href="{% url 'cancel_take_offer' offer.id request.user.id False%}">
+<a href="{% url 'cancel_take_offer' offer.id request.user.id 'offer_page'%}">
     <p>Anuluj zgłoszenie</p>
 </a>
 {%endif%}
 <a href="{% url 'not_done_yet_page' %}">
     <p>Napisz wiadomość</p>
+</a>
+{%endif%}
+
+{%else%}
+
+{%if request.user == offer.creator%}
+<a href="{%url 'republish_offer' offer.id%}">
+    <p>Wznów ofertę</p>
 </a>
 {%endif%}
 
