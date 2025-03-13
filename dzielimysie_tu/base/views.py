@@ -394,6 +394,14 @@ def reject_take_offer(request, pk, taker):
 
 def cancel_offer(request, pk):
     offer = Offer.objects.get(pk=pk)
+    take_offers = Take_offer.objects.filter(offer=offer)
+    
+    if take_offers:
+        for take_offer in take_offers:
+            take_offer.status = 'cancelled'
+            take_offer.save()
+
+    offer = Offer.objects.get(pk=pk)
     offer.status = 'cancelled'
     offer.save()
 
@@ -411,8 +419,18 @@ def cancel_take_offer(request, pk, taker,redirect_take_offers=False):
 
 def finish_offer(request, pk):
     offer = Offer.objects.get(pk=pk)
+    take_offers = Take_offer.objects.filter(offer=offer)
+    
+    if take_offers:
+        for take_offer in take_offers:
+            take_offer.status = 'cancelled'
+            take_offer.save()
+
+    offer = Offer.objects.get(pk=pk)
     offer.status = 'finished'
     offer.save()
+
+    return redirect('offer_page', pk=pk)
 
 def finish_take_offer_finish_offer(request, pk, taker):
     previous_offers_status = get_previous_offer_status(pk)
