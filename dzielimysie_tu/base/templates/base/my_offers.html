@@ -76,12 +76,8 @@
 {%elif offers_status == 'in_progress'%}
 
 {%if take_offer.status == 'accepted'%}
-<a href="{%url 'finish_take_offer' offer.id take_offer.taker.id%}">
+<a href="{%url 'finish_take_offer_finish_offer' offer.id take_offer.taker.id%}">
     <p>Potwierdź wykonanie</p>
-</a>
-
-<a href="{%url 'finish_take_offer_end_offer' offer.id take_offer.taker.id%}">
-    <p>Potwierdź wykonanie i zakończ ofertę</p>
 </a>
 
 <a href="{%url 'cancel_take_offer' offer.id take_offer.taker.id False%}">
