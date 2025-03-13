@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
-# from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, Offer, User, Photo, Follow_user, Follow_offer
+from .models import Category, Offer, User, Photo, Take_offer
 from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
@@ -13,7 +12,7 @@ def not_done(request):
 
 def home(request):
     categories = Category.objects.all()
-    top_offers = Offer.objects.all()[:10]
+    top_offers = Offer.objects.all()[:5]
     context = {"categories": categories, "top_offers": top_offers}
 
     # Filtering offers
@@ -32,8 +31,19 @@ def offer(request, pk):
     offer = Offer.objects.get(pk=pk)
     if offer.price == None:
         offer.price = "Za darmo"
-    context = {"offer": offer}
+    
+    taked_statuses = ['waiting', 'accepted']
+
+    # __in is used to filter by multiple values
+    user_is_taker = Take_offer.objects.filter(offer=offer, taker=request.user, status__in=taked_statuses).exists()
+
+    context = {"offer": offer, 'user_is_taker': user_is_taker}
     return render(request, 'base/offer.html', context)
+
+def offers(request, offers_layout):
+    offers = Offer.objects.all()
+    context = {"offers": offers, 'offers_layout': offers_layout}
+    return render(request, 'base/offers_page.html', context)
 
 @login_required(login_url='login_page')
 def follow_offer(request, pk):
@@ -64,7 +74,7 @@ def following(request, page):
         followed_users = User.objects.filter(followers=request.user)
     except User.DoesNotExist:
         followed_users = []
-    print(followed_users)
+
     context = {'offers': offers, 'page': page, 'followed_users': followed_users}
     return render(request, 'base/following.html', context)
 
@@ -72,15 +82,6 @@ def category(request, pk):
     category = Category.objects.get(pk=pk)
     offers = Offer.objects.filter(category=category)
     context = {'category': category, 'offers': offers}
-    print(offers)
-    # if request.GET.get('q') != None:
-    #     q = request.GET.get('q')
-    #     offers = Offer.objects.filter(category__icontains=q)
-    #     context['offers'] = offers
-    #     print(offers)
-    #     return render(request, 'base/category.html', context)
-    # else:
-    #     q = ''
 
     return render(request, 'base/category.html', context)
 
@@ -92,7 +93,7 @@ def user_profile(request, pk):
 @login_required(login_url='login_page')
 def user_settings(request):
     user = request.user
-    print(request.FILES)
+
     if request.method == 'POST':
         # Changing password
         if 'current_password' in request.POST:
@@ -209,12 +210,6 @@ def logout_user(request):
     return redirect('home_page')
 
 # TO DO
-def take_offer(request, pk):
-    offer = Offer.objects.get(pk=pk)
-    context = {'offer': offer}
-    return render(request, 'base/take_offer.html', context)
-
-# TO DO
 def chat(request, pk):
     offer = Offer.objects.get(pk=pk)
     context = {'offer': offer}
@@ -230,8 +225,9 @@ def create_offer(request):
             offer = form.save(commit=False)
             if offer.place == None:
                 offer.place = "Nie podano"
-            offer.creator = request.user
 
+            offer.creator = request.user
+            offer.status = 'waiting'
             offer.save()
 
             images = request.FILES.getlist('photos')
@@ -291,4 +287,150 @@ def delete_offer(request, pk):
     context = {'deleting_obj': offer}
     return render(request, 'base/delete_form.html', context)
 
- 
+ # TO DO
+
+def my_offers(request, offers_status, take_offer_status="None"):
+    offers = Offer.objects.filter(creator=request.user, status=offers_status)
+    offers_statuses = Offer.statuses
+
+    # __ is used to access field of the related model
+    if take_offer_status != "None":
+        offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, status=take_offer_status)) for offer in offers]
+    else:
+        offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
+
+    context = {
+        'offers': offers,
+        'offers_status': offers_status,
+        'offers_statuses': offers_statuses,
+        'offers_with_takers': offers_with_takers,
+    }
+    
+    return render(request, 'base/my_offers.html', context)
+
+def my_take_offers(request, status):
+    take_offers = Take_offer.objects.filter(taker=request.user, status=status)
+    take_offers_statuses = Take_offer.statuses
+
+    context = {
+        'take_offers': take_offers, 
+        'take_offers_status': status, 
+        'take_offers_statuses': take_offers_statuses
+    }
+    return render(request, 'base/my_take_offers.html', context)
+
+def take_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'pending'
+
+    try:
+        relation = Take_offer.objects.get(offer=offer, taker=request.user)
+        relation.status = 'waiting'
+    except Take_offer.DoesNotExist:
+        relation = Take_offer(offer=offer, taker=request.user)
+
+    offer.save()
+    relation.save()
+
+    messages.success(request, 'Zgłoszenie zostało wysłane. Oczekuj na zatwierdzenie przez autora oferty.')
+    return redirect('offer_page', pk=pk)
+
+def update_offer_status(request, pk, status, redirect_take_offers=False):
+    offer = Offer.objects.get(pk=pk)
+    previous_status = offer.status
+    offer.status = status
+    offer.save()
+
+    if redirect_take_offers == "offer_page":
+        return redirect('offer_page', pk=pk)
+    elif redirect_take_offers == "True":
+        return my_take_offers(request, status)
+    else:
+        return my_offers(request, offers_status=previous_status)
+
+def get_takers_after(offer, taker, status):
+    return Take_offer.objects.filter(offer=offer, status='waiting').exclude(taker=taker)
+
+def update_take_offer_status(request, pk, taker, status, previous_offers_status, redirect_take_offers=False):
+    offer = Offer.objects.get(pk=pk)
+    relation = Take_offer.objects.get(offer=offer, taker=taker)
+    previous_take_status = relation.status
+
+    relation.status = status
+    relation.save()
+
+    if status == 'accepted':
+        takers_after = get_takers_after(offer, taker, relation.status)
+        if takers_after:
+            for take_offer in takers_after:
+                take_offer.status = 'rejected'
+                take_offer.save()
+
+    if redirect_take_offers == "offer_page":
+        return redirect('offer_page', pk=pk)
+    elif redirect_take_offers == "True":
+        return my_take_offers(request, status=previous_take_status)
+    else:
+        return my_offers(request, offers_status=previous_offers_status, take_offer_status=previous_take_status)
+
+def accept_take_offer(request, pk, taker):
+    previous_offers_status = get_previous_offer_status(pk)
+
+    update_take_offer_status(request, pk, taker, 'accepted', previous_offers_status=previous_offers_status)
+    
+    return update_offer_status(request, pk, 'in_progress')
+
+def get_previous_offer_status(pk):
+    return Offer.objects.get(pk=pk).status
+
+def reject_take_offer(request, pk, taker):
+    takers_after = get_takers_after(pk, taker, 'accepted')
+    previous_offer_status = get_previous_offer_status(pk)
+
+    if not takers_after:
+        update_offer_status(request, pk, 'waiting')
+
+    return update_take_offer_status(request, pk, taker, 'rejected', previous_offers_status=previous_offer_status)
+
+def cancel_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'cancelled'
+    offer.save()
+
+    return redirect('offer_page', pk=pk)
+
+def cancel_take_offer(request, pk, taker,redirect_take_offers=False):
+    take_offer = Take_offer.objects.get(offer=pk, taker=taker)
+    takers_after = get_takers_after(pk, taker, take_offer.status)
+    previous_offers_status = get_previous_offer_status(pk)
+
+    if not takers_after:
+        update_offer_status(request, pk, 'waiting', redirect_take_offers=redirect_take_offers)
+
+    return update_take_offer_status(request, pk=pk, taker=taker, redirect_take_offers=redirect_take_offers, status='cancelled', previous_offers_status=previous_offers_status)    
+
+def finish_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'finished'
+    offer.save()
+
+def finish_take_offer_finish_offer(request, pk, taker):
+    previous_offers_status = get_previous_offer_status(pk)
+    finish_offer(request, pk=pk)
+
+    return update_take_offer_status(request, pk, taker=taker, status='finished', previous_offers_status=previous_offers_status)
+
+def finish_take_offer(request, pk, taker):
+    previous_offers_status = get_previous_offer_status(pk)
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'waiting'
+    offer.save()
+
+    return update_take_offer_status(request, pk=pk, taker=taker, status='finished', previous_offers_status=previous_offers_status)
+
+def republish_offer(request, pk):
+    offer = Offer.objects.get(pk=pk)
+    offer.status = 'waiting'
+    offer.save()
+
+    return redirect('offer_page', pk=pk)

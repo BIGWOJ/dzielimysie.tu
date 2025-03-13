@@ -4,6 +4,8 @@ from django.conf import settings
 
 # Create your models here.
 
+# __str__ - method that returns a string representation of the object
+
 class User(AbstractUser):
     first_name = models.CharField(max_length=50, null=True)
     email = models.EmailField(unique=True, null=True)
@@ -20,6 +22,9 @@ class User(AbstractUser):
     # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
@@ -55,24 +60,34 @@ class Offer(models.Model):
     creator_email = models.EmailField(null=True)
     creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')
+    
+    statuses = [
+        ('waiting', 'Oczekujące'),
+        ('pending', 'Zgłoszenia'),
+        ('in_progress', 'W realizacji'),
+        ('cancelled', 'Anulowane'),
+        ('finished', 'Zakończone'),
+    ]
+    status = models.CharField(max_length=20, choices=statuses, default='waiting')
 
     followers = models.ManyToManyField('User', related_name='offer_followers', blank=True)
 
     def __str__(self):
         return self.title
     
-class Message(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Take_offer(models.Model):
+    taker = models.ForeignKey(User, on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, related_name='take_offer_set', on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
 
-    # offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
-    body = models.TextField(max_length=100)
-
-    # auto_now_add - when the message is created, the date is added
-    created = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        # -created - ascending order
-        ordering = ['-created']
+    statuses = [
+        ('waiting', 'Oczekujące'),
+        ('accepted', 'Zaakceptowane'),
+        ('rejected', 'Odrzucone'),
+        ('cancelled', 'Anulowane'),
+        ('finished', 'Zakończone'),
+    ]
+    status = models.CharField(max_length=20, choices=statuses, default='waiting')
 
     def __str__(self):
-        return self.body
+        return self.offer.title
