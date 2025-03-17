@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    flex-direction: column;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Nagłówek */
+header {
+    background-color: #002b45;
+    color: white;
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    margin-left: 420px;
+    gap: 30px;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+.add-offer, .account {
+    background-color: #FC8500;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: auto;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #023047;
+}
+
+.account {
+    background-color: #F5F5F5;
+    margin-left: 10px;
+}
