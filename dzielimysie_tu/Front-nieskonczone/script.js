@@ -1,16 +1,15 @@
-const productContainers = [...document.querySelectorAll('.swiper-container')];
-const nxtBtn = [...document.querySelectorAll('.nxt-btn')];
-const preBtn = [...document.querySelectorAll('.pre-btn')];
+document.addEventListener("DOMContentLoaded", () => {
+    const swiperWrapper = document.querySelector(".swiper-wrapper");
+    const prevButton = document.querySelector(".pre-btn");
+    const nextButton = document.querySelector(".nxt-btn");
 
-productContainers.forEach((item, i) => {
-    let containerDimensions = item.getBoundingClientRect();
-    let containerWidth = containerDimensions.width;
+    const step = 300; 
+    
+    nextButton.addEventListener("click", () => {
+        swiperWrapper.scrollBy({ left: step, behavior: "smooth" });
+    });
 
-    nxtBtn[i].addEventListener('click', () => {
-        item.scrollLeft += containerWidth;
-    })
-
-    preBtn[i].addEventListener('click', () => {
-        item.scrollLeft -= containerWidth;
-    })
-})
+    prevButton.addEventListener("click", () => {
+        swiperWrapper.scrollBy({ left: -step, behavior: "smooth" });
+    });
+});
