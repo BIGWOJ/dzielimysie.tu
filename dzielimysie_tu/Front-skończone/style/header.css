@@ -44,6 +44,11 @@ nav ul li a {
     text-decoration: none;
 }
 
+nav ul li a:hover {
+    color: #fc8600b8;
+    transition: background-color 3s;   
+}
+
 .add-offer, .account {
     background-color: #FC8500;
     color: white;
