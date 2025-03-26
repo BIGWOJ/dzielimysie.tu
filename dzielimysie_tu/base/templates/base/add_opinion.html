@@ -4,4 +4,45 @@
 <h1>Wystaw opinię</h1>
 <p>Ogłoszenie</p>
 
+<a href="{%url 'offer_page' take_offer.offer.id%}">
+    <img src="{{take_offer.offer.photo_set.first.photo.url}}" style="width: 100px; height: 100px;">
+    <p>{{take_offer.offer}}</p>
+    <p>{{take_offer.offer.price}}</p>
+</a>
+
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="rating">Ocena:</label>
+        <select id="rating" name="rating" required>
+            <option value="1">1 gwiazdka</option>
+            <option value="2">2 gwiazdki</option>
+            <option value="3">3 gwiazdki</option>
+            <option value="4">4 gwiazdki</option>
+            <option value="5">5 gwiazdek</option>
+        </select>
+    </div>
+    <textarea required name="opinion_text" rows="4" cols="50"
+        placeholder="Napisz opinię na temat użytkownika"></textarea>
+    <br>
+
+    <img src="{{rated_user.avatar.url}}" style="width: 75px; height: 75px;">
+    <p>{{rated_user.username}}</p>
+    <a href="{%url 'user_profile_page' rated_user.id%}">
+        <p>Przejdź do profilu</p>
+    </a>
+
+    <p>Ostatnie opinie</p>
+    {%for latest_opinion in latest_opinions%}
+    <a href="{%url 'user_profile_page' latest_opinion.rated_user%}">
+        <img src="{{latest_opinion.author.avatar.url}}" style="width: 75px; height: 75px;">
+        <p>{{latest_opinion.author.username}}</p>
+    </a>
+    <p>{{latest_opinion.rating}}</p>
+    <p>{{latest_opinion.text}}</p>
+    {%endfor%}
+
+    <button type="submit">Zatwierdź</button>
+</form>
+
 {%endblock content%}
