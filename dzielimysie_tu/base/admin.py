@@ -10,4 +10,5 @@ admin.site.register(Offer)
 admin.site.register(Follow_user)
 admin.site.register(Follow_offer)
 admin.site.register(Take_offer)
+admin.site.register(Opinion)
 

@@ -23,8 +23,25 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    # Opinions functionality
+    opinions = models.ManyToManyField('Opinion', related_name='user_opinions', blank=True)
+    opinions_sum = models.DecimalField(max_digits=5, default=0, decimal_places=0)
+    opinions_count = models.IntegerField(default=0)
+    opinions_overall = models.DecimalField(max_digits=3, decimal_places=1, default=0)
+
     def __str__(self):
         return self.email
+
+class Opinion(models.Model):
+    offer = models.ForeignKey('Offer', related_name='opinions', on_delete=models.CASCADE)
+    rated_user = models.ForeignKey(User, related_name='rated_user', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=100)
+    date = models.DateTimeField(auto_now_add=True)
+    rating = models.DecimalField(max_digits=1, decimal_places=0)
+
+    def __str__(self):
+        return self.rated_user.username
 
 class Category(models.Model):
     name = models.CharField(max_length=200)

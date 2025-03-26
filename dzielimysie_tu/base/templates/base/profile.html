@@ -4,6 +4,12 @@
 <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;"><br>
 {{user.username}} <p>Online - jak będzie czas to zrobić</p>
 
+{%if user.opinions_overall != 0%}
+<p>{{user.opinions_overall}}</p>
+{%else%}
+<p>Brak ocen</p>
+{%endif%}
+
 {%if request.user == user%}
 <a href="{%url 'user_settings_page'%}">
     <p>Ustawienia</p>
@@ -22,8 +28,25 @@
     <p href=>Ogłoszenia</p>
 </a>
 
-<a href="{%url 'not_done_yet_page'%}">
+<a href="{%url 'user_profile_page' user.id%}">
     <p>Opinie</p>
 </a>
+
+{%if opinions%}
+{%for opinion in opinions%}
+<p>{{opinion.rating}}</p>
+<a href="{%url 'offer_page' opinion.offer.id%}">
+    <p>{{opinion.offer}}</p>
+</a>
+
+<p>{{opinion.text}}</p>
+
+<a href="{%url 'user_profile_page' opinion.author.id%}">
+    <img src="{{opinion.author.avatar.url}}" style="width: 50px; height: 50px;">
+</a>
+<p>{{opinion.author}}</p>
+<p>{{opinion.date}}</p>
+{%endfor%}
+{%endif%}
 
 {%endblock content%}

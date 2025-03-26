@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, Offer, User, Photo, Take_offer
+from .models import Category, Offer, User, Photo, Take_offer, Opinion
 from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
@@ -87,7 +87,9 @@ def category(request, pk):
 
 def user_profile(request, pk):  
     user = User.objects.get(pk=pk)
-    context = {'user': user}
+    opinions_overall = user.opinions_overall
+    opinions = Opinion.objects.filter(rated_user=user)
+    context = {'user': user, 'opinions': opinions, 'opinions_overall': opinions_overall}
     return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login_page')
