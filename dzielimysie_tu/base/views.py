@@ -156,6 +156,7 @@ def user_settings(request):
 def user_offers(request, pk):
     offers = Offer.objects.filter(creator=pk, status__in=['waiting', 'pending', 'in_progress'])
     user = User.objects.get(pk=pk)
+
     context = {'offers': offers, 'user': user}
     return render(request, 'base/user_offers.html', context)
 
@@ -306,11 +307,6 @@ def my_offers(request, offers_status, take_offer_status="None"):
     take_offers = [take_offer for _, take_offer_queryset in offers_with_takers for take_offer in take_offer_queryset]
 
     take_offers_without_opinions = [take_offer for take_offer in take_offers if not Opinion.objects.filter(offer=take_offer.offer, rated_user=take_offer.taker).exists()]
-
-    # take_offers_with_opinions = [take_offer for take_offer in take_offers if Opinion.objects.filter(offer=take_offer.offer, rated_user=take_offer.taker).exists()]
-
-    # print(take_offers_without_opinions)
-    # print(take_offers_with_opinions)
 
     context = {
         'offers': offers,
@@ -469,7 +465,6 @@ def republish_offer(request, pk):
 
 #Need to add redirect to chat
 def add_opinion(request, rated_user, take_offer, redirect_page):
-    print(redirect_page)
     rated_user = User.objects.get(pk=rated_user)
     take_offer_offer = Take_offer.objects.get(pk=take_offer).offer
 
