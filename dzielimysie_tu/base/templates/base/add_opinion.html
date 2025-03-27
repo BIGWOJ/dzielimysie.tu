@@ -2,6 +2,11 @@
 {%block content%}
 
 <h1>Wystaw opinię</h1>
+
+<a href="{{request.META.HTTP_REFERER}}">
+    <p>Wróć</p>
+</a>
+
 <p>Ogłoszenie</p>
 
 <a href="{%url 'offer_page' take_offer.offer.id%}">
@@ -10,6 +15,7 @@
     <p>{{take_offer.offer.price}}</p>
 </a>
 
+{%if not opinion_exists%}
 <form method="POST">
     {% csrf_token %}
     <div>
@@ -33,6 +39,11 @@
     </a>
 
     <p>Ostatnie opinie</p>
+
+    {%if not latest_opinions%}
+    <p>Brak opinii</p>
+    {%endif%}
+
     {%for latest_opinion in latest_opinions%}
     <a href="{%url 'user_profile_page' latest_opinion.rated_user%}">
         <img src="{{latest_opinion.author.avatar.url}}" style="width: 75px; height: 75px;">
@@ -44,5 +55,9 @@
 
     <button type="submit">Zatwierdź</button>
 </form>
+
+{%else%}
+<p>Opinia została już wystawiona</p>
+{%endif%}
 
 {%endblock content%}

@@ -23,6 +23,14 @@
 </a>
 {%endif%}
 
+{%if status.0 == 'finished'%}
+{%if not take_offer.taker_to_creator_opinion%}
+<a href="{%url 'add_opinion_page' take_offer.offer.creator.id take_offer.id 'my_take_offers'%}">
+    <p>Wystaw opinię</p>
+</a>
+{%endif%}
+{%endif%}
+
 {%endfor%}
 
 {%else%}

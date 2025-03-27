@@ -39,8 +39,7 @@ class Opinion(models.Model):
     text = models.TextField(max_length=100)
     rating = models.DecimalField(max_digits=1, decimal_places=0)
     date = models.DateTimeField(auto_now_add=True)
-    taker_to_creator_opinion = models.BooleanField(default=False)
-    creator_to_taker_opinion = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.rated_user.username
@@ -98,6 +97,8 @@ class Take_offer(models.Model):
     taker = models.ForeignKey(User, on_delete=models.CASCADE)
     offer = models.ForeignKey(Offer, related_name='take_offer_set', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
+    taker_to_creator_opinion = models.BooleanField(default=False)
+    creator_to_taker_opinion = models.BooleanField(default=False)
 
     statuses = [
         ('waiting', 'Oczekujące'),
