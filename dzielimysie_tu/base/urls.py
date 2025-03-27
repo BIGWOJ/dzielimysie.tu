@@ -36,9 +36,12 @@ urlpatterns = [
     path('following/<str:page>', views.following, name='following_page'),
 
     path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
+    path('add_opinion/<str:rated_user>/<str:take_offer>/<str:redirect_page>/', views.add_opinion, name='add_opinion_page'), 
+
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
     path('my_offers/<str:offers_status>/<str:take_offer_status>/', views.my_offers, name='my_offers_page'),
     path('my_take_offers/<str:status>', views.my_take_offers, name='my_take_offers_page'),
+
     path('settings/', views.user_settings, name='user_settings_page'),
 
     path('chat/<str:pk>', views.chat, name='chat_page'),

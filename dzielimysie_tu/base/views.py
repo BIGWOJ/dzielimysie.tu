@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, Offer, User, Photo, Take_offer
+from .models import Category, Offer, User, Photo, Take_offer, Opinion
 from .forms import My_User_Creation_Form, Offer_Form
 
 # q = query
@@ -87,7 +87,10 @@ def category(request, pk):
 
 def user_profile(request, pk):  
     user = User.objects.get(pk=pk)
-    context = {'user': user}
+    opinions_overall = user.opinions_overall
+    latest_opinions = Opinion.objects.filter(rated_user=user).order_by('-date')[:3]
+
+    context = {'user': user, 'latest_opinions': latest_opinions, 'opinions_overall': opinions_overall}
     return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login_page')
@@ -151,8 +154,9 @@ def user_settings(request):
     return render(request, 'base/user_settings.html', context)
 
 def user_offers(request, pk):
-    offers = Offer.objects.filter(creator=pk)
+    offers = Offer.objects.filter(creator=pk, status__in=['waiting', 'pending', 'in_progress'])
     user = User.objects.get(pk=pk)
+
     context = {'offers': offers, 'user': user}
     return render(request, 'base/user_offers.html', context)
 
@@ -296,14 +300,20 @@ def my_offers(request, offers_status, take_offer_status="None"):
     # __ is used to access field of the related model
     if take_offer_status != "None":
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, status=take_offer_status)) for offer in offers]
+
     else:
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
+
+    take_offers = [take_offer for _, take_offer_queryset in offers_with_takers for take_offer in take_offer_queryset]
+
+    take_offers_without_opinions = [take_offer for take_offer in take_offers if not Opinion.objects.filter(offer=take_offer.offer, rated_user=take_offer.taker).exists()]
 
     context = {
         'offers': offers,
         'offers_status': offers_status,
         'offers_statuses': offers_statuses,
         'offers_with_takers': offers_with_takers,
+        'take_offers_without_opinions': take_offers_without_opinions
     }
     
     return render(request, 'base/my_offers.html', context)
@@ -452,3 +462,44 @@ def republish_offer(request, pk):
     offer.save()
 
     return redirect('offer_page', pk=pk)
+
+#Need to add redirect to chat
+def add_opinion(request, rated_user, take_offer, redirect_page):
+    rated_user = User.objects.get(pk=rated_user)
+    take_offer_offer = Take_offer.objects.get(pk=take_offer).offer
+
+    if redirect_page == 'my_take_offers':
+        take_offer = Take_offer.objects.get(offer=take_offer_offer, taker=request.user)
+
+    if redirect_page == 'my_offers':
+        take_offer = Take_offer.objects.get(offer=take_offer_offer, taker=rated_user)
+        
+    opinion = Opinion.objects.filter(rated_user=rated_user, author=request.user, offer=take_offer.offer)
+    opinion_exists = opinion.exists()
+
+    if request.method == 'POST':
+        opinion = Opinion(offer=take_offer.offer, rated_user=rated_user, author=request.user, text=request.POST['opinion_text'], rating=request.POST['rating'])
+        opinion.save()
+
+        rated_user.opinions_count += 1
+        rated_user.opinions_sum += int(request.POST['rating'])
+        rated_user.opinions_overall = rated_user.opinions_sum / rated_user.opinions_count
+        rated_user.save()
+
+        match redirect_page:
+            case "my_take_offers":
+                take_offer.taker_to_creator_opinion = True
+                take_offer.save()
+                return my_take_offers(request, status='finished')
+            case "my_offers":
+                take_offer.creator_to_taker_opinion = True
+                take_offer.save()
+                return my_offers(request, offers_status='finished', take_offer_status='finished')
+            case "chat":
+                #TO DO
+                pass
+    
+    latest_opinions = Opinion.objects.filter(rated_user=rated_user).order_by('-date')[:3]
+
+    context = {'rated_user': rated_user, 'take_offer': take_offer, 'latest_opinions': latest_opinions, 'opinion_exists': opinion_exists}
+    return render(request, 'base/add_opinion.html', context=context)

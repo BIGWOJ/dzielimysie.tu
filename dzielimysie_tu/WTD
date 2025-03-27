@@ -2,6 +2,7 @@
 1. Żeby na głównej i w innych miejscach były wyświetlane tylko aktywne oferty, a nie wszystkie
 
 ==========ŚREDNIO WAŻNE==========
+1. Aktualnie wyświetlane są tylko 3 najnowsze opinie na profilu użytkownika, zmienić, żeby były wszystkie widoczne, ale w formie np. "pokaż więcej" i "pokaż mniej" albo slider jak strona główna oferty, (?) sortowanie 1/2/3/4/5 gwiazdek (?)
 
 ==========MAŁO WAŻNE==========
 1. Wywalić null=True z models w miejscach, gdzie są wymagane. True jest do testowania ciągłego, żeby nie przerabiać danych. Tak samo blank
