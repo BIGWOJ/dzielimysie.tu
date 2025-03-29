@@ -45,7 +45,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #fc8600b8;
+    color: #FC8500;
     transition: background-color 3s;   
 }
 
