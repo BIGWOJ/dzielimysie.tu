@@ -1,0 +1,99 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<h1>Moje ogłoszenia</h1>
+
+<!-- .0 => first element -->
+{%for status in offers_statuses%}
+{%if status.0 == offers_status%}
+
+<p><b>{{status.1}}</b></p>
+
+{%else%}
+
+{%if status.0 == 'pending'%}
+<a href="{%url 'my_offers_page' status.0 'waiting'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'in_progress'%}
+<a href="{%url 'my_offers_page' status.0 'accepted'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'cancelled'%}
+<a href="{%url 'my_offers_page' status.0 'cancelled'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%elif status.0 == 'finished'%}
+<a href="{%url 'my_offers_page' status.0 'finished'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%else%}
+<a href="{%url 'my_offers_page' status.0 'None'%}">
+    <p>{{status.1}}</p>
+</a>
+
+{%endif%}
+{%endif%}
+{%endfor%}
+
+{%for offer, take_offers in offers_with_takers%}
+
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" alt="photo" style="width: 100px; height: 100px;">
+</a>
+<p>{{offer}}</p>
+<p>{{offer.price}}</p><br>
+
+{%if take_offers%}
+{%for take_offer in take_offers%}
+
+{%if offers_status != 'waiting'%}
+
+<a href="{%url 'user_profile_page' take_offer.taker.id%}">
+    <img src="{{take_offer.taker.avatar.url}}" alt="photo" style="width: 75px; height: 75px;">
+</a>
+<p>{{take_offer.taker.username}}</p>
+{%endif%}
+
+{%if offers_status == 'pending'%}
+
+{%if take_offer.status == 'waiting'%}
+<a href="{%url 'accept_take_offer' offer.id take_offer.taker.id%}">
+    <p>Akceptuj</p>
+</a>
+
+<a href="{%url 'reject_take_offer' offer.id take_offer.taker.id%}">
+    <p>Odrzuć</p><br>
+</a>
+{%endif%}
+
+{%elif offers_status == 'in_progress'%}
+
+{%if take_offer.status == 'accepted'%}
+<a href="{%url 'finish_take_offer_finish_offer' offer.id take_offer.taker.id%}">
+    <p>Potwierdź wykonanie</p>
+</a>
+
+<a href="{%url 'cancel_take_offer' offer.id take_offer.taker.id False%}">
+    <p>Anuluj</p><br>
+</a>
+{%endif%}
+
+{%elif offers_status == 'finished'%}
+{%if not take_offer.creator_to_taker_opinion%}
+<a href="{%url 'add_opinion_page' take_offer.taker.id take_offer.id 'my_offers'%}">
+    <p>Wystaw opinię</p>
+</a>
+{%endif%}
+{%endif%}
+
+{%endfor%}
+{%endif%}
+
+{%endfor%}
+
+{%endblock content%}

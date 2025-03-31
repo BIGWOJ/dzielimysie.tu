@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Category, Offer, User, Photo, Follow_user, Follow_offer
 from .forms import My_User_Creation_Form, Offer_Form
 from chat.models import Chat, Message
+from django.http import HttpResponseNotFound
+from . import views
 
 # q = query
 
@@ -16,17 +18,6 @@ def home(request):
     categories = Category.objects.all()
     top_offers = Offer.objects.all()[:10]
     context = {"categories": categories, "top_offers": top_offers}
-
-    # Filtering offers
-    if request.GET.get('q') != None:
-        q = request.GET.get('q')
-        offers = Offer.objects.filter(title__icontains=q)
-        context['offers'] = offers
-
-        return render(request, 'base/category.html', context)
-    else:
-        q = ''
-
     return render(request, 'base/home.html', context)
 
 def offer(request, pk):
@@ -189,13 +180,12 @@ def login_page(request):
 def register_page(request):
     page = 'register'
     form = My_User_Creation_Form()
-        
+
     if request.method == 'POST':
         form = My_User_Creation_Form(request.POST)
         if form.is_valid():
-            # Commit=false -> not saving to database yet, firstly clearing up data and logging up on the page
             user = form.save(commit=False)
-            # user.username = user.username
+            user.is_superuser = False  
             user.save()
             login(request, user)
             return redirect('home_page')
@@ -296,67 +286,77 @@ def delete_offer(request, pk):
 def offer_detail(request, pk):
     offer = get_object_or_404(Offer, pk=pk)
     chat = Chat.objects.filter(offer=offer).first()
-    context = {'offer': offer, 'chat': chat}
+    context = {
+        'offer': offer,
+        'chat': chat,
+        'chat_id': chat.id if chat else None,  
+    }
     return render(request, 'base/offer_detail.html', context)
-
 
 @login_required
 def send_message(request, offer_id):
     if request.method == 'POST':
         offer = get_object_or_404(Offer, pk=offer_id)
-        recipient_id = request.POST.get('recipient_id')
+        recipient = offer.creator
         message_text = request.POST.get('message')
-        if message_text and recipient_id:
-            recipient = get_object_or_404(User, pk=recipient_id)
-            chat, created = Chat.objects.get_or_create(
+
+        if message_text:
+            # Znajdź istniejący czat dla tej kombinacji użytkowników i oferty
+            chat = Chat.objects.filter(
                 offer=offer,
-                defaults={
-                    'participants': []
-                },
-            )
-            if created:
-                chat.participants.set([request.user, recipient])
+                participants=request.user
+            ).filter(participants=recipient).first()
+
+            # Jeśli czat nie istnieje, utwórz nowy
+            if not chat:
+                chat = Chat.objects.create(offer=offer)
+                chat.participants.add(request.user, recipient)
+
+            # Dodaj wiadomość do czatu
             Message.objects.create(chat=chat, sender=request.user, text=message_text)
+
             return redirect(chat.get_chat_url())
         else:
-             return redirect('offer_page', pk=offer_id)
+            messages.error(request, 'Wiadomość nie może być pusta.')
+            return redirect('offer_page', pk=offer_id)
     else:
         return redirect('offer_page', pk=offer_id)
-    
+
 @login_required
 def create_chat(request, offer_id):
     offer = get_object_or_404(Offer, pk=offer_id)
     recipient_id = request.POST.get('recipient_id')
     recipient = get_object_or_404(User, pk=recipient_id)
-    if not request.user.is_authenticated:
-        return redirect('login_page')
 
-    chat = Chat.objects.filter(offer=offer).first()
+    # Sprawdź, czy istnieje czat dla tej kombinacji użytkowników i oferty
+    chat = Chat.objects.filter(
+        offer=offer,
+        participants=request.user
+    ).filter(participants=recipient).first()
 
-    if chat:
-        if request.user not in chat.participants.all() or recipient not in chat.participants.all():
-            chat.participants.add(request.user, recipient)
-            return redirect(chat.get_chat_url())
-        else:
-            return redirect(chat.get_chat_url())
-    else:
+    # Jeśli czat nie istnieje, utwórz nowy
+    if not chat:
         chat = Chat.objects.create(offer=offer)
         chat.participants.add(request.user, recipient)
-        return redirect(chat.get_chat_url())
-    
+
+    return redirect(chat.get_chat_url())
+
 @login_required
-def offer_page(request,pk):
+def offer_page(request, pk):
     offer = get_object_or_404(Offer, pk=pk)
-    chat = Chat.objects.filter(offer=offer).first()
-    context = {'offer':offer, 'chat':chat}
+    chat = Chat.objects.filter(offer=offer, participants=request.user).first()
+    context = {'offer': offer, 'chat': chat}
     return render(request, 'base/offer.html', context)
 
 @login_required
 def user_chats(request, pk):
     user = get_object_or_404(User, pk=pk)
-    user_chats = Chat.objects.filter(participants=user)
-    context = {
-        'user_chats': user_chats,
-        'user': user
-    }
-    return render(request, 'base/user_chats.html', context)
+    user_chats = Chat.objects.filter(participants=user).order_by('-created_at')
+
+    if user_chats.exists():
+        # Przekierowanie do pierwszego czatu
+        first_chat = user_chats.first()
+        return redirect('chat:chat', chat_id=first_chat.id)
+    else:
+        # Wyświetlenie pustej strony z komunikatem
+        return HttpResponseNotFound("<h1>Nie masz jeszcze żadnych wiadomości</h1>")

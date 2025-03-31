@@ -4,16 +4,23 @@ from django.conf import settings
 
 
 class Chat(models.Model):
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="chats")
-    offer = models.ForeignKey('base.Offer', on_delete=models.SET_NULL, null=True, blank=True,
-                              related_name='offer_chats')  # offer related to chat, it can be null if chat is not related to any offer
+    participants = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='chats')
+    offer = models.ForeignKey('base.Offer', on_delete=models.CASCADE, related_name='chats')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['offer'],
+                name='unique_chat_per_offer_and_participants'
+            )
+        ]
+
     def __str__(self):
-        return f"Chat between {', '.join([str(p) for p in self.participants.all()])}"
+        return f"Chat for {self.offer.title} between {', '.join([str(p) for p in self.participants.all()])}"
 
     def get_chat_url(self):
-        return reverse('chat:chat', args=[self.id])
+        return reverse('chat:chat', kwargs={'chat_id': self.id})
 
 
 class Message(models.Model):

@@ -25,17 +25,20 @@
 
 {% else %}
     {% if chat %}
+    <!-- Jeśli czat istnieje, przekieruj do niego -->
     <a href="{{ chat.get_chat_url }}">
         <button>Przejdź do czatu</button>
     </a>
     {% else %}
+    <!-- Jeśli czat nie istnieje, utwórz nowy -->
     <form method="post" action="{% url 'create_chat' offer.id %}">
         {% csrf_token %}
         <input type="hidden" name="recipient_id" value="{{ offer.creator.id }}">
-        <button type="submit">Napisz wiadomość</button>
+        <button type="submit">Wyślij wiadomość</button>
     </form>
     {% endif %}
 {% endif %}
+
 
 <p>Opis: {{offer.description}}</p>
 
@@ -48,5 +51,9 @@
 {%for photo in offer.photo_set.all%}
 <img src="{{photo.photo.url}}" style="width: 200px; height: 200px;">
 {%endfor%}
+
+<script>
+    const chat_id = "{{ chat.id }}";
+</script>
 
 {%endblock content%}

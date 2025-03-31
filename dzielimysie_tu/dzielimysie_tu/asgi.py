@@ -7,23 +7,27 @@ For more information on this file, see
 https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 import os
+import django
+
+# Ustawienie zmiennej środowiskowej dla Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dzielimysie_tu.settings')
+
+# Inicjalizacja Django
+django.setup()
 
 from django.core.asgi import get_asgi_application
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dzielimysie_tu.settings')
-# Configure django, this must be before importing routing
-django_asgi_app = get_asgi_application()
-
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+from chat.routing import websocket_urlpatterns
 
-import chat.routing
-
+# Konfiguracja aplikacji ASGI
 application = ProtocolTypeRouter({
-    "http": django_asgi_app,
+    "http": get_asgi_application(),
+
+    
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            chat.routing.websocket_urlpatterns
+            websocket_urlpatterns
         )
     ),
 })
