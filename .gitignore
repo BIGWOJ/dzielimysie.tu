@@ -174,3 +174,7 @@ cython_debug/
 #docker
 Dockerfile
 docker-compose.yml
+
+#migracje
+*/migrations/*.py
+!*/migrations/__init__.py

@@ -1,58 +1,52 @@
 from django.db import models
-from django.contrib.auth.base_user import BaseUserManager
-from django.utils import timezone
-from django.urls import reverse
-from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings   
 
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+# Create your models here.
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', True)
+# __str__ - method that returns a string representation of the object
 
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(email, password, **extra_fields)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=150, unique=True)
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(unique=True)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)  # Dodano pole is_staff
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
+class User(AbstractUser):
+    first_name = models.CharField(max_length=50, null=True)
+    email = models.EmailField(unique=True, null=True)
     avatar = models.ImageField(null=True, default='avatars/default_avatar.png', upload_to='avatars/')
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    place = models.CharField(max_length=100, null=True, blank=True)
-    followers = models.ManyToManyField('self', related_name='user_followers', blank=True, symmetrical=False)
+    phone = models.CharField(max_length=20, null=True) 
+    place = models.CharField(max_length=100, null=True)
+    followers = models.ManyToManyField('User', related_name='user_followers', blank=True)
 
     # Notifications
     new_message_notification = models.BooleanField(default=False)
     price_change_notification = models.BooleanField(default=False)
     new_offer_notification = models.BooleanField(default=False)
 
+    # USERNAME_FIELD - the field that is used to log in using the email, standard authentication is the username, so if we want to use the email, we need to change it or change authentication backend
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = []
 
-    objects = UserManager()
+    # Opinions functionality
+    opinions = models.ManyToManyField('Opinion', related_name='user_opinions', blank=True)
+    opinions_sum = models.DecimalField(max_digits=5, default=0, decimal_places=0)
+    opinions_count = models.IntegerField(default=0)
+    opinions_overall = models.DecimalField(max_digits=3, decimal_places=1, default=0)
 
     def __str__(self):
-        return self.username
+        return self.email
+
+class Opinion(models.Model):
+    offer = models.ForeignKey('Offer', related_name='opinions', on_delete=models.CASCADE)
+    rated_user = models.ForeignKey(User, related_name='rated_user', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=100)
+    rating = models.DecimalField(max_digits=1, decimal_places=0)
+    date = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.rated_user.username
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+   
     
     def __str__(self):
         return self.name
@@ -74,14 +68,47 @@ class Follow_offer(models.Model):
 
 class Offer(models.Model):
     title = models.CharField(max_length=200)
+
+    # models.CASCADE - when the user is deleted, all their offers are deleted
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(max_length=1000)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator_name = models.CharField(max_length=100, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True, 
     blank=True)
+    creator_email = models.EmailField(null=True)
+    creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')
+    
+    statuses = [
+        ('waiting', 'Oczekujące'),
+        ('pending', 'Zgłoszenia'),
+        ('in_progress', 'W realizacji'),
+        ('cancelled', 'Anulowane'),
+        ('finished', 'Zakończone'),
+    ]
+    status = models.CharField(max_length=20, choices=statuses, default='waiting')
 
     followers = models.ManyToManyField('User', related_name='offer_followers', blank=True)
 
     def __str__(self):
         return self.title
+    
+class Take_offer(models.Model):
+    taker = models.ForeignKey(User, on_delete=models.CASCADE)
+    offer = models.ForeignKey(Offer, related_name='take_offer_set', on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
+    taker_to_creator_opinion = models.BooleanField(default=False)
+    creator_to_taker_opinion = models.BooleanField(default=False)
+
+    statuses = [
+        ('waiting', 'Oczekujące'),
+        ('accepted', 'Zaakceptowane'),
+        ('rejected', 'Odrzucone'),
+        ('cancelled', 'Anulowane'),
+        ('finished', 'Zakończone'),
+    ]
+    status = models.CharField(max_length=20, choices=statuses, default='waiting')
+
+    def __str__(self):
+        return self.offer.title

@@ -8,14 +8,6 @@ class Chat(models.Model):
     offer = models.ForeignKey('base.Offer', on_delete=models.CASCADE, related_name='chats')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['offer'],
-                name='unique_chat_per_offer_and_participants'
-            )
-        ]
-
     def __str__(self):
         return f"Chat for {self.offer.title} between {', '.join([str(p) for p in self.participants.all()])}"
 
