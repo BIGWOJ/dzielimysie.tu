@@ -7,6 +7,8 @@
 ==========MAŁO WAŻNE==========
 1. Wywalić null=True z models w miejscach, gdzie są wymagane. True jest do testowania ciągłego, żeby nie przerabiać danych. Tak samo blank
 
+2. Podczas tworzenia oferty jest ustawiana cena, która w zamyśle strony raczej nie powinna być. Warto byłoby pousuwać wszędzie gdzie jest wspomniana ta cena.
+
 ==========WARTO DODAĆ/ZMIENIĆ==========
 1. W formularzu tworzenia/edytowania ogłoszenia dodać przyciski typu "Oddam" albo "Zamienię się"
 
