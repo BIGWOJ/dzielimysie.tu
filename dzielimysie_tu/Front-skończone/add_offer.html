@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta - Wyprowadzanie psa</title>
+    <link rel="stylesheet" href="style/header.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/add_offer.css">
+</head>
+
+<body>
+    
+    <header>
+        <nav>
+            <ul>
+                <li><a href="offers.html">Oferty</a></li>
+                <li><a href="#">Ulubione</a></li>
+                <li><a href="message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer">Dodaj ogłoszenie</button>
+            <button class="account">Moje konto</button>           
+        </nav>
+    </header>
+    <h1>Dodaj ogłoszenie</h1>
+    <div class="Title-container">
+        <h3>Tytuł ogłoszenia</h3>
+        <input id="text" type="text" placeholder="np. Wykoszę trawnik...">
+        <h3>Kategoria</h3>
+        
+            <select id="select">
+                <option value="" disabled selected hidden>Wybierz kategorię</option>
+                <option value="dom">Dom</option>
+                <option value="moda">Moda</option>
+                <option value="sport">Sport i Hobby</option>
+                <option value="uslugi">Usługi</option>
+                <option value="motoryzacja">Motoryzacja</option>
+                <option value="zwierzeta">Zwierzęta</option>
+                <option value="ogrod">Ogród</option>
+                <option value="elektronika">Elektronika</option>
+            </select>
+
+    </div>
+
+    <div  class="Photo-container">
+        <h3>Zdjęcia</h3>
+        <p>Dodaj zdjęcia do swojego ogłoszenia. Pierwsze zdjęcie będzie również miniaturką</p>
+        <button class="add-picture"> Dodaj zdjęcia</button> 
+        <div class="frame-for-photo"></div>
+        
+    </div>
+
+    <div class="Description">
+        <h3>Opis</h3>
+        <textarea id="opis" placeholder="Dodaj szczegóły odnośnie swojego ogłoszenia. Co, gdzie i jak" maxlength="1000"></textarea>
+        <p>Opis powinien mieć co najmniej 50 znaków</p>
+        <p id="char-count">0 / 100 znaków</p>
+    </div>
+
+    <div class="Contact">
+    <h3> Imię </h3>
+    <input type="text">
+
+    <h3> Adres e-mail </h3>
+    <input type="text">
+
+    <h3> Numer telefonu </h3>
+    <input type="text">
+    
+    </div>
+
+    <div class="offer-actions">
+        <button>Dodaj ogłoszenie</button>
+        <button>Podgląd ogłoszenia</button>
+    </div>
+      
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+
+</body>
+</html>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const select = document.getElementById('select');
+      select.selectedIndex = 0; 
+    });
+
+</script>
+
+<!-- Do liczenia znaków  -->
+  
+  <script>
+    const textarea = document.getElementById('opis');
+    const charCount = document.getElementById('char-count');
+
+
+    textarea.addEventListener('input', () => {
+        const length = textarea.value.length;
+        charCount.textContent = `${length} / 1000 znaków`;
+    });
+    
+  </script>
