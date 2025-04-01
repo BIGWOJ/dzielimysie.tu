@@ -13,4 +13,4 @@ class Offer_Form(ModelForm):
     class Meta:
         model = Offer
         fields = '__all__'
-        exclude = ['creator']
+        exclude = ['creator', 'status']

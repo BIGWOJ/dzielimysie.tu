@@ -1,47 +1,110 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dodaj ogłoszenie</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/add_offer.css'%}">
+    {%endblock styles%}
+</head>
 
 {%block content%}
 
-<h1>Dodaj ogłoszenie</h1>
+<form method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
 
-<div>
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
+    <h1>Dodaj ogłoszenie</h1>
+    <div class="Title-container">
+        <h3>Tytuł ogłoszenia</h3>
+        <input id="text" type="text" name="title" placeholder="np. Oddam sernik..." required>
 
-        <label>Tytuł ogłoszenia</label>
-        <input type="text" name="title" required><br>
-
-        <label>Kategoria</label>
-        <select name="category" required>
+        <h3>Kategoria</h3>
+        <select id="select" name="category" required>
             <option value="" disabled selected>Wybierz kategorię</option>
             {%for category in categories%}
             <option value="{{category.id}}">{{category.name}}</option>
             {%endfor%}
-        </select><br>
+        </select>
 
-        <label>Dodaj zdjęcia</label>
-        <input type="file" name="photos" multiple><br>
+    </div>
+    <div class="Photo-container">
+        <h3>Zdjęcia</h3>
+        <p>Dodaj zdjęcia do swojego ogłoszenia. Pierwsze zdjęcie będzie również miniaturką.</p>
+        <label for="file_upload" class="add-picture">Dodaj zdjęcia</label>
+        <input id="file_upload" type="file" name="photos" multiple>
+        <div class="frame-for-photo">
+            <img id="preview_image">
+        </div>
+    </div>
+    </div>
 
-        <label>Opis</label>
-        <textarea name="description" rows="10" cols="50" required></textarea><br>
+    <div class="Description">
+        <h3>Opis</h3>
+        <textarea id="opis" name="description"
+            placeholder="Dodaj szczegóły odnośnie swojego ogłoszenia. Co, gdzie i jak" maxlength="1000" minlength="50"
+            required></textarea>
+        <p>Opis powinien mieć co najmniej 50 znaków</p>
+        <p id="char-count">0 / 1000 znaków</p>
+    </div>
 
-        <label>Cena</label>
-        <input type="number" name="price" required min="0"><br>
+    <div class="Contact">
+        <h3> Imię </h3>
+        <input type="text" value="{{request.user.first_name|default_if_none:''}}" name="creator_name" required>
 
-        <label>Miejsce</label>
-        <input type="text" value="{{request.user.place|default_if_none:''}}" name="place" required><br>
+        <h3> Adres e-mail </h3>
+        <input type="text" value="{{request.user.email|default_if_none:''}}" name="creator_email" required>
 
-        <label>Imię</label>
-        <input type="text" value="{{request.user.first_name|default_if_none:''}}" name="creator_name" required><br>
+        <h3> Numer telefonu </h3>
+        <input type="text" value="{{request.user.phone|default_if_none:''}}" name="creator_phone" required>
 
-        <label>Adres e-mail</label>
-        <input type="text" value="{{request.user.email|default_if_none:''}}" name="creator_email" required><br>
+    </div>
 
-        <label>Numer telefonu</label>
-        <input type="text" value="{{request.user.phone|default_if_none:''}}" name="creator_phone" required><br>
+    <div class="offer-actions">
+        <!-- <input type="submit" value="Dodaj ogłoszenie"> -->
+        <button type="submit">Dodaj ogłoszenie</button>
+        <button>Podgląd ogłoszenia</button>
+    </div>
+</form>
 
-        <input type="submit" value="Dodaj ogłoszenie">
-    </form>
-</div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const select = document.getElementById('select');
+        select.selectedIndex = 0;
+    });
+
+</script>
+
+<!-- Do liczenia znaków  -->
+
+<script>
+    const textarea = document.getElementById('opis');
+    const charCount = document.getElementById('char-count');
+
+
+    textarea.addEventListener('input', () => {
+        const length = textarea.value.length;
+        charCount.textContent = `${length} / 1000 znaków`;
+    });
+
+</script>
+
+<!-- Showing first inputed image as offer thumbnail -->
+<script>
+    const file_input = document.getElementById('file_upload');
+    const previewImage = document.getElementById('preview_image');
+
+    file_input.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
 
 {%endblock content%}
