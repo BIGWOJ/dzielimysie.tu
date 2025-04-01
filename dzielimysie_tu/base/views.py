@@ -225,7 +225,12 @@ def create_offer(request):
     categories = Category.objects.all()
 
     if request.method == 'POST':
+        data = request.POST.copy()
+        data['place'] = data.get('place', 'Szczecin')
+        form = Offer_Form(data, request.FILES)
+
         if form.is_valid():
+            print("ŚRODEK")
             offer = form.save(commit=False)
             if offer.place == None:
                 offer.place = "Nie podano"
@@ -342,7 +347,6 @@ def take_offer(request, pk):
     offer.save()
     relation.save()
 
-    messages.success(request, 'Zgłoszenie zostało wysłane. Oczekuj na zatwierdzenie przez autora oferty.')
     return redirect('offer_page', pk=pk)
 
 def update_offer_status(request, pk, status, redirect_take_offers=False):
