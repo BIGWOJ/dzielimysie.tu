@@ -21,52 +21,41 @@
             <span class="category">{{offer.category}}</span>
             <p class="location">{{offer.place}}</p>
             <div class="buttons">
-                {%if offer.status != 'cancelled' and offer.status != 'finished'%}
-                {%if offer.creator == request.user%}
-                <a href="{% url 'edit_offer_page' offer.id %}" style="text-decoration: none;">
-                    <button class="apply">Edytuj</button>
-                </a>
+                {% if offer.status != 'cancelled' and offer.status != 'finished' %}
+                    {% if offer.creator == request.user %}
+                        <a href="{% url 'edit_offer_page' offer.id %}" style="text-decoration: none;">
+                            <button class="apply">Edytuj</button>
+                        </a>
 
-                <a href="{% url 'delete_offer_page' offer.id %}">
-                    <button class="apply">Usuń ofertę</button>
-                </a>
+                        <a href="{% url 'delete_offer_page' offer.id %}">
+                            <button class="apply">Usuń ofertę</button>
+                        </a>
 
-                <a href="{% url 'cancel_offer' offer.id %}" style="text-decoration: none;">
-                    <button class="apply">Anuluj ofertę</button>
-                </a>
+                        <a href="{% url 'cancel_offer' offer.id %}" style="text-decoration: none;">
+                            <button class="apply">Anuluj ofertę</button>
+                        </a>
 
-                <a href="{% url 'finish_offer' offer.id %}">
-                    <button class="apply">Zakończ ofertę</button>
-                </a>
-
-
-                {%else%}
-
-                {%if not user_is_taker%}
-                <a href="{%url 'take_offer' offer.id%}">
-                    <button class="apply">Zgłoś się</button>
-                </a>
-
-                {%else%}
-                <a href="{%url 'cancel_take_offer' offer.id request.user.id 'offer_page'%}">
-                    <button class="apply">Anuluj zgłoszenie</button>
-                </a>
-                {%endif%}
-
-                <a href="{%url 'not_done_yet_page'%}">
-                    <button class="message">Napisz wiadomość</button>
-                </a>
-                {%endif%}
-
-                {%else%}
-
-                {%if request.user == offer.creator%}
-                <a href="{%url 'republish_offer' offer.id%}">
-                    <button class="apply">Wznów ofertę</button>
-                </a>
-                {%endif%}
-
-                {%endif%}
+                        <a href="{% url 'finish_offer' offer.id %}">
+                            <button class="apply">Zakończ ofertę</button>
+                        </a>
+                    {% else %}
+                        {% if not user_is_taker %}
+                            <a href="{% url 'take_offer' offer.id %}">
+                                <button class="apply">Zgłoś się</button>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'cancel_take_offer' offer.id request.user.id 'offer_page' %}">
+                                <button class="apply">Anuluj zgłoszenie</button>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if request.user == offer.creator %}
+                        <a href="{% url 'republish_offer' offer.id %}">
+                            <button class="apply">Wznów ofertę</button>
+                        </a>
+                    {% endif %}
+                {% endif %}
             </div>
             <div class="description">
                 <h3>Opis</h3>
@@ -74,11 +63,13 @@
             </div>
         </div>
         <div class="user-profile">
-            <a href="{%url 'user_profile_page' offer.creator.id%}">
+            <a href="{% url 'user_profile_page' offer.creator.id %}">
                 <img src="{{offer.creator.avatar.url}}" alt="Profil użytkownika">
             </a>
             <p>{{offer.creator.username}}</p>
         </div>
     </div>
 </div>
+
+{% endblock %}
 
