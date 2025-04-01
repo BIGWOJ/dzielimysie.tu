@@ -40,7 +40,6 @@ class Opinion(models.Model):
     rating = models.DecimalField(max_digits=1, decimal_places=0)
     date = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return self.rated_user.username
 
@@ -73,8 +72,7 @@ class Offer(models.Model):
     description = models.TextField(max_length=1000)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     creator_name = models.CharField(max_length=100, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=0, null=True, 
-    blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)
     creator_email = models.EmailField(null=True)
     creator_phone = models.CharField(max_length=20, null=True) 
     place = models.CharField(max_length=200, default='Nie podano')

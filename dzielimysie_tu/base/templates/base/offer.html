@@ -19,26 +19,26 @@
         <div class="details">
             <h1>{{offer.title}}</h1>
             <span class="category">{{offer.category}}</span>
-            <p class="price">10 zł</p>
             <p class="location">{{offer.place}}</p>
             <div class="buttons">
                 {%if offer.status != 'cancelled' and offer.status != 'finished'%}
                 {%if offer.creator == request.user%}
-                <button class="apply">Edytuj
-                    <a href="{% url 'edit_offer_page' offer.id %}"></a>
-                </button>
+                <a href="{% url 'edit_offer_page' offer.id %}" style="text-decoration: none;">
+                    <button class="apply">Edytuj</button>
+                </a>
 
-                <button class="apply">Usuń ofertę
-                    <a href="{% url 'delete_offer_page' offer.id %}"></a>
-                </button>
+                <a href="{% url 'delete_offer_page' offer.id %}">
+                    <button class="apply">Usuń ofertę</button>
+                </a>
 
-                <button class="apply">Anuluj ofertę
-                    <a href="{% url 'cancel_offer' offer.id %}"></a>
-                </button>
+                <a href="{% url 'cancel_offer' offer.id %}" style="text-decoration: none;">
+                    <button class="apply">Anuluj ofertę</button>
+                </a>
 
-                <button class="apply">Zakończ ofertę
-                    <a href="{% url 'finish_offer' offer.id %}"></a>
-                </button>
+                <a href="{% url 'finish_offer' offer.id %}">
+                    <button class="apply">Zakończ ofertę</button>
+                </a>
+
 
                 {%else%}
 
