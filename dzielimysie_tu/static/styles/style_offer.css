@@ -57,12 +57,18 @@ h1 {
     font-size: 14px;
     border-radius: 5px;
     width: 178px;
-    margin: 5px
+    margin: 5px;
 }
 
 .apply {
     background-color: #FC8500;
     color: white;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
 .message{

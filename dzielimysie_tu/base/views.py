@@ -230,7 +230,6 @@ def create_offer(request):
         form = Offer_Form(data, request.FILES)
 
         if form.is_valid():
-            print("ŚRODEK")
             offer = form.save(commit=False)
             if offer.place == None:
                 offer.place = "Nie podano"
