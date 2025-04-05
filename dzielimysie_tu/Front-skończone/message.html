@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/style_message.css">
 </head>
+
 <body>
+    
     <header>
         <nav>
             <ul>
@@ -16,7 +18,7 @@
                 <li><a href="#">Ulubione</a></li>
                 <li><a href="message.html">Wiadomości</a></li>
             </ul>
-            <button class="add-offer"><a href="add_offer.html">Dodaj ogłoszenie</a></button>
+            <button class="add-offer">Dodaj ogłoszenie</button>
             <button class="account">Moje konto</button>           
         </nav>
     </header>
@@ -50,17 +52,32 @@
                     <img src="images/Avatar.png" alt="Użytkownik">
                     <h2>Si_woo_111</h2>
                 </div>
+                <p class="chat-topic">Rozmawiasz odnośnie:</p> 
+                <div class="chat-description">
+                    
+                    <img class="chat-img" src="images/pies.jpg" alt="pies">
+                    <span class="offer-text">Wyprowadzenie psa Szczecin, śródmieście</span>
+                    <span class="offer-price">10zł</span>
+                </div>  
+
+
                 <div class="chat-messages">
                     <p class="message received">Cześć, chciałem dopytać o usługę dla psa.</p>
                     <p class="message sent">Cześć, oczywiście wyprowadzam psy. Zapraszam do rozmowy.</p>
                     <p class="message received">Okej, zgoda.</p>
-                    <div class="offer-confirmation">
-                        <p>Czy chcesz zaakceptować ofertę?</p>
-                        <button class="accept">Akceptuj</button>
-                        <button class="reject">Odrzuć</button>
+                
+                </div>
+
+             
+                    <div class="information">
+                        <p class="nick-name">Si_woo_111</p><p>chce podjąć się zgłoszenia</p>
                     </div>
+                <div class="offer-confirmation">
+                    <button class="accept">Akceptuj</button>
+                    <button class="reject">Odrzuć</button>
                 </div>
                 <div class="chat-input">
+
                     <input type="text" placeholder="Wpisz wiadomość...">
                     <button class="send-btn">➤</button>
                 </div>
@@ -69,5 +86,6 @@
     <footer>
         <p>© 2024 dzielimysie.tu</p>
     </footer>
+    <script src="message.js"></script>
 </body>
 </html>
