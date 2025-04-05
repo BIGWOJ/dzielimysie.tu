@@ -39,6 +39,7 @@
 .filters {
     display: flex;
     margin-top: 15px;
+    margin-bottom: 20px;
     gap: 10px;
 }
 .filter {
@@ -84,58 +85,98 @@ text-decoration: none;
     fill: #f4a623;
 }
 
-.wrap1{
+.tabs {
     display: flex;
-    gap: 10px;
-}
+    justify-content: space-around;
+    border-bottom: 2px solid #0a2540;
+    margin-bottom: 20px;
+    width: 881px;
+  }
 
-.card {
-    margin-top: 20px;
+  .tabs button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    padding: 10px;
+    cursor: pointer;
+    color: #333;
+  }
+
+  .tabs .active {
+    border-bottom: 3px solid #0a2540;
+    font-weight: bold;
+  }
+
+  .tabs button a{
+    text-decoration: none;
+    color: #333;
+  }
+
+  .list {
+    max-height: 800px;
+  }
+
+  .ad {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #00a6c0;
+    color: white;
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 15px;
+    box-shadow: 5px 4px 9px -3px rgba(66, 68, 90, 1);
+  }
+
+  .ad img.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+
+  .ad-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .ad-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background: #ffffff;
-    border-radius: 10px;
-    width: 287px;
-    padding-top: 10px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-.card img {
-    width: 95%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 15px;
-}
-.location {
-    color: #767676;
-}
+  }
 
-.title{
-    text-align: right; 
-    margin-top: 20px;
-    flex-grow: 1;
-    width: 250px;
-   
-}
-
-.details{
-
-    gap:-5;
-    width: 250px;
+  .ad .buttons {
     display: flex;
-    justify-content: space-between; 
-    padding: 10px 5px;
-    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+  }
 
-}
-.price {
+  .ad .buttons button {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 
-    color: #FC8500;
-    font-weight: bold;
-    
-}
+  .ad .buttons .accept {
+    background: #0a2540;
+    color: white;
+  }
 
-p {
-    margin: 4px;
-}
+  .ad .buttons .cancel {
+    background: white;
+    color: #0a2540;
+    border: 1px solid #0a2540;
+  }
+
+  .status {
+    margin-top: 5px;
+    color: #ffc300;
+  }
+
+  .text-avatar{
+    margin-right: 35px;
+  }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta - Wyprowadzanie psa</title>
+    <link rel="stylesheet" href="style/header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/my_offers_anulowane.css">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="offers.html">Oferty</a></li>
+                <li><a href="#">Ulubione</a></li>
+                <li><a href="message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer"><a href="add_offer.html">Dodaj ogłoszenie</a></button>
+            <button class="account">Moje konto</button>           
+        </nav>
+    </header>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" placeholder="Szukaj...">
+            <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z"/>
+            </svg></button>
+        </div>   
+        <div class="filters">
+            <button class="filter"><a href="offers.html">Najnowsze</a></button>
+            <button class="filter">Twoja okolica</button>
+            <button class="filter">Najlepiej oceniane</button>
+            <button class="filter active"><a href="my_offers_oczekujące.html">Moje ogłoszenia</a></button>
+            <button class="filter"><a href="zgłoszenia.html">Zgłoszenia</a></button>
+        </div> 
+        
+        <div class="tabs">
+            <button><a href="my_offers_oczekujące.html">Oczekujące</a></button>
+            <button><a href="my_offers_realizacja.html">W realizacji</a></button>
+            <button class="active"><a href="my_offers_anulowane.html">Anulowane</a></button>
+            <button><a href="my_offers_zakonczone.html">Zakończone</a></button>
+          </div>
+        
+          <div class="list">
+            <div class="ad">
+              <div class="ad-info">
+                <img src="images/pies.jpg" class="avatar" alt="avatar">
+                <div class="ad-content">
+                  <strong>Wyprowadzanie psa Szczecin, Śródmieście</strong>
+                  <span class="status">10 zl</span>
+                </div>
+              </div>
+              <div class="text-avatar">
+                <img src="images/Avatar.png" class="avatar" alt="user">
+                <p>Beata_123</p>
+              </div>
+            </div>
+        
+            <div class="ad">
+              <div class="ad-info">
+                <img src="images/sernik.jpg" class="avatar" alt="ciasto">
+                <div class="ad-content">
+                  <strong>Oddam kawałek sernika</strong>
+                  <span class="status">Za darmo</span>
+                </div>
+              </div>
+              <div class="text-avatar">
+                <img src="images/Avatar.png" class="avatar" alt="user">
+                <p>Beata_123</p>
+              </div>
+            </div>
+        
+            <div class="ad">
+              <div class="ad-info">
+                <img src="images/zabawka.jpeg" class="avatar" alt="zabawka">
+                <div class="ad-content">
+                  <strong>Zabawki dla dziecka</strong>
+                  <span class="status">Za darmo</span>
+                </div>
+              </div>
+              <div class="text-avatar">
+                <img src="images/Avatar.png" class="avatar" alt="user">
+                <p>Beata_123</p>
+              </div>
+            </div>
+          </div>
+   </div>     
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+<script src="offers.js"></script>
+</body>
+</html>
