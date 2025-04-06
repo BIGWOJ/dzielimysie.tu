@@ -1,46 +1,61 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>{{offer.title}}</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/offers.css'%}">
+    {%endblock styles%}
+</head>
+
 {%block content%}
 
-<form method="GET">
-    <input type="next" name="q" placeholder="Jeszcze nie działa">
-</form>
+<div class="container">
+    <div class="search-container">
+        <input type="text" placeholder="Szukaj...(jeszcze nie działa)">
+        <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z" />
+            </svg></button>
+    </div>
+    <div class="filters">
+        <a href="{%url 'not_done_yet_page'%}">
+            <button class="filter active">Najnowsze</button>
+        </a>
 
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Najnowsze</p>
-</a>
+        <a href="{%url 'not_done_yet_page'%}">
+            <button class="filter">Cena rosnąco</button>
+        </a>
 
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Cena rosnąco</p>
-</a>
+        <a href="{%url 'not_done_yet_page'%}">
+            <button class="filter">Cena malejąco</button>
+        </a>
 
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Cena malejąco</p>
-</a>
+        <a href="{%url 'not_done_yet_page'%}">
+            <button class="filter">Twoja okolica</button>
+        </a>
 
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Twoja okolica</p>
-</a>
+        <a href="{%url 'not_done_yet_page'%}">
+            <button class="filter">Najlepiej oceniane</button>
+        </a>
+    </div>
 
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Najlepiej oceniane</p>
-</a>
-
-<a href="{%url 'my_offers_page' 'waiting' 'None'%}">
-    <p>Moje ogłoszenia</p>
-</a>
-
-<a href="{%url 'my_take_offers_page' 'waiting'%}">
-    <p>Moje zgłoszenia</p>
-</a>
-
-{%for offer in offers%}
-<a href="{%url 'offer_page' offer.id%}">
-    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer.title}}</p>
-<p>{{offer.price}}</p>
-<p>{{offer.place}}</p>
-{%endfor%}
-
+    <div class="wrap1">
+        {%for offer in offers%}
+        <div class="card">
+            <a href="{%url 'offer_page' offer.id%}">
+                <img src="{{offer.photo_set.first.photo.url}}" alt="{{offer.title}}">
+            </a>
+            <div class="title">
+                <p><strong>{{offer.title}}</strong></p>
+            </div>
+            <div class="details">
+                <!-- <p class="price">Za darmo</p> -->
+                <p class="location">Wrocław, Grodzka 999</p>
+            </div>
+        </div>
+        {%endfor%}
+    </div>
+</div>
 
 {%endblock content%}

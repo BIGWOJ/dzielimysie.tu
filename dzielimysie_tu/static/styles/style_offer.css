@@ -45,11 +45,6 @@ h1 {
     color: gray;
 }
 
-.buttons {
-    margin-top: 15px;
-    gap: 10px;
-}
-
 .apply, .message {
     padding: 7px 10px;
     border: none;
@@ -66,9 +61,11 @@ h1 {
 }
 
 .buttons {
+    margin-top: 15px;
+    gap: 10px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    width: 50px;
 }
 
 .message{
@@ -100,13 +97,14 @@ h1 {
     font-weight: bold;
 }
 
-
-/* Opis */
 .description {
     margin-top: 20px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #00000052;
+    width: 500px;
+    height: auto;
+    word-wrap: break-word;
 }
 
 h3 {

@@ -1,0 +1,46 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<form method="GET">
+    <input type="next" name="q" placeholder="Jeszcze nie działa">
+</form>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Najnowsze</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Cena rosnąco</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Cena malejąco</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Twoja okolica</p>
+</a>
+
+<a href="{%url 'not_done_yet_page'%}">
+    <p>Najlepiej oceniane</p>
+</a>
+
+<a href="{%url 'my_offers_page' 'waiting' 'None'%}">
+    <p>Moje ogłoszenia</p>
+</a>
+
+<a href="{%url 'my_take_offers_page' 'waiting'%}">
+    <p>Moje zgłoszenia</p>
+</a>
+
+{%for offer in offers%}
+<a href="{%url 'offer_page' offer.id%}">
+    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
+</a>
+<p>{{offer.title}}</p>
+<p>{{offer.price}}</p>
+<p>{{offer.place}}</p>
+{%endfor%}
+
+
+{%endblock content%}

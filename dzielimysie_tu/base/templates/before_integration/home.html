@@ -1,0 +1,32 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
+<h1>Strona główna </h1>
+
+{%include 'search_bar.html'%}
+
+<div>
+    <!-- Categories -->
+    <div>
+        {%for category in categories%}
+        <!-- {%url 'category_page' category.id%}?q={{category.name}} -->
+        <a href="{%url 'category_page' category.id%}">
+            <h2>{{category}}</h2>
+        </a>
+        {%endfor%}
+    </div>
+
+    <hr>
+
+    <!-- Top offers -->
+    <div>
+        {%for top_offer in top_offers%}
+        <a href="{%url 'offer_page' top_offer.id%}">
+            <h2>{{top_offer}}</h2>
+            {%endfor%}
+        </a>
+    </div>
+</div>
+
+{%endblock content%}

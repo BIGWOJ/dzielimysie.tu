@@ -4,6 +4,8 @@
 ==========ŚREDNIO WAŻNE==========
 1. Aktualnie wyświetlane są tylko 3 najnowsze opinie na profilu użytkownika, zmienić, żeby były wszystkie widoczne, ale w formie np. "pokaż więcej" i "pokaż mniej" albo slider jak strona główna oferty, (?) sortowanie 1/2/3/4/5 gwiazdek (?)
 
+2. W stronie oferty są wyświetlane wszystkie na raz oferty, lepiej jakby były np na stronie 10, 20, 50 itd. i można było przechodzić między stronami, bo teraz to się nie mieści na ekranie i trzeba scrollować w dół, żeby zobaczyć wszystkie oferty
+
 ==========MAŁO WAŻNE==========
 1. Wywalić null=True z models w miejscach, gdzie są wymagane. True jest do testowania ciągłego, żeby nie przerabiać danych. Tak samo blank
 
@@ -18,3 +20,4 @@
 3. Przy edycji oferty można dodać przycisk "Usuń zdjęcie" przy każdym zdjęciu, żeby pojedyncze usuwać, bo teraz to za każdym razem nadpisuje aktualne zdjęcia
 
 4. Dodać do take_offer i offer itd class Meta żeby były sortowane od najnowszych, żeby w zakładce anulowane itd były w kolejności i tak samo sortowanie po statusie, najwyżej realizowane, potem anulowane itd.
+

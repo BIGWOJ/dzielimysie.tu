@@ -12,8 +12,8 @@ def not_done(request):
 
 def home(request):
     categories = Category.objects.all()
-    top_offers = Offer.objects.all()[:5]
-    context = {"categories": categories, "top_offers": top_offers}
+    latest_offers = Offer.objects.all()[:8]
+    context = {"categories": categories, "latest_offers": latest_offers}
 
     # Filtering offers
     if request.GET.get('q') != None:
@@ -270,14 +270,15 @@ def edit_offer(request, pk):
 
             offer.save()
 
-            current_photos = Photo.objects.filter(offer=offer)
-            for photo in current_photos:
-                photo.delete()
-
             images = request.FILES.getlist('photos')
-            for image in images:
-                photo = Photo(offer=offer, photo=image)
-                photo.save()
+            if len(images) != 0:
+                current_photos = Photo.objects.filter(offer=offer)
+                for photo in current_photos:
+                    photo.delete()
+
+                for image in images:
+                    photo = Photo(offer=offer, photo=image)
+                    photo.save()
             return redirect('offer_page', pk=offer.id)
         else:
             messages.error(request, 'Coś poszło nie tak. Spróbuj ponownie')
