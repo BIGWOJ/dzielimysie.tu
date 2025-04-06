@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta - Wyprowadzanie psa</title>
+    <link rel="stylesheet" href="style/header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/ulubione_użytk.css">
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="offers.html">Oferty</a></li>
+                <li><a href="ulubione.html">Ulubione</a></li>
+                <li><a href="message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer"><a href="add_offer.html">Dodaj ogłoszenie</a></button>
+            <button class="account">Moje konto</button>           
+        </nav>
+    </header>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" placeholder="Szukaj...">
+            <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z"/>
+            </svg></button>
+        </div>
+        <div class="filters">
+            <button class="filter"><a href="ulubione.html">Ogłoszenia</a></button>
+            <button class="filter active"><a href="ulubione_użytk.html">Użytkownicy</a></button>
+          </div>
+        
+          <div class="user-container">
+            <div class="user-card">
+              <img src="https://www.gstatic.com/webp/gallery3/1.sm.png" alt="Marek" class="avatar">
+              <p class="username">Marek_203</p>
+            </div>
+            <div class="user-card">
+              <img src="https://www.gstatic.com/webp/gallery3/2.sm.png" alt="Jolka" class="avatar">
+              <p class="username">Jolka_xx3</p>
+            </div>
+          </div>
+    </div>
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+<script src="offers.js"></script>
+</body>
+</html>
