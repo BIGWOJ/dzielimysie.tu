@@ -1,0 +1,114 @@
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4a623;
+    border-radius: 20px;
+    padding: 5px 10px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.search-container input{
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f4a623;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.search-container button svg {
+    fill: #f4a623;
+    width: 18px;
+    height: 18px;
+}
+  
+  .search {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-btn {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .filters {
+    display: flex;
+    margin-top: 15px;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+.filter {
+    padding: 8px 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter.active {
+    background-color: #f4a623;
+    color: white;
+    font-weight: bold;
+}
+
+.filter a{
+color: black;
+text-decoration: none;
+}
+
+.filter.active a{
+    color: white;
+}
+.user-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 800px;
+  }
+  
+  .user-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  
+  .user-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .username {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }

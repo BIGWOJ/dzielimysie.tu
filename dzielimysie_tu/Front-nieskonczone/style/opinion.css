@@ -1,0 +1,135 @@
+body {
+    font-family: 'Baloo 2', sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+  }
+  
+  .container {
+    display: flex;
+    padding: 50px;
+    width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h2{
+    font-family: 'Baloo 2', sans-serif;
+    text-align: center;
+    color:#FC8500;
+  }
+
+  p{
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .opinion {
+    flex: 2;
+    background-color: #dcdcdc;
+    padding: 30px;
+
+  }
+
+  .chat-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+
+  .chat-description {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 20px;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+
+
+.offer-text {
+
+    flex: 1;
+}
+
+.offer-price {
+    color: #ff8000;
+    font-weight: bold;
+    margin-left: 10px;
+}
+  
+  .stars {
+    text-align: center;
+    font-size: 30px;
+    color: #003049;
+    margin-bottom: 30px;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    resize: none;
+    font-size: 16px;
+  }
+  
+  .accept {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #dcdcdc;
+    color:  #002b45;
+    font-weight: bold;
+    border-radius: 6px;           
+    border: 2px solid #ff8000;     
+    
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+  }
+  
+  .user {
+    flex: 1;
+    background-color: #002b45;
+    color: white;
+    padding: 30px;
+    border-top-right-radius: 30px;
+    text-align: center;
+  }
+  
+  .user img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .username {
+    font-weight: bold;
+    margin: 10px 0;
+    color: #ff8000;  
+  }
+  
+  .go-to-profile {
+    padding: 10px 12px;
+    background: transparent;
+    border: 2px solid #ff8000;  
+    color: white;
+    font-size: 10px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+  
+  }
+  
+  footer {
+    background-color: #003049;
+    color: white;
+    text-align: center;
+    padding: 15px;
+  }
+  
