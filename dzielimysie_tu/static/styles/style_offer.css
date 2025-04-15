@@ -59,7 +59,7 @@ h1 {
     font-size: 14px;
     border-radius: 5px;
     width: 178px;
-    margin: 5px
+    margin: 5px;
 }
 
 .apply {
@@ -101,13 +101,14 @@ h1 {
     font-weight: bold;
 }
 
-
-/* Opis */
 .description {
     margin-top: 20px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #00000052;
+    width: 500px;
+    height: auto;
+    word-wrap: break-word;
 }
 
 h3 {

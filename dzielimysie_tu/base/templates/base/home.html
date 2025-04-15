@@ -1,32 +1,121 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dzielimy się</title>
+    <link rel="stylesheet" href="{%static 'styles/home.css'%}">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="{%static 'scripts/home.js'%}" defer></script>
+    {%endblock styles%}
+</head>
 
 {%block content%}
 
-<h1>Strona główna </h1>
-
-{%include 'search_bar.html'%}
-
-<div>
-    <!-- Categories -->
-    <div>
-        {%for category in categories%}
-        <!-- {%url 'category_page' category.id%}?q={{category.name}} -->
-        <a href="{%url 'category_page' category.id%}">
-            <h2>{{category}}</h2>
-        </a>
-        {%endfor%}
+<section class="hero">
+    <div class="heading">
+        <h1>DZIELIMY SIĘ</h1>
+        <p>I TY TEŻ MOŻESZ</p>
     </div>
 
-    <hr>
-
-    <!-- Top offers -->
-    <div>
-        {%for top_offer in top_offers%}
-        <a href="{%url 'offer_page' top_offer.id%}">
-            <h2>{{top_offer}}</h2>
-            {%endfor%}
-        </a>
+    <div class="heading-logo">
+        <img src="{%static 'images/styling/logo.png'%}" alt="Logo">
     </div>
+</section>
+
+<div class="divider">
+    <span class="circle"><i class="arrow-down"></i></span>
 </div>
 
+
+<section class="categories">
+    <h2>Kategorie</h2>
+    <div class="category-list">
+        <div class="category category-one">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-couch"></i>
+            </a>
+            <p>Dom</p>
+        </div>
+        <div class="category category-two">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-shirt"></i>
+            </a>
+            <p>Moda</p>
+        </div>
+        <div class="category category-one">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-basketball-ball"></i>
+            </a>
+            <p>Sport i Hobby</p>
+        </div>
+        <div class="category category-two">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-briefcase"></i>
+            </a>
+            <p>Usługi</p>
+        </div>
+        <div class="category category-one">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-car"></i>
+            </a>
+            <p>Motoryzacja</p>
+        </div>
+        <div class="category category-two">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-paw"></i>
+            </a>
+            <p>Zwierzęta</p>
+        </div>
+        <div class="category category-one">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-seedling"></i>
+            </a>
+            <p>Ogród</p>
+        </div>
+        <div class="category category-two">
+            <a href="{%url 'not_done_yet_page'%}">
+                <i class="fa-solid fa-headphones"></i>
+            </a>
+            <p>Elektronika</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="listings">
+
+
+    <h2>Ostatnio dodane</h2>
+
+    <div class="swiper-container">
+        <button class="pre-btn"><img src="{%static 'images/styling/arrow2.png'%}" alt="Left arrow"></button>
+        <div class="swiper-wrapper">
+            {%for latest_offer in latest_offers%}
+            <div class="card">
+                <a href="{%url 'offer_page' latest_offer.id%}">
+                    <img src="{{latest_offer.photo_set.first.photo.url}}" alt="{{latest_offer.title}}">
+                </a>
+                <div class="title">
+                    <p><strong>{{latest_offer.title}}</strong></p>
+                </div>
+                <div class="details">
+                    <!-- <p class="price">10zł</p> -->
+                    <p class="location">{{latest_offer.place}}</p>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+        <button class="nxt-btn"><img src="{% static 'images/styling/arrow.png'%}" alt="Right arrow"></button>
+    </div>
+</section>
+
+<section class="text">
+    <h2>Razem możemy więcej</h2>
+    <p>Dołącz do <span class="highlight">Dzielimysie.tu</span> i twórzmy społeczność opartą na wymianie, pomocy i
+        współpracy.</p>
+</section>
 {%endblock content%}

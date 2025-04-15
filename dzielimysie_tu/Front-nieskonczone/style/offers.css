@@ -49,10 +49,20 @@
     cursor: pointer;
     font-size: 14px;
 }
+
 .filter.active {
     background-color: #f4a623;
     color: white;
     font-weight: bold;
+}
+
+.filter a{
+color: black;
+text-decoration: none;
+}
+
+.filter.active a{
+    color: white;
 }
 
 .view-icons {

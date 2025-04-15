@@ -1,0 +1,135 @@
+.ad{
+    background: #00a6c069;
+    color: #ffffff63;
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4a623;
+    border-radius: 20px;
+    padding: 5px 10px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.search-container input{
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f4a623;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.search-container button svg {
+    fill: #f4a623;
+    width: 18px;
+    height: 18px;
+}
+
+.filters {
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+.filter {
+    padding: 8px 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter.active {
+    background-color: #f4a623;
+    color: white;
+    font-weight: bold;
+}
+
+.filter a{
+color: black;
+text-decoration: none;
+}
+
+.filter.active a{
+    color: white;
+}
+
+
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 2px solid #0a2540;
+    margin-bottom: 20px;
+    width: 881px;
+  }
+
+
+
+  .tabs .active {
+    border-bottom: 3px solid #0a2540;
+    font-weight: bold;
+  }
+
+  .tabs a{
+    text-decoration: none;
+    color: #333;
+  }
+
+  .list {
+    max-height: 800px;
+  }
+
+  .ad {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #00a6c07a;
+    color: rgba(255, 255, 255, 0.614);
+    border-radius: 12px;
+    padding: 25px 20px;
+    margin-bottom: 15px;
+    box-shadow: 5px 4px 9px -3px rgba(66, 68, 90, 1);
+  }
+
+  .ad img.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    opacity: 0.8;
+  }
+
+  .ad-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .ad-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status{
+    margin-top: 5px;
+  }

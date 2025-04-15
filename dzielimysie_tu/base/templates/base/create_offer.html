@@ -5,6 +5,7 @@
     {%block styles%}
     <title>Dodaj ogłoszenie</title>
     <link rel="stylesheet" type='text/css' href="{%static 'styles/add_offer.css'%}">
+    <script src="{%static 'scripts/create_offer.js'%}" defer></script>
     {%endblock styles%}
 </head>
 
@@ -62,49 +63,7 @@
     <div class="offer-actions">
         <!-- <input type="submit" value="Dodaj ogłoszenie"> -->
         <button type="submit">Dodaj ogłoszenie</button>
-        <button>Podgląd ogłoszenia</button>
     </div>
 </form>
-
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const select = document.getElementById('select');
-        select.selectedIndex = 0;
-    });
-
-</script>
-
-<!-- Do liczenia znaków  -->
-
-<script>
-    const textarea = document.getElementById('opis');
-    const charCount = document.getElementById('char-count');
-
-
-    textarea.addEventListener('input', () => {
-        const length = textarea.value.length;
-        charCount.textContent = `${length} / 1000 znaków`;
-    });
-
-</script>
-
-<!-- Showing first inputed image as offer thumbnail -->
-<script>
-    const file_input = document.getElementById('file_upload');
-    const previewImage = document.getElementById('preview_image');
-
-    file_input.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImage.src = e.target.result;
-                previewImage.style.display = 'block';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script>
-
 
 {%endblock content%}

@@ -1,66 +1,70 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+header * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
-  background-color: #f5f5f5;
-  flex-direction: column;
-  display: flex;
-  min-height: 100vh;
+    background-color: #f5f5f5;
+    flex-direction: column;
+    display: flex;
+    min-height: 100vh;
 }
 
 /* Nagłówek */
 header {
-  background-color: #002b45;
-  color: white;
-  padding: 22px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    background-color: #002b45;
+    color: white;
+    padding: 22px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 nav {
-  display: flex;
-  align-items: center;
-  width: 100%;
+    display: flex;
+    align-items: center;
+    width: 100%;
 }
 
 nav ul {
-  list-style: none;
-  display: flex;
-  gap: 30px;
-  margin: 0 auto; /* Center the navigation links */
+    list-style: none;
+    display: flex;
+    margin-left: 40%;
+    gap: 30px;
 }
 
 nav ul li {
-  margin: 0 10px;
+    margin: 0 10px;
 }
 
 nav ul li a {
-  color: white;
-  text-decoration: none;
+    color: white;
+    text-decoration: none;
+}
+button a{
+    text-decoration: none;
 }
 
 nav ul li a:hover {
-  color: #fc8600b8;
-  transition: background-color 3s;
+    color: #fc8600b8;
+    transition: background-color 3s;   
 }
 
-.add-offer,
-.account {
-  background-color: #fc8500;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 10px;
+.add-offer, .account {
+    background-color: #FC8500;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: auto;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #023047;
+    text-decoration: none;
 }
 
 .account {
-  background-color: #f5f5f5;
-  color: #023047;
+    background-color: #F5F5F5;
+    margin-left: 10px;
 }

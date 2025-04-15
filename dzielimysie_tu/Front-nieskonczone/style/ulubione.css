@@ -1,0 +1,125 @@
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4a623;
+    border-radius: 20px;
+    padding: 5px 10px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.search-container input{
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f4a623;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.search-container button svg {
+    fill: #f4a623;
+    width: 18px;
+    height: 18px;
+}
+  
+  .search {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-btn {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .filters {
+    display: flex;
+    margin-top: 15px;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+.filter {
+    padding: 8px 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter.active {
+    background-color: #f4a623;
+    color: white;
+    font-weight: bold;
+}
+
+.filter a{
+color: black;
+text-decoration: none;
+}
+
+.filter.active a{
+    color: white;
+}
+  .ads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    width: 800px;
+  }
+  
+  .ad {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  .ad img,
+  .image-placeholder {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    background: #eee;
+  }
+  
+  .ad h3 {
+    padding: 8px 10px 4px;
+    font-size: 1rem;
+  }
+  
+  .price {
+    font-size: 0.9rem;
+    color: orange;
+  }
+  
+  .price.free {
+    color: #ff6600;
+  }
+  
+  
+  .large {
+    grid-column: span 2;
+    margin-bottom: 20px;
+  }
