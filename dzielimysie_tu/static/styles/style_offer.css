@@ -48,6 +48,8 @@ h1 {
 .buttons {
     margin-top: 15px;
     gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .apply, .message {
@@ -63,6 +65,11 @@ h1 {
 .apply {
     background-color: #FC8500;
     color: white;
+    /* display: flex; */
+    /* grid-template-columns: repeat(2, 1fr); */
+    /* grid-template-rows: repeat(2, 2); */
+    /* gap: 20px; */
+    /* margin-top: 20px; */
 }
 
 .message{
