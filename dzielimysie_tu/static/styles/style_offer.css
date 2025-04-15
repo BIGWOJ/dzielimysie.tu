@@ -45,6 +45,13 @@ h1 {
     color: gray;
 }
 
+.buttons {
+    margin-top: 15px;
+    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
 .apply, .message {
     padding: 7px 10px;
     border: none;
@@ -58,14 +65,11 @@ h1 {
 .apply {
     background-color: #FC8500;
     color: white;
-}
-
-.buttons {
-    margin-top: 15px;
-    gap: 10px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    width: 50px;
+    /* display: flex; */
+    /* grid-template-columns: repeat(2, 1fr); */
+    /* grid-template-rows: repeat(2, 2); */
+    /* gap: 20px; */
+    /* margin-top: 20px; */
 }
 
 .message{
