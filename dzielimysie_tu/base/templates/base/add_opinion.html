@@ -1,63 +1,122 @@
-{%extends 'main.html'%}
-{%block content%}
+<!DOCTYPE html>
+<html lang="pl">
 
-<h1>Wystaw opinię</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta - Wyprowadzanie psa</title>
+    <link rel="stylesheet" href="style/header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/opinion.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 
-<a href="{{request.META.HTTP_REFERER}}">
-    <p>Wróć</p>
-</a>
+<body>
 
-<p>Ogłoszenie</p>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="offers.html">Oferty</a></li>
+                <li><a href="ulubione.html">Ulubione</a></li>
+                <li><a href="message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer">Dodaj ogłoszenie</button>
+            <button class="account">Moje konto</button>
+        </nav>
+    </header>
 
-<a href="{%url 'offer_page' take_offer.offer.id%}">
-    <img src="{{take_offer.offer.photo_set.first.photo.url}}" style="width: 100px; height: 100px;">
-    <p>{{take_offer.offer}}</p>
-    <p>{{take_offer.offer.price}}</p>
-</a>
+    <div class="container">
+        <div class="opinion">
+            <div class="opinion_text">
+                <h2>WYSTAW OPINIĘ</h2>
+                <p>OGŁOSZENIE</p>
+            </div>
 
-{%if not opinion_exists%}
-<form method="POST">
-    {% csrf_token %}
-    <div>
-        <label for="rating">Ocena:</label>
-        <select id="rating" name="rating" required>
-            <option value="1">1 gwiazdka</option>
-            <option value="2">2 gwiazdki</option>
-            <option value="3">3 gwiazdki</option>
-            <option value="4">4 gwiazdki</option>
-            <option value="5">5 gwiazdek</option>
-        </select>
+            <div class="opinion_container">
+
+                <div class="chat-description">
+                    <img class="chat-img" src="images/pies.jpg" alt="pies">
+                    <div class="offer-info">
+                        <span class="offer-text">Wyprowadzenie psa Szczecin, śródmieście</span>
+                        <span class="offer-price">10zł</span>
+                    </div>
+                </div>
+
+                <div class="stars">
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                    <i class="fa-regular fa-star"></i>
+                </div>
+
+                <textarea placeholder="Napisz opinię na temat tego ogłoszenia..."></textarea>
+                <button class="accept">ZATWIERDŹ</button>
+
+            </div>
+        </div>
+
+        <div class="user">
+            <img src="images/Avatar.png" alt="Profil">
+            <p class="username">Si_woo_111</p>
+            <button class="go-to-profile">PRZEJDŹ DO PROFILU</button>
+            <h3>OSTATNIE OPINIE</h3>
+            <div class="user_opinion">
+                <div class="opinion_card">
+                    <img class="user_photo" src="images/user1.jpg" alt="User 1">
+                    <div class="opinion_content">
+                        <p class="username">JAGODA_B@</p>
+                        <div class="stars2">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text">Bardzo polecam, Pani oddała pyszny kawałek ciasta. :)</p>
+                    </div>
+                </div>
+
+                <div class="opinion_card">
+                    <img class="user_photo" src="images/user2.jpg" alt="User 2">
+                    <div class="opinion_content">
+                        <p class="username">Jan234</p>
+                        <div class="stars2">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text">Wszystko super, Pani odebrała paczkę. Nie było żadnych problemów.</p>
+                    </div>
+                </div>
+
+                <div class="opinion_card">
+                    <img class="user_photo" src="images/user3.jpg" alt="User 3">
+                    <div class="opinion_content">
+                        <p class="username">Adas_45</p>
+                        <div class="stars2">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                        <p class="text">Wyprowadziłem Pani psa. Super kontakt, polecam.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
     </div>
-    <textarea required name="opinion_text" rows="4" cols="50" maxlength="100"
-        placeholder="Napisz opinię na temat użytkownika"></textarea>
-    <br>
 
-    <img src="{{rated_user.avatar.url}}" style="width: 75px; height: 75px;">
-    <p>{{rated_user.username}}</p>
-    <a href="{%url 'user_profile_page' rated_user.id%}">
-        <p>Przejdź do profilu</p>
-    </a>
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+</body>
 
-    <p>Ostatnie opinie</p>
-
-    {%if not latest_opinions%}
-    <p>Brak opinii</p>
-    {%endif%}
-
-    {%for latest_opinion in latest_opinions%}
-    <a href="{%url 'user_profile_page' latest_opinion.rated_user%}">
-        <img src="{{latest_opinion.author.avatar.url}}" style="width: 75px; height: 75px;">
-        <p>{{latest_opinion.author.username}}</p>
-    </a>
-    <p>{{latest_opinion.rating}}</p>
-    <p>{{latest_opinion.text}}</p>
-    {%endfor%}
-
-    <button type="submit">Zatwierdź</button>
-</form>
-
-{%else%}
-<p>Opinia została już wystawiona</p>
-{%endif%}
-
-{%endblock content%}
+</html>

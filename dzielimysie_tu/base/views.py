@@ -298,17 +298,23 @@ def delete_offer(request, pk):
 
  # TO DO
 
-def my_offers(request, offers_status, take_offer_status="None"):
+def my_offers(request, offers_status, take_offer_status=None):
     offers = Offer.objects.filter(creator=request.user, status=offers_status)
     offers_statuses = Offer.statuses
 
     # __ is used to access field of the related model
-    if take_offer_status != "None":
+    # if take_offer_status == 'hot_fix':
+    #     print("aaaaaaaaaaaaaa")
+    #     offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, offer__status='cancelled')) for offer in offers]
+    #     offer__status = 'cancelled'
+
+    if take_offer_status != None:
+        print(take_offer_status)
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, status=take_offer_status)) for offer in offers]
 
     else:
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
-
+    print(offers_with_takers)
     take_offers = [take_offer for _, take_offer_queryset in offers_with_takers for take_offer in take_offer_queryset]
 
     take_offers_without_opinions = [take_offer for take_offer in take_offers if not Opinion.objects.filter(offer=take_offer.offer, rated_user=take_offer.taker).exists()]
@@ -321,7 +327,8 @@ def my_offers(request, offers_status, take_offer_status="None"):
         'take_offers_without_opinions': take_offers_without_opinions
     }
     
-    return render(request, 'base/my_offers.html', context)
+
+    return render(request, f'base/my_offers_{offers_status}.html', context)
 
 def my_take_offers(request, status):
     take_offers = Take_offer.objects.filter(taker=request.user, status=status)

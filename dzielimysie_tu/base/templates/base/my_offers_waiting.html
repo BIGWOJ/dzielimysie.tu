@@ -1,0 +1,72 @@
+{%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dzielimy się</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/my_offers_oczekujące.css'%}">
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/my_offers.css'%}">
+    {%endblock styles%}
+</head>
+
+{%block content%}
+
+<div class="container">
+    <!-- <div class="search-container">
+        <input type="text" placeholder="Szukaj...">
+        <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z" />
+            </svg></button>
+    </div> -->
+
+    <div class="tabs">
+        <button class="active"><a href="{%url 'my_offers_page' 'waiting' 'waiting'%}">Oczekujące</a></button>
+        <button><a href="{%url 'my_offers_page' 'pending' 'waiting'%}">Do akceptacji</a></button>
+        <button><a href="{%url 'my_offers_page' 'in_progress' 'accepted'%}">W realizacji</a></button>
+        <button><a href="{%url 'my_offers_page' 'cancelled' 'None'%}">Anulowane</a></button>
+        <button><a href="{%url 'my_offers_page' 'finished' 'finished'%}">Zakończone</a></button>
+    </div>
+    <div class="list_o">
+        {%for offer in offers%}
+        <div class="ad_o">
+            <div class="ad-info">
+                <a href="{%url 'offer_page' offer.id%}">
+                    <img src="{{offer.photo_set.first.photo.url}}" class="avatar" alt="{{offer.title}}">
+                </a>
+                <div class="ad-content">
+                    <strong>{{offer.title}}, {{offer.place}}</strong>
+                    <!-- <span class="status">10 zł</span> -->
+                </div>
+            </div>
+            <a href="{% url 'edit_offer_page' offer.id %}">
+                <div class="edit-icon"></div>
+            </a>
+        </div>
+        {%endfor%}
+        <!-- 
+        <div class="ad_o">
+            <div class="ad-info">
+                <img src="images/sernik.jpg" class="avatar" alt="sernik">
+                <div class="ad-content">
+                    <strong>Oddam kawałek sernika</strong>
+                    <span class="status">Za darmo</span>
+                </div>
+            </div>
+            <div class="edit-icon"></div>
+        </div> -->
+
+        <!-- <div class="ad_o">
+            <div class="ad-info">
+                <img src="images/zabawka.jpeg" class="avatar" alt="zabawki">
+                <div class="ad-content">
+                    <strong>Zabawki dla dziecka</strong>
+                    <span class="status">Za darmo</span>
+                </div>
+            </div>
+            <div class="edit-icon"></div>
+        </div> -->
+    </div>
+</div>
+
+{%endblock content%}
