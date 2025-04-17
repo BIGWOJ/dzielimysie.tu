@@ -484,12 +484,20 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
 
     if redirect_page == 'my_offers':
         take_offer = Take_offer.objects.get(offer=take_offer_offer, taker=rated_user)
-        
-    opinion = Opinion.objects.filter(rated_user=rated_user, author=request.user, offer=take_offer.offer)
-    opinion_exists = opinion.exists()
+
+    # .first is used to get the first object from the queryset, if it exists, returns None otherwise
+    # used like try except
+    given_opinion = Opinion.objects.filter(rated_user=rated_user, author=request.user, offer=take_offer.offer).first()
+    remaining_to_5_stars = 5 - (given_opinion.rating if given_opinion else 0)
 
     if request.method == 'POST':
-        opinion = Opinion(offer=take_offer.offer, rated_user=rated_user, author=request.user, text=request.POST['opinion_text'], rating=request.POST['rating'])
+        print(request.POST)
+        opinion = Opinion(
+            offer=take_offer.offer,
+            rated_user=rated_user,
+            author=request.user,
+            text=request.POST['opinion_text'],
+            rating=request.POST['rating'])
         opinion.save()
 
         rated_user.opinions_count += 1
@@ -511,6 +519,13 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
                 pass
     
     latest_opinions = Opinion.objects.filter(rated_user=rated_user).order_by('-date')[:3]
-
-    context = {'rated_user': rated_user, 'take_offer': take_offer, 'latest_opinions': latest_opinions, 'opinion_exists': opinion_exists}
+    
+    context = {
+        'rated_user': rated_user, 
+        'take_offer': take_offer,
+        'latest_opinions': latest_opinions,
+        'given_opinion': given_opinion,
+        'remaining_to_5_stars': remaining_to_5_stars}
+    
     return render(request, 'base/add_opinion.html', context=context)
+

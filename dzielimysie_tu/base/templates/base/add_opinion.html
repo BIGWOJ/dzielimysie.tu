@@ -1,122 +1,123 @@
-<!DOCTYPE html>
-<html lang="pl">
+{%extends 'main.html'%}
+{%load static%}
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oferta - Wyprowadzanie psa</title>
-    <link rel="stylesheet" href="style/header.css">
-    <link rel="stylesheet" href="style/footer.css">
-    <link rel="stylesheet" href="style/opinion.css">
+    {%block styles%}
+    <title>Dzielimy się</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/opinion.css'%}">
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="{%static 'scripts/add_opinion.js'%}" defer></script>
+    {%endblock styles%}
 </head>
 
-<body>
+{%block content%}
 
-    <header>
-        <nav>
-            <ul>
-                <li><a href="offers.html">Oferty</a></li>
-                <li><a href="ulubione.html">Ulubione</a></li>
-                <li><a href="message.html">Wiadomości</a></li>
-            </ul>
-            <button class="add-offer">Dodaj ogłoszenie</button>
-            <button class="account">Moje konto</button>
-        </nav>
-    </header>
-
-    <div class="container">
-        <div class="opinion">
-            <div class="opinion_text">
-                <h2>WYSTAW OPINIĘ</h2>
-                <p>OGŁOSZENIE</p>
-            </div>
-
-            <div class="opinion_container">
-
-                <div class="chat-description">
-                    <img class="chat-img" src="images/pies.jpg" alt="pies">
-                    <div class="offer-info">
-                        <span class="offer-text">Wyprowadzenie psa Szczecin, śródmieście</span>
-                        <span class="offer-price">10zł</span>
-                    </div>
-                </div>
-
-                <div class="stars">
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                    <i class="fa-regular fa-star"></i>
-                </div>
-
-                <textarea placeholder="Napisz opinię na temat tego ogłoszenia..."></textarea>
-                <button class="accept">ZATWIERDŹ</button>
-
-            </div>
+<div class="container">
+    <div class="opinion">
+        <div class="opinion_text">
+            <h2>WYSTAW OPINIĘ</h2>
+            <p>OGŁOSZENIE</p>
         </div>
 
-        <div class="user">
-            <img src="images/Avatar.png" alt="Profil">
-            <p class="username">Si_woo_111</p>
-            <button class="go-to-profile">PRZEJDŹ DO PROFILU</button>
-            <h3>OSTATNIE OPINIE</h3>
-            <div class="user_opinion">
-                <div class="opinion_card">
-                    <img class="user_photo" src="images/user1.jpg" alt="User 1">
-                    <div class="opinion_content">
-                        <p class="username">JAGODA_B@</p>
-                        <div class="stars2">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <p class="text">Bardzo polecam, Pani oddała pyszny kawałek ciasta. :)</p>
-                    </div>
+
+        <div class="opinion_container">
+
+            <div class="chat-description">
+                {%if opinion_exists%}
+                <h2>Opinia już została wystawiona.</h2><br>
+                {%endif%}
+
+                <img class="chat-img" src="{{take_offer.offer.photo_set.first.photo.url}}"
+                    alt="{{take_offer.offer.title}}">
+                <div class="offer-info">
+                    <span class="offer-text">{{take_offer.offer.title}} <br> {{take_offer.offer.place}}</span>
                 </div>
 
-                <div class="opinion_card">
-                    <img class="user_photo" src="images/user2.jpg" alt="User 2">
-                    <div class="opinion_content">
-                        <p class="username">Jan234</p>
-                        <div class="stars2">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <p class="text">Wszystko super, Pani odebrała paczkę. Nie było żadnych problemów.</p>
-                    </div>
-                </div>
-
-                <div class="opinion_card">
-                    <img class="user_photo" src="images/user3.jpg" alt="User 3">
-                    <div class="opinion_content">
-                        <p class="username">Adas_45</p>
-                        <div class="stars2">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star-half-stroke"></i>
-                        </div>
-                        <p class="text">Wyprowadziłem Pani psa. Super kontakt, polecam.</p>
-                    </div>
-                </div>
             </div>
 
-        </div>
+            <div class="stars">
+                {%if given_opinion%}
 
+                {%with ''|center:given_opinion.rating as range%}
+                {%for filled_star in range%}
+                <i class="fa-solid fa-star" name="given_opinion_star"></i>
+                {%endfor%}
+                {%endwith%}
+
+                {%with ''|center:remaining_to_5_stars as range%}
+                {%for empty_star in range%}
+                <i class="fa-regular fa-star" name="given_opinion_star"></i>
+                {%endfor%}
+                {%endwith%}
+
+                {%else%}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    {%with ''|center:5 as range_5%}
+                    {%for empty_star in range_5%}
+                    <i class="fa-regular fa-star" data-value="{{ forloop.counter }}"
+                        onclick="set_rating('{{forloop.counter}}')"></i>
+                    {%endfor%}
+                    {%endwith%}
+                    <input type="hidden" name="rating" id="rating_input" value="0">
+
+                    {%endif%}
+            </div>
+
+            {%if given_opinion%}
+            <textarea placeholder="{{given_opinion.text}}" readonly disabled></textarea>
+            {%else%}
+            <textarea required name="opinion_text" placeholder="Napisz opinię na temat tego ogłoszenia..."></textarea>
+            <button type="submit" class="accept">ZATWIERDŹ</button>
+            {%endif%}
+
+        </div>
+        </form>
 
     </div>
 
-    <footer>
-        <p>© 2024 dzielimysie.tu</p>
-    </footer>
-</body>
+    <div class="user">
+        <img src="{{rated_user.avatar.url}}" alt="{{rated_user.username}}">
+        <p class="username">{{take_offer.taker.username}}</p>
+        <a href="{%url 'user_profile_page' take_offer.taker.id%}" class="go-to-profile">
+            PRZEJDŹ DO PROFILU
+        </a>
+        <h3>OSTATNIE OPINIE</h3>
+        {%if not latest_opinions%}
+        <h4>Brak opinii</h4>
 
-</html>
+        {%else%}
+        <div class="user_opinion">
+            {%for latest_opinion in latest_opinions%}
+            <div class="opinion_card">
+                <a href="{%url 'user_profile_page' latest_opinion.author.id%}">
+                    <img class="user_photo" src="{{latest_opinion.author.avatar.url}}"
+                        alt="{{latest_opinion.author.username}}">
+                </a>
+
+                <div class="opinion_content">
+                    <p class="username">{{latest_opinion.author.username}}</p>
+                    <div class="stars2">
+                        <h1>{{latest_opinion.rating}}</h1>
+                        {% with ''|center:latest_opinion.rating as range %}
+                        {% for star in range %}
+                        <i class="fa-solid fa-star"></i>
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <p class="text">{{latest_opinion.text}}</p>
+                </div>
+            </div>
+            {%endfor%}
+            {%endif%}
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{%endblock content%}
