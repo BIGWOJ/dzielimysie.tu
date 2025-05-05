@@ -43,6 +43,13 @@
                 {%else%}
 
                 {%if not user_is_taker%}
+                {%if offer.status != 'cancelled' and offer.status != 'finished'%}
+                {%if offer.creator != request.user%}
+                <a href="{%url 'follow_offer' offer.id%}">
+                    <button class="apply">Obserwuj</button>
+                </a>
+                {%endif%}
+                {%endif%}
                 <a href="{%url 'take_offer' offer.id%}">
                     <button class="apply">Zgłoś się</button>
                 </a>

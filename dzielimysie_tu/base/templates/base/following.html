@@ -1,51 +1,60 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dzielimysie. tu</title>
+    {%if page == 'offers'%}
+    <h1>asdf</h1>
+    <link rel="stylesheet" href="{%static 'styles/ulubione.css'%}">
+    {%else%}
+    <link rel="stylesheet" href="{%static 'styles/ulubione_użytk.css'%}">
+    {%endif%}
+    {%endblock styles%}
+</head>
+
 {%block content%}
 
-<h1>Ulubione</h1>
-<form method="GET">
-    <input type="next" name="q" placeholder="Jeszcze nie działa">
-</form>
+<div class="container">
+    <form method="GET">
+        <div class="search-container">
+            <input type="text" name='q' placeholder="Szukaj...">
+            <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z" />
+                </svg></button>
+        </div>
+    </form>
+    <div class="filters">
+        <button class="filter {%if page == 'offers' %}active{%endif%}"><a
+                href="{%url 'following_page' 'offers'%}">Ogłoszenia</a></button>
 
-<!-- DLACZEGO TUTAJ MUSI BYĆ PODAWANE W '' A offer.id już nie? -->
+        <button class="filter {%if page == 'users'%}active{%endif%}"><a
+                href="{%url 'following_page' 'users'%}">Użytkownicy</a></button>
+    </div>
 
-<a href="{%url 'following_page' 'offers'%}">
-    <p>Ogłoszenia</p>
-</a>
+    <main class="ads-grid">
+        {%if page == 'offers'%}
+        {%for offer in offers%}
+        <div class="ad">
+            <a href="{%url 'offer_page' offer.id%}">
+                <img src="{{offer.photo_set.first.photo.url}}" alt="{{offer.title}}" />
+            </a>
+            <h3>{{offer.title}}</h3>
+        </div>
+        {%endfor%}
+        {%else%}
 
-<a href="{%url 'following_page' 'users'%}">
-    <p>Użytkownicy</p>
-</a>
-<hr>
+        {%for user in followed_users%}
+        <div class='user-card'>
+            <a href="{%url 'user_profile_page' user.id%}">
+                <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;">
+            </a>
+            <p>{{user.username}}</p>
+        </div>
+        {%endfor%}
 
-{%if page == 'offers'%}
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Najnowsze</p>
-</a>
-
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Cena od najwyższej</p>
-</a>
-
-<a href="{%url 'not_done_yet_page'%}">
-    <p>Cena od najwyższej</p>
-</a>
-
-{%for offer in offers%}
-<a href="{%url 'offer_page' offer.id%}">
-    <img src="{{offer.photo_set.first.photo.url}}" style="width: 200px; height: 200px;">
-</a>
-<p>{{offer.title}}</p>
-<p>{{offer.price}}</p>
-{%endfor%}
-
-{%else%}
-{%for user in followed_users%}
-<a href="{%url 'user_profile_page' user.id%}">
-    <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;">
-</a>
-<p>{{user.username}}</p>
-{%endfor%}
-
-{%endif%}
+        {%endif%}
+</div>
 
 {%endblock content%}
