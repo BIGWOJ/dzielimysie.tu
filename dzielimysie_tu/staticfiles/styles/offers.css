@@ -1,0 +1,140 @@
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    border: 2px solid #f4a623;
+    border-radius: 20px;
+    padding: 5px 10px;
+    background-color: white;
+    margin-top: 20px;
+}
+
+.search-container input{
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+    flex-grow: 1;
+}
+
+.search-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f4a623;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.search-container button svg {
+    fill: #f4a623;
+    width: 18px;
+    height: 18px;
+}
+
+.filters {
+    display: flex;
+    margin-top: 15px;
+    gap: 10px;
+}
+.filter {
+    padding: 8px 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ddd;
+    cursor: pointer;
+    font-size: 14px;
+}
+.filter.active {
+    background-color: #f4a623;
+    color: white;
+    font-weight: bold;
+}
+
+.view-icons {
+    display: flex;
+    gap: 10px;
+}
+.view-icons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.view-icons button svg {
+    width: 20px;
+    height: 20px;
+    fill: #ddd;
+}
+.view-icons button.active svg {
+    fill: #f4a623;
+}
+
+.wrap1{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.card {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    width: 287px;
+    padding-top: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.card img {
+    width: 95%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+.location {
+    color: #FC8500;
+}
+
+.title{
+    text-align: center; 
+    margin-top: 20px;
+    flex-grow: 1;
+    width: 250px;
+   
+}
+
+.details{
+
+    gap:-5;
+    width: 250px;
+    display: flex;
+    justify-content: space-between; 
+    padding: 10px 5px;
+    align-items: center;
+
+}
+.price {
+
+    color: #FC8500;
+    font-weight: bold;
+    
+}
+
+p {
+    margin: 4px;
+}

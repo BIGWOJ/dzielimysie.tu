@@ -37,7 +37,7 @@ class Opinion(models.Model):
     rated_user = models.ForeignKey(User, related_name='rated_user', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField(max_length=100)
-    rating = models.IntegerField()
+    rating = models.DecimalField(max_digits=1, decimal_places=0)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

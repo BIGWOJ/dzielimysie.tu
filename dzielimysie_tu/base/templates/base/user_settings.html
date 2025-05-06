@@ -1,67 +1,78 @@
 {%extends 'main.html'%}
-{%load static%}
-
-<head>
-    {%block styles%}
-    <title>Dzielimysie. tu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{%static 'styles/settings.css'%}">
-    {%endblock styles%}
-</head>
-
 {%block content%}
 
 <h1>Ustawienia</h1>
+
+<!-- Change password -->
 <form method="POST">
     {%csrf_token%}
+    <h3>Zmień hasło</h3>
 
-    <div class="Password">
-        <h3>Zmień hasło</h3>
-        <p>Obecne hasło</p>
-        <input id="text" type="password" name="current_password">
-        <p>Nowe hasło</p>
-        <input id="text" type="password" name="new_password">
-        <p>Potwierdź nowe hasło</p>
-        <input id="text" type="password" name="new_password_confirm">
-        <button type='submit' class="button">Zmień hasło</button>
-    </div>
+    <label>Obecne hasło</label>
+    <input type="password" name="current_password"><br>
+
+    <label>Nowe hasło</label>
+    <input type="password" name="new_password"><br>
+
+    <label>Potwierdź nowe hasło</label>
+    <input type="password" name="new_password_confirm"><br>
+
+    <input type="submit" value="Zmień hasło">
 </form>
 
+<!-- Change email -->
 <form method="POST">
     {%csrf_token%}
-    <div class="E-mail">
-        <h3>Zmień e-mail</h3>
-        <p>Twój nowy e-mail</p>
-        <input id="text" type="email" name="new_email">
-        <button type='submit' class="button">Zmień e-mail</button>
-    </div>
+    <h3>Zmień e-mail</h3>
+
+    <label>Twój nowy e-mail</label>
+    <input type="email" name="new_email"><br>
+
+    <input type="submit" value="Zmień e-mail">
 </form>
 
+<!-- Notifications -->
 <form method="POST">
     {%csrf_token%}
-    <div class="Notification">
-        <h3>Powiadomienia</h3>
+    <h3>Powiadomienia</h3>
 
-        <label class="checkbox-row">
-            <span>Nowa wiadomość</span>
-            <input type="hidden" name="new_message_notification" value="off">
-            <input type="checkbox" name="new_message_notification" {% if user.new_message_notification %}checked{%endif%}>
-        </label>
-        <div class="separator"></div>
+    <label>Nowa wiadomość</label>
+    <input type="hidden" name="new_message_notification" value="off">
+    <input type="checkbox" name="new_message_notification" {% if user.new_message_notification %}checked{% endif %}>
+    <hr>
 
-        <label class="checkbox-row">
-            <span>Zmiana ceny</span>
-            <input type="checkbox" name="price_change_notification" {%if user.price_change_notification%} checked {%endif%}>
-        </label>
-        <div class="separator"></div>
+    <label>Zmiana ceny</label>
+    <input type="checkbox" name="price_change_notification" {%if user.price_change_notification%} checked {%endif%}>
+    <hr>
 
-        <label class="checkbox-row">
-            <span>Nowe ogłoszenia</span>
-            <input type="checkbox" name="new_offer_notification" {%if user.new_offer_notification%} checked {%endif%}>
-        </label>
+    <label>Nowe ogłoszenie</label>
+    <input type="checkbox" name="new_offer_notification" {%if user.new_offer_notification%} checked {%endif%}><br>
 
-        <button type='submit' class="button">Zapisz</button>
-    </div>
+    <input type="submit" value="Zapisz">
+</form>
+
+<!-- Change avatar -->
+<form method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <h3>Zmień avatar</h3>
+
+    <label>Avatar</label>
+    <input type="file" name="new_avatar"><br>
+
+    <input type="submit" value="Zmień avatar">
+</form>
+
+<!-- Delete account -->
+<form method="POST">
+    {%csrf_token%}
+    <h3>Usuń konto</h3>
+
+    <label>Podaj hasło</label>
+    <input type="password" name="delete_account_password"><br>
+
+    <label>Potwierdź hasło</label>
+    <input type="password" name="delete_account_password_confirm"><br>
+    <input type="submit" value="Usuń konto">
 </form>
 
 {%endblock content%}
