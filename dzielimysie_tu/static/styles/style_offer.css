@@ -32,6 +32,8 @@ h1 {
     padding: 8px 13px;
     font-weight: bold;
     border-radius: 5px;
+    text-decoration: none;
+    color: black;
 }
 
 .price {
