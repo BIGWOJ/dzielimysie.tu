@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from chat.models import Chat, Message
 from .models import Category, Offer, User, Photo, Take_offer, Opinion
 from .forms import My_User_Creation_Form, Offer_Form
 
@@ -528,4 +529,66 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
         'remaining_to_5_stars': remaining_to_5_stars}
     
     return render(request, 'base/add_opinion.html', context=context)
+
+@login_required
+def send_message(request, offer_id):
+    if request.method == 'POST':
+        offer = get_object_or_404(Offer, pk=offer_id)
+        recipient = offer.creator
+        message_text = request.POST.get('message')
+
+        if message_text:
+            # Znajdź istniejący czat dla tej kombinacji użytkowników i oferty
+            chat = Chat.objects.filter(
+                offer=offer,
+                participants=request.user
+            ).filter(participants=recipient).first()
+
+            # Jeśli czat nie istnieje, utwórz nowy
+            if not chat:
+                chat = Chat.objects.create(offer=offer)
+                chat.participants.add(request.user, recipient)
+
+            # Dodaj wiadomość do czatu
+            Message.objects.create(chat=chat, sender=request.user, text=message_text)
+
+            return redirect(chat.get_chat_url())
+        else:
+            messages.error(request, 'Wiadomość nie może być pusta.')
+            return redirect('offer_page', pk=offer_id)
+    else:
+        return redirect('offer_page', pk=offer_id)
+
+
+@login_required
+def create_chat(request, offer_id):
+    offer = get_object_or_404(Offer, pk=offer_id)
+    recipient = offer.creator  # Twórca oferty
+    sender = request.user  # Zgłaszający się użytkownik
+
+    # Sprawdź, czy istnieje czat między zgłaszającym się użytkownikiem a twórcą oferty
+    chat = Chat.objects.filter(
+        offer=offer,
+        participants=sender
+    ).filter(participants=recipient).first()
+
+    # Jeśli czat nie istnieje, utwórz nowy
+    if not chat:
+        chat = Chat.objects.create(offer=offer)
+        chat.participants.add(sender, recipient)
+
+    return redirect(chat.get_chat_url())
+
+@login_required
+def user_chats(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_chats = Chat.objects.filter(participants=user).order_by('-created_at')
+
+    if user_chats.exists():
+        # Przekierowanie do pierwszego czatu
+        first_chat = user_chats.first()
+        return redirect('chat:chat', chat_id=first_chat.id)
+    else:
+        # Wyświetlenie pustej strony z komunikatem
+        return HttpResponseNotFound("<h1>Nie masz jeszcze żadnych wiadomości</h1>")
 
