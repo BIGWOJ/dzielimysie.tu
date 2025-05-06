@@ -1,0 +1,145 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czat</title>
+    <link rel="stylesheet" href="{% static 'style/header.css' %}">
+    <link rel="stylesheet" href="{% static 'style/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'style/style_message.css' %}">
+    <style>
+        #chat-container {
+            width: 600px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #messages {
+            height: 300px; 
+            overflow-y: auto; 
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            max-width: 60%;
+            word-wrap: break-word;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #ffa500; /* Pomarańczowy kolor dla wysłanych wiadomości */
+            color: white;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #eeeeee; /* Szary kolor dla otrzymanych wiadomości */
+            color: black;
+        }
+
+        #message {
+          width: 80%;
+          padding: 10px;
+        }
+        #send{
+          padding: 10px;
+          width: 15%;
+        }
+
+        .chat-messages {
+            display: flex;
+            flex-direction: column; 
+            gap: 10px; 
+        }
+
+        .chat-link {
+            text-decoration: none;
+            color: inherit; 
+            display: flex; 
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-link:hover {
+            background-color: #f0f0f0; 
+            border-radius: 5px;
+        }
+
+        .chat-item.active .chat-link {
+            background-color: #ffa500; 
+            color: white;
+            border-radius: 5px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home_page' %}">Oferty</a></li>
+                <li><a href="{% url 'following_page' 'offers' %}">Ulubione</a></li>
+                <li><a href="{% url 'chat:chat' request.user.chats.first.id %}">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer"><a href="{% url 'create_offer_page' %}">Dodaj ogłoszenie</a></button>
+            <button class="account"><a href="{% url 'user_profile_page' request.user.id %}">Moje konto</a></button>           
+        </nav>
+    </header>
+    <div class="chat-container">
+        <div class="chat-sidebar">
+            <ul class="chat-list">
+                {% for chat in user_chats %}
+                <li class="chat-item {% if chat.id == current_chat.id %}active{% endif %}">
+                    <a href="{% url 'chat:chat' chat.id %}" class="chat-link">
+                        <img src="{{ other_participant.avatar.url }}" alt="Użytkownik">
+                        <p>{{ chat.messages.last.text|default:"Brak wiadomości" }}</p>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="chat-main">
+            <div class="chat-header">
+                <img src="{{ other_participant.avatar.url }}" alt="Avatar użytkownika" class="profile-pic">
+                <h2>{{ other_participant.username }}</h2>
+            </div>
+            <div class="chat-messages">
+                {% for message in current_chat.messages.all %}
+                <p class="message {% if message.sender.id == request.user.id %}sent{% else %}received{% endif %}">
+                    {{ message.text }}
+                </p>
+                {% endfor %}
+            </div>
+            <div class="chat-input" style="display: flex; align-items: center; padding: 10px; background: white; border-radius: 5px;">
+                <form id="chat-form" style="display: flex; width: 100%;">
+                    {% csrf_token %}
+                    <input type="text" id="message" name="message" placeholder="Wpisz wiadomość..." style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px 0 0 5px;">
+                    <button type="submit" id="send" class="send-btn" style="padding: 10px 15px; background-color: #ffa500; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer;">➤</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+    <script>
+        const user_id = "{{ request.user.id }}";
+        const chat_id = "{{ current_chat.id }}"; 
+    </script>
+    <script src="{% static 'chat/chat.js' %}"></script>
+</body>
+</html>
+
