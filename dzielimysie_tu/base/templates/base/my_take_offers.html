@@ -1,46 +1,110 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>{{offer.title}}</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/style_offer.css'%}">
+    {%endblock styles%}
+</head>
+
 {%block content%}
 
-<h1>Moje zgłoszenia</h1>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="offers.html">Oferty</a></li>
+                <li><a href="ulubione.html">Ulubione</a></li>
+                <li><a href="message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer"><a href="add_offer.html">Dodaj ogłoszenie</a></button>
+            <button class="account">Moje konto</button>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="search-container">
+            <input type="text" placeholder="Szukaj...">
+            <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z" />
+                </svg></button>
+        </div>
+        <div class="filters">
+            <button class="filter"><a href="offers.html">Najnowsze</a></button>
+            <button class="filter">Twoja okolica</button>
+            <button class="filter">Najlepiej oceniane</button>
+            <button class="filter"><a href="my_offers_oczekujące.html">Moje ogłoszenia</a></button>
+            <button class="filter active"><a href="zgłoszenia.html">Zgłoszenia</a></button>
+        </div>
 
-{%for status in take_offers_statuses%}
-{%if status.0 == take_offers_status%}
-<a href="{%url 'my_take_offers_page' status.0%}"></a>
-<p><b>{{status.1}}</b></p>
-</a>
+        <div class="tabs">
+            <button class="active"><a href="zgłoszenia_oczekujące.html">Oczekujące</a></button>
+            <button><a href="zgłoszenia.html">W realizacji</a></button>
+            <button><a href="zgłoszenia_anulowane.html">Anulowane</a></button>
+            <button><a href="zgłoszenia_zakończone.html">Zakończone</a></button>
+        </div>
 
-{%for take_offer in take_offers%}
+        <div class="list">
+            <div class="ad">
+                <div class="ad-info">
+                    <img src="images/pies.jpg" class="avatar" alt="avatar">
+                    <div class="ad-content">
+                        <strong>Wyprowadzanie psa Szczecin, Śródmieście</strong>
+                        <span class="status">10 zl</span>
+                    </div>
+                </div>
+                <div class="text-avatar">
+                    <img src="images/Avatar.png" class="avatar" alt="user">
+                    <p>Beata_123</p>
+                </div>
+                <div class="buttons">
+                    <button class="accept">Akceptuj</button>
+                    <button class="cancel">Odrzuć</button>
+                </div>
+            </div>
 
-<a href="{%url 'offer_page' take_offer.offer.id%}">
-    <img src="{{take_offer.offer.photo_set.first.photo.url}}" alt="photo" style="width: 100px; height: 100px;">
-</a>
-<p>{{take_offer.offer}}</p>
-<p>{{take_offer.offer.price}}</p>
+            <div class="ad">
+                <div class="ad-info">
+                    <img src="images/sernik.jpg" class="avatar" alt="ciasto">
+                    <div class="ad-content">
+                        <strong>Oddam kawałek sernika</strong>
+                        <span class="status">Za darmo</span>
+                    </div>
+                </div>
+                <div class="text-avatar">
+                    <img src="images/Avatar.png" class="avatar" alt="user">
+                    <p>Beata_123</p>
+                </div>
+                <div class="buttons">
+                    <button class="accept">Akceptuj</button>
+                    <button class="cancel">Odrzuć</button>
+                </div>
+            </div>
 
-{%if status.0 == 'waiting' or status.0 == 'accepted'%}
-<a href="{%url 'cancel_take_offer' take_offer.offer.id request.user.id True%}">
-    <p>Anuluj zgłoszenie</p>
-</a>
-{%endif%}
+            <div class="ad">
+                <div class="ad-info">
+                    <img src="images/zabawka.jpeg" class="avatar" alt="zabawka">
+                    <div class="ad-content">
+                        <strong>Zabawki dla dziecka</strong>
+                        <span class="status">Za darmo</span>
+                    </div>
+                </div>
+                <div class="text-avatar">
+                    <img src="images/Avatar.png" class="avatar" alt="user">
+                    <p>Beata_123</p>
+                </div>
+                <div class="buttons">
+                    <button class="accept">Akceptuj</button>
+                    <button class="cancel">Odrzuć</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 dzielimysie.tu</p>
+    </footer>
+    <script src="offers.js"></script>
+</body>
 
-{%if status.0 == 'finished'%}
-{%if not take_offer.taker_to_creator_opinion%}
-<a href="{%url 'add_opinion_page' take_offer.offer.creator.id take_offer.id 'my_take_offers'%}">
-    <p>Wystaw opinię</p>
-</a>
-{%endif%}
-{%endif%}
-
-{%endfor%}
-
-{%else%}
-<a href="{%url 'my_take_offers_page' status.0%}">
-    <p>{{status.1}}</p>
-</a>
-{%endif%}
-
-{%endfor%}
-
-
-
-{%endblock content%}
+</html>
