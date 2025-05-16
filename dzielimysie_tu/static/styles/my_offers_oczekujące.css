@@ -1,0 +1,53 @@
+.list_o {
+    max-height: 500px;
+  }
+
+  .ad_o {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f8f8;
+    color: black;
+    border-radius: 16px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .ad_o img.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+
+  .ad-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+  }
+
+  .ad-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ad-content strong {
+    font-size: 16px;
+  }
+
+  .status {
+    font-size: 14px;
+    color: #f48c06;
+    font-weight: bold;
+  }
+
+  .edit-icon {
+    width: 24px;
+    height: 24px;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/1159/1159633.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }

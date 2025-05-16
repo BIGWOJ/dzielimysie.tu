@@ -1,33 +1,39 @@
-{%extends 'main.html'%}
-{%load static%}
+{% extends 'main.html' %}
+{% load static %}
 
 <head>
-    {%block styles%}
-    <title>{{offer.title}}</title>
-    <link rel="stylesheet" type='text/css' href="{%static 'styles/style_offer.css'%}">
-    {%endblock styles%}
+    {% block styles %}
+    <title>{{ offer.title }}</title>
+    <link rel="stylesheet" type='text/css' href="{% static 'styles/style_offer.css' %}">
+    {% endblock styles %}
 </head>
 
-{%block content%}
+{% block content %}
 
 <div class="container">
     <div class="offer-container">
         <div class="image">
-            <img id="dogImage" src="{{offer.photo_set.first.photo.url}}">
+            {% for photo in offer.photo_set.all %}
+            <img src="{{ photo.photo.url }}" style="width: 100%; height: auto;">
+            {% endfor %}
         </div>
 
         <div class="details">
-            <h1>{{offer.title}}</h1>
-            <span class="category">{{offer.category}}</span>
-            <p class="location">{{offer.place}}</p>
+            <h1>{{ offer.title }}</h1>
+            <a href="{% url 'category_page' offer.category.id %}">
+                <span class="category">{{ offer.category }}</span>
+            </a>
+            <p class="location">{{ offer.place }}</p>
+            <p class="price">Cena: {{ offer.price }}</p>
+
             <div class="buttons">
-                {%if offer.status != 'cancelled' and offer.status != 'finished'%}
-                {%if offer.creator == request.user%}
+                {% if offer.status != 'cancelled' and offer.status != 'finished' %}
+                {% if offer.creator == request.user %}
                 <a href="{% url 'edit_offer_page' offer.id %}" style="text-decoration: none;">
                     <button class="apply">Edytuj</button>
                 </a>
 
-                <a href="{% url 'delete_offer_page' offer.id %}" style="text-decoration: none;">
+                <a href="{% url 'delete_offer_page' offer.id %}">
                     <button class="apply">Usuń ofertę</button>
                 </a>
 
@@ -35,51 +41,62 @@
                     <button class="apply">Anuluj ofertę</button>
                 </a>
 
-                <a href="{% url 'finish_offer' offer.id %}" style="text-decoration: none;">
+                <a href="{% url 'finish_offer' offer.id %}">
                     <button class="apply">Zakończ ofertę</button>
                 </a>
-
-
-                {%else%}
-
-                {%if not user_is_taker%}
-                <a href="{%url 'take_offer' offer.id%}">
+                {% else %}
+                {% if not user_is_taker %}
+                <a href="{% url 'take_offer' offer.id %}">
                     <button class="apply">Zgłoś się</button>
                 </a>
-
-                {%else%}
-                <a href="{%url 'cancel_take_offer' offer.id request.user.id 'offer_page'%}">
+                {% else %}
+                <a href="{% url 'cancel_take_offer' offer.id request.user.id 'offer_page' %}">
                     <button class="apply">Anuluj zgłoszenie</button>
                 </a>
-                {%endif%}
+                {% endif %}
 
-                <a href="{%url 'not_done_yet_page'%}">
-                    <button class="message">Napisz wiadomość</button>
+                {% if chat %}
+                <a href="{{ chat.get_chat_url }}">
+                    <button class="apply">Przejdź do czatu</button>
                 </a>
-                {%endif%}
+                {% else %}
+                <form method="post" action="{% url 'create_chat' offer.id %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="recipient_id" value="{{ offer.creator.id }}">
+                    <button type="submit" class="apply">Wyślij wiadomość</button>
+                </form>
+                {% endif %}
 
-                {%else%}
-
-                {%if request.user == offer.creator%}
-                <a href="{%url 'republish_offer' offer.id%}">
+                <a href="{% url 'follow_offer' offer.id %}">
+                    <button class="apply">Obserwuj</button>
+                </a>
+                {% endif %}
+                {% else %}
+                {% if request.user == offer.creator %}
+                <a href="{% url 'republish_offer' offer.id %}">
                     <button class="apply">Wznów ofertę</button>
                 </a>
-                {%endif%}
-
-                {%endif%}
+                {% endif %}
+                {% endif %}
             </div>
+
             <div class="description">
                 <h3>Opis</h3>
-                <p>{{offer.description}}</p>
+                <p>{{ offer.description }}</p>
             </div>
         </div>
+
         <div class="user-profile">
-            <a href="{%url 'user_profile_page' offer.creator.id%}">
-                <img src="{{offer.creator.avatar.url}}" alt="Profil użytkownika">
+            <a href="{% url 'user_profile_page' offer.creator.id %}">
+                <img src="{{ offer.creator.avatar.url }}" alt="Profil użytkownika">
             </a>
-            <p>{{offer.creator.username}}</p>
+            <p>{{ offer.creator.username }}</p>
         </div>
     </div>
 </div>
 
-{%endblock content%}
+<script>
+    const chat_id = "{{ chat.id }}";
+</script>
+
+{% endblock content %}

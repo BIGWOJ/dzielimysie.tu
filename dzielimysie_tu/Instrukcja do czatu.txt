@@ -1,0 +1,21 @@
+Żeby czat działał potrzeba:
+-Włączyć serwer redis:
+sudo service redis-server start
+redis-cli
+ping //sprawdzenie czy wszystko działa
+
+redis trzeba uprzednio zainstalować, a działa tylko na linuxie. Na Windowsie można to zrobić
+przez WSL (szybko się instaluje, poradniki można znaleźć na necie)
+
+-Włączyć daphne:
+daphne dzielimysie_tu.asgi:application -p 8000 -b 127.0.0.1
+
+wcześniej warto wykonać polecenie
+python manage.py collectstatic 
+bez tego może mieć problem z plikami statycznymi (chat.js)
+
+
+Przygotowałem skrypt w batchu, StartStrony.bat dla szybszego uruchamiania i nie bawienia się z paroma okienkami konsoli (dalej wymagany jest WSL z redis, rzecz jasna, ale skrypt już sam to uruchamia).
+ 
+
+

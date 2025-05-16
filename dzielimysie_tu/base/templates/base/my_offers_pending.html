@@ -1,0 +1,65 @@
+{%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dzielimy się</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/my_offers_oczekujące.css'%}">
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/my_offers.css'%}">
+    {%endblock styles%}
+</head>
+
+{%block content%}
+
+<div class="container">
+    <!-- <div class="search-container">
+        <input type="text" placeholder="Szukaj...">
+        <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M21.71 20.29l-5.4-5.39a8 8 0 10-1.41 1.41l5.39 5.4a1 1 0 001.42-1.42zM4 10a6 6 0 116 6 6 6 0 01-6-6z" />
+            </svg></button>
+    </div> -->
+
+    <div class="tabs">
+        <button><a href="{%url 'my_offers_page' 'waiting' 'waiting'%}">Oczekujące</a></button>
+        <button class="active"><a href="{%url 'my_offers_page' 'pending' 'waiting'%}">Do akceptacji</a></button>
+        <button><a href="{%url 'my_offers_page' 'in_progress' 'accepted'%}">W realizacji</a></button>
+        <button><a href="{%url 'my_offers_page' 'cancelled' 'None'%}">Anulowane</a></button>
+        <button><a href="{%url 'my_offers_page' 'finished' 'finished'%}">Zakończone</a></button>
+    </div>
+
+    <div class="list">
+        {%for offer, take_offers in offers_with_takers%}
+        {%for take_offer in take_offers%}
+        <div class="ad">
+            <div class="ad-info">
+                <a href="{%url 'offer_page' offer.id%}">
+                    <img src="{{offer.photo_set.first.photo.url}}" class="avatar" alt="{{offer.title}}">
+                </a>
+                <div class="ad-content">
+                    <strong>{{offer.title}}, {{offer.place}}</strong>
+                    <!-- <span class="status">Za darmo</span> -->
+                </div>
+            </div>
+            <div class="text-avatar">
+                <a href="{%url 'user_profile_page' take_offer.taker.id%}">
+                    <img src="{{take_offer.taker.avatar.url}}" class="avatar" alt="user">
+                </a>
+                <p>{{take_offer.taker.username}}</p>
+
+            </div>
+            <div class="buttons">
+                <a href="{%url 'accept_take_offer' offer.id take_offer.taker.id%}" class='accept'>
+                    Zaakceptuj
+                </a>
+                <a href="{%url 'reject_take_offer' offer.id take_offer.taker.id%}" class="cancel">
+                    Odrzuć
+                </a>
+            </div>
+        </div>
+        {%endfor%}
+        {%endfor%}
+    </div>
+</div>
+
+{%endblock content%}
