@@ -5,7 +5,6 @@
     {%block styles%}
     <title>Dzielimysie. tu</title>
     {%if page == 'offers'%}
-    <h1>asdf</h1>
     <link rel="stylesheet" href="{%static 'styles/ulubione.css'%}">
     {%else%}
     <link rel="stylesheet" href="{%static 'styles/ulubione_użytk.css'%}">
@@ -45,14 +44,16 @@
         {%endfor%}
         {%else%}
 
-        {%for user in followed_users%}
-        <div class='user-card'>
-            <a href="{%url 'user_profile_page' user.id%}">
-                <img src="{{user.avatar.url}}" style="width: 100px; height: 100px;">
-            </a>
-            <p>{{user.username}}</p>
+        <div class="user-container">
+            {%for user in followed_users%}
+            <div class='user-card'>
+                <a href="{%url 'user_profile_page' user.id%}">
+                    <img src="{{user.avatar.url}}" class="avatar" alt="{{user.username}}">
+                </a>
+                <p class="username">{{user.username}}</p>
+            </div>
+            {%endfor%}
         </div>
-        {%endfor%}
 
         {%endif%}
 </div>

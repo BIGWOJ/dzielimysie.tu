@@ -9,8 +9,10 @@
     <nav>
         <ul>
             <li><a href="{%url 'offers_page' 'grid'%}">Oferty</a></li>
-            <li><a href="{%url 'following_page' 'offers'%}">Ulubione</a></li>
-            <li><a href="{%url 'not_done_yet_page'%}">Wiadomości</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'following_page' 'offers' %}">Ulubione</a></li>
+            <li><a href="{% url 'user_chats' request.user.id %}">Wiadomości</a></li>
+            {% endif %}
         </ul>
 
         {%if request.user.is_authenticated%}

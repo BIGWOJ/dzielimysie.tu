@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from chat.models import Chat, Message
 from .models import Category, Offer, User, Photo, Take_offer, Opinion
 from .forms import My_User_Creation_Form, Offer_Form
 
@@ -484,20 +485,12 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
 
     if redirect_page == 'my_offers':
         take_offer = Take_offer.objects.get(offer=take_offer_offer, taker=rated_user)
-
-    # .first is used to get the first object from the queryset, if it exists, returns None otherwise
-    # used like try except
-    given_opinion = Opinion.objects.filter(rated_user=rated_user, author=request.user, offer=take_offer.offer).first()
-    remaining_to_5_stars = 5 - (given_opinion.rating if given_opinion else 0)
+        
+    opinion = Opinion.objects.filter(rated_user=rated_user, author=request.user, offer=take_offer.offer)
+    opinion_exists = opinion.exists()
 
     if request.method == 'POST':
-        print(request.POST)
-        opinion = Opinion(
-            offer=take_offer.offer,
-            rated_user=rated_user,
-            author=request.user,
-            text=request.POST['opinion_text'],
-            rating=request.POST['rating'])
+        opinion = Opinion(offer=take_offer.offer, rated_user=rated_user, author=request.user, text=request.POST['opinion_text'], rating=request.POST['rating'])
         opinion.save()
 
         rated_user.opinions_count += 1
@@ -519,13 +512,72 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
                 pass
     
     latest_opinions = Opinion.objects.filter(rated_user=rated_user).order_by('-date')[:3]
-    
-    context = {
-        'rated_user': rated_user, 
-        'take_offer': take_offer,
-        'latest_opinions': latest_opinions,
-        'given_opinion': given_opinion,
-        'remaining_to_5_stars': remaining_to_5_stars}
-    
+
+    context = {'rated_user': rated_user, 'take_offer': take_offer, 'latest_opinions': latest_opinions, 'opinion_exists': opinion_exists}
     return render(request, 'base/add_opinion.html', context=context)
 
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+@login_required
+def send_message(request, offer_id):
+    if request.method == 'POST':
+        offer = get_object_or_404(Offer, pk=offer_id)
+        recipient = offer.creator
+        message_text = request.POST.get('message')
+
+        if message_text:
+            # Znajdź istniejący czat dla tej kombinacji użytkowników i oferty
+            chat = Chat.objects.filter(
+                offer=offer,
+                participants=request.user
+            ).filter(participants=recipient).first()
+
+            # Jeśli czat nie istnieje, utwórz nowy
+            if not chat:
+                chat = Chat.objects.create(offer=offer)
+                chat.participants.add(request.user, recipient)
+
+            # Dodaj wiadomość do czatu
+            Message.objects.create(chat=chat, sender=request.user, text=message_text)
+
+            return redirect(chat.get_chat_url())
+        else:
+            messages.error(request, 'Wiadomość nie może być pusta.')
+            return redirect('offer_page', pk=offer_id)
+    else:
+        return redirect('offer_page', pk=offer_id)
+
+
+@login_required
+def create_chat(request, offer_id):
+    offer = get_object_or_404(Offer, pk=offer_id)
+    recipient = offer.creator  # Twórca oferty
+    sender = request.user  # Zgłaszający się użytkownik
+
+    # Sprawdź, czy istnieje czat między zgłaszającym się użytkownikiem a twórcą oferty
+    chat = Chat.objects.filter(
+        offer=offer,
+        participants=sender
+    ).filter(participants=recipient).first()
+
+    # Jeśli czat nie istnieje, utwórz nowy
+    if not chat:
+        chat = Chat.objects.create(offer=offer)
+        chat.participants.add(sender, recipient)
+
+    return redirect(chat.get_chat_url())
+
+@login_required
+def user_chats(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_chats = Chat.objects.filter(participants=user).order_by('-created_at')
+
+    if user_chats.exists():
+        # Przekierowanie do pierwszego czatu
+        first_chat = user_chats.first()
+        return redirect('chat:chat', chat_id=first_chat.id)
+    else:
+        # Wyświetlenie pustej strony z komunikatem
+        return HttpResponseNotFound("<h1>Nie masz jeszcze żadnych wiadomości</h1>")

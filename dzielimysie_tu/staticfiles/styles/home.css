@@ -1,0 +1,296 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color:#F5F5F5;
+}
+
+header {
+    background-color: #023047;
+    color: white;
+    padding: 10px;
+}
+
+.highlight {
+    font-weight: bold;
+    
+}
+
+.hero {
+    display: flex;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-family: 'Baloo 2', sans-serif; 
+    color: #FC8500;
+    font-size: 68px;
+    margin-top:16%;
+}
+
+.hero img {
+    width: 100%;
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    
+}
+
+.hero p{
+    
+    color: #757575;
+    margin-top: 25px;
+    font-size: 22px;
+    
+}
+
+.heading-logo{
+    width: 40%;
+}
+.categories {
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+h2 {
+    color: #023047;
+    font-family: 'Baloo 2', sans-serif; 
+}
+
+.category-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 30px; 
+    justify-items: center;
+    text-align: center;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto; 
+}
+
+.category {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    max-width: 180px; 
+}
+
+.category i {
+    font-size: 60px; 
+    
+
+}
+
+.category:nth-child(1) i { color: #FFB701; } 
+.category:nth-child(2) i { color: #c85f82; } 
+.category:nth-child(3) i { color: #03A9F4; } 
+.category:nth-child(4) i { color: #FF5722; } 
+.category:nth-child(5) i { color: #28292a; }  
+.category:nth-child(6) i { color: #3d3528; }  
+.category:nth-child(7) i { color: #4CAF50; }  
+.category:nth-child(8) i { color: #F44336; } 
+
+.category p {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    font-family: 'Baloo 2', sans-serif; 
+}
+
+
+.category:hover {
+transform: scale(1.1);
+}
+
+
+.listings-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.listings {
+    max-width: 80%;
+    margin: auto;
+}
+
+.swiper-container {
+    position: relative;
+    width: 100%;
+    background-color: #023047;
+    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.swiper-wrapper {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    width: 100%;
+}
+
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    width: 287px;
+    padding-top: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.card img {
+    width: 95%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+
+.pre-btn, .nxt-btn {
+    border: none;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+}
+
+.pre-btn {
+    left: 0;
+    left: 10px;
+}
+
+.nxt-btn {
+    right: 10px;
+}
+
+.pre-btn img,
+.nxt-btn img {
+    width: 30px;
+    opacity: 0.5;
+}
+
+.pre-btn:hover img,
+.nxt-btn:hover img {
+    opacity: 1;
+}
+
+
+.location {
+    color: #767676;
+}
+
+.title{
+    text-align: right; 
+    margin-top: 20px;
+    flex-grow: 1;
+    width: 250px;
+   
+}
+
+.details{
+
+    gap:-5;
+    width: 250px;
+    display: flex;
+    justify-content: space-between; 
+    padding: 10px 5px;
+    align-items: center;
+
+}
+.price {
+
+    color: #FC8500;
+    font-weight: bold;
+    
+}
+
+p {
+    margin: 4px;
+}
+
+
+.text {
+    
+    color: #767676;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.text h2{
+    font-family: 'Baloo 2', sans-serif; 
+    color: #FC8500;
+
+}
+
+footer {
+    background-color: #023047;  
+    padding: 10px;
+    color: white;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: none;
+    width: 40%;
+    height: 2.5px;
+    background-color: #003366;
+    margin: 0 20px;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #003366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.circle::before {
+    content: "↓";
+    font-size: 16px;
+    color: #003366;
+}
+
+@media (max-width: 768px) {
+    .category-list {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px;
+    }
+}

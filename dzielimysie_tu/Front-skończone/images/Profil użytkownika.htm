@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pl"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil użytkownika</title>
+    
+    
+    
+    
+    
+<link rel="stylesheet" href="Profil%20u%C5%BCytkownika_pliki/header.css"><link rel="stylesheet" href="Profil%20u%C5%BCytkownika_pliki/all.min.css"><link href="Profil%20u%C5%BCytkownika_pliki/css2.css" rel="stylesheet"><link rel="stylesheet" href="Profil%20u%C5%BCytkownika_pliki/footer.css"><link rel="stylesheet" href="Profil%20u%C5%BCytkownika_pliki/profile_opinion.css"><link id="chromealerabat-link" rel="stylesheet" type="text/css" href="Profil%20u%C5%BCytkownika_pliki/content.css"></head>
+
+<body>
+    
+    <header>
+        <nav>
+            <ul>
+                <li><a href="http://127.0.0.1:5500/dzielimysie_tu/Front-nieskonczone/offers.html">Oferty</a></li>
+                <li><a href="http://127.0.0.1:5500/dzielimysie_tu/Front-nieskonczone/ulubione.html">Ulubione</a></li>
+                <li><a href="http://127.0.0.1:5500/dzielimysie_tu/Front-nieskonczone/message.html">Wiadomości</a></li>
+            </ul>
+            <button class="add-offer">Dodaj ogłoszenie</button>
+            <button class="account">Moje konto</button>           
+        </nav>
+    </header>
+
+
+    <div class="user">
+        <div class="photo">
+          <img src="Profil%20u%C5%BCytkownika_pliki/Avatar.png" alt="Avatar">
+        </div>
+        <div class="information"> 
+          <h3>Si_woo_111</h3>
+          <div class="stars2">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i> 
+            
+          </div>
+          <p>15 opinii</p>
+          <p>5.0</p>
+          
+      
+        
+          <p>Na platformie od luty 2024</p>
+          <p style="color: green;">● Online</p>
+        </div>
+      </div>
+      
+
+    <div class="tabs">
+        <h2><a href="http://127.0.0.1:5500/dzielimysie_tu/Front-nieskonczone/profile_offers.html">Ogłoszenia</a></h2>
+        <h2 class="active"><a href="http://127.0.0.1:5500/dzielimysie_tu/Front-nieskonczone/profile_opinion.html">Opinie</a></h2>
+    </div>
+    
+    <div class="Opinion_container">
+        <div class="opinion">
+            <div class="stars2">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i> 
+                
+              </div>
+            <p>Odebranie paczki</p>
+            <p>Wszystko poszło sprawnie polecam</p>
+            <img src="Profil%20u%C5%BCytkownika_pliki/user1.htm">
+            <p class="date">21.11.2024</p>
+        </div>
+
+        <div class="opinion">
+            <div class="stars2">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i> 
+                
+              </div>
+            <p>Odebranie paczki</p>
+            <p>Wszystko poszło sprawnie polecam</p>
+            <img src="Profil%20u%C5%BCytkownika_pliki/user1.htm">
+            <p class="date">21.11.2024</p>
+            
+        </div>
+
+        <div class="opinion">
+            <div class="stars2">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i> 
+                
+              </div>             
+            <p>Odebranie paczki</p>
+            <p>Wszystko poszło sprawnie polecam</p>
+            <img src="Profil%20u%C5%BCytkownika_pliki/user1.htm">
+            <p class="date">21.11.2024</p>
+            
+        </div>
+    </div>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body></html>
