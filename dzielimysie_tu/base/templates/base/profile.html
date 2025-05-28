@@ -1,54 +1,116 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Moje konto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+
+    {%if subpage == 'offers'%}
+    <link rel="stylesheet" href="{% static 'styles/my_profile_offers.css' %}">
+    {%else%}
+    <link rel="stylesheet" href="{% static 'styles/profile_opinion.css' %}">
+    {%endif%}
+
+    {%endblock styles%}
+</head>
+
 {%block content%}
 
-<img src="{{user.avatar.url}}" style="width: 100px; height: 100px;"><br>
-{{user.username}} <p>Online - jak będzie czas to zrobić</p>
+<div class="user-card">
+    <div class="photo">
+        <img src="{{user.avatar.url}}" alt="Avatar">
+    </div>
 
-{%if user.opinions_overall != 0%}
-<p>{{user.opinions_overall}}</p>
-<p>{{user.opinions_count}} ocen</p>
-{%else%}
-<p>Brak ocen</p>
-{%endif%}
+    <div class="information">
+        <div class="header">
+            <h3>{{user.username}}</h3>
+        </div>
 
-{%if request.user == user%}
-<a href="{%url 'user_settings_page'%}">
-    <p>Ustawienia</p>
-</a>
+        <div class="stars2">
+            {%if user.opinions_overall != 0%}
+            {%with ''|center:user.opinions_overall as range%}
+            {%for filled_star in range%}
+            <i class="fa-solid fa-star"></i>
+            {%endfor%}
+            {%endwith%}
+            {%with ''|center:remaining_to_5_stars as range%}
+            {%for empty_star in range%}
+            <i class="fa-regular fa-star" name="given_opinion_star"></i>
+            {%endfor%}
+            {%endwith%}
 
-{%else%}
-<a href="{%url 'follow_user' user.id%}">
-    <p>Obserwuj</p>
-</a>
-{%endif%}
+            <p>{{user.opinions_count}} opinii</p>
+            {%else%}
+            <p>Brak ocen</p>
+            {%endif%}
+        </div>
 
-<!-- https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#date -->
-<p>Na platformie od {{user.date_joined|date:"E Y"}}</p>
 
-<a href="{%url 'user_offers_page' user.id%}">
-    <p>Ogłoszenia</p>
-</a>
+        <p>Na platformie od {{user.date_joined|date:"E Y"}}</p>
+        <p class="status"><span class="dot"></span> Online</p>
 
-<a href="{%url 'user_profile_page' user.id%}">
-    <p>Opinie</p>
-</a>
+        {%if request.user == user%}
+        <a href="{%url 'user_settings_page'%}"><button class="follow-btn" id="followBtn">Edytuj</button></a>
+        <a href="{%url 'logout_page'%}"><button class="follow-btn" id="followBtn">Wyloguj się</button></a>
+        {%endif%}
 
-{%if latest_opinions%}
-{%for opinion in latest_opinions%}
-<br>
-<p>{{opinion.rating}}</p>
-<a href="{%url 'offer_page' opinion.offer.id%}">
-    <p>{{opinion.offer}}</p>
-</a>
+    </div>
+</div>
 
-<p>{{opinion.text}}</p>
 
-<a href="{%url 'user_profile_page' opinion.author.id%}">
-    <img src="{{opinion.author.avatar.url}}" style="width: 50px; height: 50px;">
-</a>
-<p>{{opinion.author.username}}</p>
-<p>{{opinion.date}}</p>
-{%endfor%}
-{%endif%}
+
+<div class="tabs">
+    {%if subpage == 'offers'%}
+    <h3 class="active">Ogłoszenia</h3>
+    <h3><a href="{%url 'user_profile_page' user.id 'opinions'%}">Opinie</a></h3>
+    {%else%}
+    <h3><a href="{%url 'user_profile_page' user.id 'offers'%}">Ogłoszenia</a></h3>
+    <h3 class="active">Opinie</h3>
+    {%endif%}
+
+</div>
+
+<div class="Opinion_container">
+    {%if subpage == 'offers'%}
+    <div class="offers-container">
+        {%for offer in newest_offers%}
+        <a href="{%url 'offer_page' offer.id%}">
+            <div class="offer-card">
+                <img src="{{offer.photo_set.first.photo.url}}" alt="{{take_offer.offer.title}}">
+                <div class="offer-content">
+                    <h4>{{offer.title}}</h4>
+                    <p class="price">{{offer.price}}</p>
+                    <p class="location">{{offer.place}}</p>
+                </div>
+            </div>
+        </a>
+        {%endfor%}
+    </div>
+
+    {%else%}
+    {%if user.opinions_overall == 0%}
+    <p>Brak ocen</p>
+    {%endif%}
+
+    {%for opinion in newest_opinions%}
+    <div class="opinion">
+        <div class="stars2">
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+            <i class="fa-solid fa-star"></i>
+        </div>
+        <p>{{opinion.text}}</p>
+        <a href="{%url 'user_profile_page' opinion.author.id 'offers'%}">
+            <img src="{{opinion.author.avatar.url}}">
+        </a>
+        <p class="date">{{opinion.date|date:"d-m-Y"}}</p>
+    </div>
+    {%endfor%}
+    {%endif%}
+</div>
 
 {%endblock content%}

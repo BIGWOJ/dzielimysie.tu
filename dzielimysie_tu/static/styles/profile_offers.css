@@ -1,0 +1,175 @@
+body {
+  font-family: 'Baloo 2', sans-serif;
+  margin: 0;
+  
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 40px auto;
+}
+
+.photo img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.information {
+  flex: 1;
+}
+
+.header h3 {
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  color: #003049;
+}
+
+.stars2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff8000;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.stars2 p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  color: green;
+  margin: 8px 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: green;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.follow-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #ff8000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.follow-btn:hover {
+  background-color:#003049;
+}
+
+.follow-btn.following {
+  background-color: #003049; 
+ 
+}
+
+.tabs {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap:330px;
+  margin:40px auto;
+  width: 55%;
+  border-bottom:2px solid #0a2540;
+}
+
+.tabs .active {
+  border-bottom: 3px solid #0a2540;
+  font-weight: bold;
+}
+
+.tabs  a{
+  text-decoration: none;
+  color: #333;
+}
+
+.tabs h2 {
+  color: #ff8000;
+  cursor: pointer;
+}
+
+.offers-container {
+  background-color: #ffffff;
+  border: 2px solid #ff8000;
+  padding: 30px;
+  border-radius: 15px;
+  margin: 0 auto 50px auto;
+  max-width: 1000px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.offer-card {
+  width: 250px;
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-5px);
+}
+
+.offer-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.offer-content {
+  padding: 15px;
+}
+
+.offer-content h4 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #003049;
+}
+
+
+.offer-content .price {
+  font-weight: bold;
+  color: #ff8000;
+  align-items: end;
+}
+
+.offer-content .location {
+  color: #555;
+  font-size: 14px;
+  align-items: end;
+}

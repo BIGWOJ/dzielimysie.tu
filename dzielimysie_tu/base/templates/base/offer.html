@@ -87,7 +87,7 @@
         </div>
 
         <div class="user-profile">
-            <a href="{% url 'user_profile_page' offer.creator.id %}">
+            <a href="{% url 'user_profile_page' offer.creator.id 'offers'%}">
                 <img src="{{ offer.creator.avatar.url }}" alt="Profil użytkownika">
             </a>
             <p>{{ offer.creator.username }}</p>

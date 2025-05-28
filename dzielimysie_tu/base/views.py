@@ -86,12 +86,19 @@ def category(request, pk):
 
     return render(request, 'base/category.html', context)
 
-def user_profile(request, pk):  
+def user_profile(request, pk, subpage):  
     user = User.objects.get(pk=pk)
     opinions_overall = user.opinions_overall
     latest_opinions = Opinion.objects.filter(rated_user=user).order_by('-date')[:3]
 
-    context = {'user': user, 'latest_opinions': latest_opinions, 'opinions_overall': opinions_overall}
+    context = {'user': user,
+               'latest_opinions': latest_opinions,
+                'opinions_overall': opinions_overall,
+                'remaining_to_5_stars': 5 - int(opinions_overall),
+                'newest_offers': Offer.objects.filter(creator=user).order_by('-created_at')[:3],
+                'newest_opinions': Opinion.objects.filter(rated_user=user).order_by('-date')[:3],
+                'subpage': subpage,
+            }
     return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login_page')
