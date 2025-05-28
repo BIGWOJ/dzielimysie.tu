@@ -1,0 +1,54 @@
+{%extends 'main.html'%}
+{%block content%}
+
+<img src="{{user.avatar.url}}" style="width: 100px; height: 100px;"><br>
+{{user.username}} <p>Online - jak będzie czas to zrobić</p>
+
+{%if user.opinions_overall != 0%}
+<p>{{user.opinions_overall}}</p>
+<p>{{user.opinions_count}} ocen</p>
+{%else%}
+<p>Brak ocen</p>
+{%endif%}
+
+{%if request.user == user%}
+<a href="{%url 'user_settings_page'%}">
+    <p>Ustawienia</p>
+</a>
+
+{%else%}
+<a href="{%url 'follow_user' user.id%}">
+    <p>Obserwuj</p>
+</a>
+{%endif%}
+
+<!-- https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#date -->
+<p>Na platformie od {{user.date_joined|date:"E Y"}}</p>
+
+<a href="{%url 'user_offers_page' user.id%}">
+    <p>Ogłoszenia</p>
+</a>
+
+<a href="{%url 'user_profile_page' user.id%}">
+    <p>Opinie</p>
+</a>
+
+{%if latest_opinions%}
+{%for opinion in latest_opinions%}
+<br>
+<p>{{opinion.rating}}</p>
+<a href="{%url 'offer_page' opinion.offer.id%}">
+    <p>{{opinion.offer}}</p>
+</a>
+
+<p>{{opinion.text}}</p>
+
+<a href="{%url 'user_profile_page' opinion.author.id%}">
+    <img src="{{opinion.author.avatar.url}}" style="width: 50px; height: 50px;">
+</a>
+<p>{{opinion.author.username}}</p>
+<p>{{opinion.date}}</p>
+{%endfor%}
+{%endif%}
+
+{%endblock content%}

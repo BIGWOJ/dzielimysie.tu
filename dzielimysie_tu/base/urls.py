@@ -38,7 +38,7 @@ urlpatterns = [
     path('follow_user/<str:pk>', views.follow_user, name='follow_user'),
     path('following/<str:page>', views.following, name='following_page'),
 
-    path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
+    path('profile/<str:pk>/<str:subpage>', views.user_profile, name='user_profile_page'),
     path('add_opinion/<str:rated_user>/<str:take_offer>/<str:redirect_page>/', views.add_opinion, name='add_opinion_page'), 
 
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
