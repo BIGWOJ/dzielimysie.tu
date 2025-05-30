@@ -1,5 +1,8 @@
-from django.urls import path
+from django.urls import path, include
+from django.contrib import admin
 from . import views
+from chat import views as chat_views
+
 
 # By convention, add _page at the end of the view in name
 # Without _page because it's a function, not a view
@@ -35,7 +38,7 @@ urlpatterns = [
     path('follow_user/<str:pk>', views.follow_user, name='follow_user'),
     path('following/<str:page>', views.following, name='following_page'),
 
-    path('profile/<str:pk>', views.user_profile, name='user_profile_page'),
+    path('profile/<str:pk>/<str:subpage>', views.user_profile, name='user_profile_page'),
     path('add_opinion/<str:rated_user>/<str:take_offer>/<str:redirect_page>/', views.add_opinion, name='add_opinion_page'), 
 
     path('profile/<str:pk>/offers', views.user_offers, name='user_offers_page'),
@@ -44,5 +47,10 @@ urlpatterns = [
 
     path('settings/', views.user_settings, name='user_settings_page'),
 
-    path('chat/<str:pk>', views.chat, name='chat_page'),
+    # path('chat/<str:pk>', views.chat, name='chat_page'),
+    path('chat/', include('chat.urls')),
+    path('send_message/<int:offer_id>/', views.send_message, name='send_message'),
+    path('create_chat/<int:offer_id>/', views.create_chat, name='create_chat'),
+    path('profile/<int:pk>/chats/', views.user_chats, name='user_chats'),
+    path('<int:chat_id>/', chat_views.chat_view, name='chat'),
 ]

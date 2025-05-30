@@ -81,21 +81,14 @@ text-decoration: none;
     width: 881px;
   }
 
-  .tabs button {
-    background: none;
-    border: none;
-    font-size: 16px;
-    padding: 10px;
-    cursor: pointer;
-    color: #333;
-  }
+
 
   .tabs .active {
     border-bottom: 3px solid #0a2540;
     font-weight: bold;
   }
 
-  .tabs button a{
+  .tabs a{
     text-decoration: none;
     color: #333;
   }

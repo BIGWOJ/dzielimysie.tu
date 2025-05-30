@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from chat.models import Chat, Message
 from .models import Category, Offer, User, Photo, Take_offer, Opinion
 from .forms import My_User_Creation_Form, Offer_Form
 
@@ -85,12 +86,19 @@ def category(request, pk):
 
     return render(request, 'base/category.html', context)
 
-def user_profile(request, pk):  
+def user_profile(request, pk, subpage):  
     user = User.objects.get(pk=pk)
     opinions_overall = user.opinions_overall
     latest_opinions = Opinion.objects.filter(rated_user=user).order_by('-date')[:3]
 
-    context = {'user': user, 'latest_opinions': latest_opinions, 'opinions_overall': opinions_overall}
+    context = {'user': user,
+               'latest_opinions': latest_opinions,
+                'opinions_overall': opinions_overall,
+                'remaining_to_5_stars': 5 - int(opinions_overall),
+                'newest_offers': Offer.objects.filter(creator=user).order_by('-created_at')[:3],
+                'newest_opinions': Opinion.objects.filter(rated_user=user).order_by('-date')[:3],
+                'subpage': subpage,
+            }
     return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login_page')
@@ -299,17 +307,23 @@ def delete_offer(request, pk):
 
  # TO DO
 
-def my_offers(request, offers_status, take_offer_status="None"):
+def my_offers(request, offers_status, take_offer_status=None):
     offers = Offer.objects.filter(creator=request.user, status=offers_status)
     offers_statuses = Offer.statuses
 
     # __ is used to access field of the related model
-    if take_offer_status != "None":
+    # if take_offer_status == 'hot_fix':
+    #     print("aaaaaaaaaaaaaa")
+    #     offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, offer__status='cancelled')) for offer in offers]
+    #     offer__status = 'cancelled'
+
+    if take_offer_status != None:
+        print(take_offer_status)
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user, status=take_offer_status)) for offer in offers]
 
     else:
         offers_with_takers = [(offer, Take_offer.objects.filter(offer=offer, offer__creator=request.user)) for offer in offers]
-
+    print(offers_with_takers)
     take_offers = [take_offer for _, take_offer_queryset in offers_with_takers for take_offer in take_offer_queryset]
 
     take_offers_without_opinions = [take_offer for take_offer in take_offers if not Opinion.objects.filter(offer=take_offer.offer, rated_user=take_offer.taker).exists()]
@@ -322,7 +336,8 @@ def my_offers(request, offers_status, take_offer_status="None"):
         'take_offers_without_opinions': take_offers_without_opinions
     }
     
-    return render(request, 'base/my_offers.html', context)
+
+    return render(request, f'base/my_offers_{offers_status}.html', context)
 
 def my_take_offers(request, status):
     take_offers = Take_offer.objects.filter(taker=request.user, status=status)
@@ -508,3 +523,69 @@ def add_opinion(request, rated_user, take_offer, redirect_page):
 
     context = {'rated_user': rated_user, 'take_offer': take_offer, 'latest_opinions': latest_opinions, 'opinion_exists': opinion_exists}
     return render(request, 'base/add_opinion.html', context=context)
+
+
+
+# ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
+
+@login_required
+def send_message(request, offer_id):
+    if request.method == 'POST':
+        offer = get_object_or_404(Offer, pk=offer_id)
+        recipient = offer.creator
+        message_text = request.POST.get('message')
+
+        if message_text:
+            # Znajdź istniejący czat dla tej kombinacji użytkowników i oferty
+            chat = Chat.objects.filter(
+                offer=offer,
+                participants=request.user
+            ).filter(participants=recipient).first()
+
+            # Jeśli czat nie istnieje, utwórz nowy
+            if not chat:
+                chat = Chat.objects.create(offer=offer)
+                chat.participants.add(request.user, recipient)
+
+            # Dodaj wiadomość do czatu
+            Message.objects.create(chat=chat, sender=request.user, text=message_text)
+
+            return redirect(chat.get_chat_url())
+        else:
+            messages.error(request, 'Wiadomość nie może być pusta.')
+            return redirect('offer_page', pk=offer_id)
+    else:
+        return redirect('offer_page', pk=offer_id)
+
+
+@login_required
+def create_chat(request, offer_id):
+    offer = get_object_or_404(Offer, pk=offer_id)
+    recipient = offer.creator  # Twórca oferty
+    sender = request.user  # Zgłaszający się użytkownik
+
+    # Sprawdź, czy istnieje czat między zgłaszającym się użytkownikiem a twórcą oferty
+    chat = Chat.objects.filter(
+        offer=offer,
+        participants=sender
+    ).filter(participants=recipient).first()
+
+    # Jeśli czat nie istnieje, utwórz nowy
+    if not chat:
+        chat = Chat.objects.create(offer=offer)
+        chat.participants.add(sender, recipient)
+
+    return redirect(chat.get_chat_url())
+
+@login_required
+def user_chats(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_chats = Chat.objects.filter(participants=user).order_by('-created_at')
+
+    if user_chats.exists():
+        # Przekierowanie do pierwszego czatu
+        first_chat = user_chats.first()
+        return redirect('chat:chat', chat_id=first_chat.id)
+    else:
+        # Wyświetlenie pustej strony z komunikatem
+        return HttpResponseNotFound("<h1>Nie masz jeszcze żadnych wiadomości</h1>")
