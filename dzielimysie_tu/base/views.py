@@ -226,7 +226,8 @@ def create_offer(request):
 
     if request.method == 'POST':
         data = request.POST.copy()
-        data['place'] = data.get('place', 'Szczecin')
+        print(data)
+        data['place'] = data.get('place', request.user.place)
         form = Offer_Form(data, request.FILES)
 
         if form.is_valid():
