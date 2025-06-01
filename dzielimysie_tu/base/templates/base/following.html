@@ -47,7 +47,7 @@
         <div class="user-container">
             {%for user in followed_users%}
             <div class='user-card'>
-                <a href="{%url 'user_profile_page' user.id%}">
+                <a href="{%url 'user_profile_page' user.id 'offers'%}">
                     <img src="{{user.avatar.url}}" class="avatar" alt="{{user.username}}">
                 </a>
                 <p class="username">{{user.username}}</p>

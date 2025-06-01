@@ -28,6 +28,7 @@ h1 {
   }
   
   input[type="text"],
+  input[type="number"],
   textarea,
   #select {
     padding: 10px;

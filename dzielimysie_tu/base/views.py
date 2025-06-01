@@ -42,7 +42,7 @@ def offer(request, pk):
     return render(request, 'base/offer.html', context)
 
 def offers(request, offers_layout):
-    offers = Offer.objects.all()
+    offers = Offer.objects.exclude(status='finished').order_by('-created_at')
     context = {"offers": offers, 'offers_layout': offers_layout}
     return render(request, 'base/offers_page.html', context)
 
@@ -53,7 +53,7 @@ def follow_offer(request, pk):
         offer.followers.remove(request.user)
     else:
         offer.followers.add(request.user)
-    return redirect('offer_page', pk=pk)
+    return redirect('offer_page', pk)
 
 @login_required(login_url='login_page')
 def follow_user(request, pk):
@@ -62,7 +62,7 @@ def follow_user(request, pk):
         followed_user.followers.remove(request.user)
     else:
         followed_user.followers.add(request.user)
-    return redirect('user_profile_page', pk=pk)
+    return redirect('user_profile_page', pk=pk, subpage='offers')
 
 @login_required(login_url='login_page')
 def following(request, page):
@@ -234,7 +234,6 @@ def create_offer(request):
 
     if request.method == 'POST':
         data = request.POST.copy()
-        print(data)
         data['place'] = data.get('place', request.user.place)
         form = Offer_Form(data, request.FILES)
 
@@ -342,7 +341,7 @@ def my_offers(request, offers_status, take_offer_status=None):
 def my_take_offers(request, status):
     take_offers = Take_offer.objects.filter(taker=request.user, status=status)
     take_offers_statuses = Take_offer.statuses
-
+    print(status, take_offers)
     context = {
         'take_offers': take_offers, 
         'take_offers_status': status, 

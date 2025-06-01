@@ -17,7 +17,6 @@
     <div class="opinion">
         <div class="opinion_text">
             <h2>WYSTAW OPINIĘ</h2>
-            <p>OGŁOSZENIE</p>
         </div>
 
 
@@ -81,7 +80,7 @@
     <div class="user">
         <img src="{{rated_user.avatar.url}}" alt="{{rated_user.username}}">
         <p class="username">{{take_offer.taker.username}}</p>
-        <a href="{%url 'user_profile_page' take_offer.taker.id%}" class="go-to-profile">
+        <a href="{%url 'user_profile_page' take_offer.taker.id 'offers'%}" class="go-to-profile">
             PRZEJDŹ DO PROFILU
         </a>
         <h3>OSTATNIE OPINIE</h3>

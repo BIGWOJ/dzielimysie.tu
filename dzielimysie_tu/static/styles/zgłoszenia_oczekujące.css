@@ -90,6 +90,7 @@ text-decoration: none;
     justify-content: space-around;
     border-bottom: 2px solid #0a2540;
     margin-bottom: 20px;
+    margin-top: 50px;
     width: 881px;
   }
 
@@ -116,11 +117,15 @@ text-decoration: none;
     max-height: 800px;
   }
 
+  .list a {
+    text-decoration: none;
+}
+
   .ad {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #00a6c0;
+    background: #f8f8f8;
     color: white;
     border-radius: 12px;
     padding: 25px 20px;
@@ -146,6 +151,7 @@ text-decoration: none;
   .ad-content {
     display: flex;
     flex-direction: column;
+    color: black;
   }
 
   .ad .buttons {

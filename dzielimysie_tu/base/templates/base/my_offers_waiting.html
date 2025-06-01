@@ -26,6 +26,7 @@
         <button><a href="{%url 'my_offers_page' 'in_progress' 'accepted'%}">W realizacji</a></button>
         <button><a href="{%url 'my_offers_page' 'cancelled' 'None'%}">Anulowane</a></button>
         <button><a href="{%url 'my_offers_page' 'finished' 'finished'%}">Zakończone</a></button>
+        <button><a href="{%url 'my_take_offers_page' 'waiting'%}">Moje zgłoszenia</a></button>
     </div>
     <div class="list_o">
         {%for offer in offers%}

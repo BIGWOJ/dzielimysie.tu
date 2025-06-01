@@ -52,10 +52,13 @@
         <p class="status"><span class="dot"></span> Online</p>
 
         {%if request.user == user%}
-        <a href="{%url 'user_settings_page'%}"><button class="follow-btn" id="followBtn">Edytuj</button></a>
+        <a href="{%url 'user_settings_page'%}"><button class="follow-btn" id="followBtn">Ustawienia</button></a>
         <a href="{%url 'logout_page'%}"><button class="follow-btn" id="followBtn">Wyloguj się</button></a>
         {%endif%}
 
+        {%if request.user != user%}
+        <a href="{%url 'follow_user' user.id%}"><button class="follow-btn" id="followBtn">Obserwuj</button></a>
+        {%endif%}
     </div>
 </div>
 
@@ -81,7 +84,11 @@
                 <img src="{{offer.photo_set.first.photo.url}}" alt="{{take_offer.offer.title}}">
                 <div class="offer-content">
                     <h4>{{offer.title}}</h4>
+                    {%if offer.price%}
                     <p class="price">{{offer.price}}</p>
+                    {%else%}
+                    <p class="price">Za darmo</p>
+                    {%endif%}
                     <p class="location">{{offer.place}}</p>
                 </div>
             </div>

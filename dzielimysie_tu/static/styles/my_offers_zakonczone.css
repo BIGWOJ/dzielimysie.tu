@@ -161,3 +161,8 @@ text-decoration: none;
   .text-avatar{
     margin-right: 10px;
   }
+
+.cancel {
+    background: #0a2540;
+    color: white;
+  }

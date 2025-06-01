@@ -1,34 +1,43 @@
 {%extends 'main.html'%}
+{%load static%}
+
+<head>
+    {%block styles%}
+    <title>Dodaj ogłoszenie</title>
+    <link rel="stylesheet" type='text/css' href="{%static 'styles/add_offer.css'%}">
+    <script src="{%static 'scripts/character_counter.js'%}" defer></script>
+    {%endblock styles%}
+</head>
 
 {%block content%}
 
-<h1>Edytuj ogłoszenie</h1>
+<form method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
 
-<div>
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-
-        <label>Tytuł ogłoszenia</label>
+    <h1>Edytuj ogłoszenie</h1>
+    <div class="Title-container">
+        <h3>Tytuł ogłoszenia</h3>
         <input type="text" value="{{offer.title|default_if_none:''}}" name="title" required><br>
-
-        <label>Kategoria</label>
-        <select name="category" required>
-            <option value="" disabled selected>Wybierz kategorię</option>
-            {%for category in categories%}
-            {%if category.id == offer.category.id%}
-            <option value="{{category.id}}" selected>{{category.name}}</option>
-
-            {%else%}
-            <option value="{{category.id}}">{{category.name}}</option>
-            {%endif%}
-
-            {%endfor%}
+        <h3>Kategoria</h3>
+        <select id='select' name="category" required>
+            {% if offer.category %}
+                <option value="{{ offer.category.id }}" selected>{{ offer.category.name }}</option>
+            {% else %}
+                <option value="" disabled selected>Wybierz kategorię</option>
+            {% endif %}
+            {% for category in categories %}
+                {% if not offer.category or category.id != offer.category.id %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endif %}
+            {% endfor %}
         </select><br>
 
-        <label>Dodaj zdjęcia</label>
+    </div>
+    <div class="Photo-container">
+        <h3>Zdjęcia</h3>
+        <p>Możesz zmienić zdjęcia dla swojego ogłoszenia. Pierwsze zdjęcie będzie również miniaturką.</p>
         <input type="file" name="photos" multiple><br>
-
-        {% if offer.photo_set.all %}
+         {% if offer.photo_set.all %}
         <div>
             <h3>Aktualne zdjęcia:</h3>
             {% for photo in offer.photo_set.all %}
@@ -37,11 +46,19 @@
         </div>
         {% endif %}
 
-        <label>Opis</label>
-        <textarea name="description" rows="10" cols="50" required>{{offer.description}}</textarea><br>
+    </div>
+    </div>
 
+    <div class="Description">
+        <h3>Opis</h3>
+        <textarea id='opis' name="description" rows="10" cols="50" required>{{offer.description}}</textarea><br>
+        <p>Opis powinien mieć co najmniej 50 znaków</p>
+        <p id="char-count">0 / 1000 znaków</p>
+    </div>
+
+    <div class="Contact">
         <label>Cena</label>
-        <input type="number" name="price" value="{{offer.price|default_if_none:''}}" required min="0"><br>
+        <input type="number" name="price" value="{{offer.price|default_if_none:''}}" min="0"><br>
 
         <label>Miejsce</label>
         <input type="text" value="{{offer.place|default_if_none:''}}" name="place" required><br>
@@ -55,8 +72,12 @@
         <label>Numer telefonu</label>
         <input type="text" value="{{offer.creator_phone|default_if_none:''}}" name="creator_phone" required><br>
 
-        <input type="submit" value="Zapisz zmiany">
-    </form>
-</div>
+    </div>
+
+    <div class="offer-actions">
+        <!-- <input type="submit" value="Dodaj ogłoszenie"> -->
+        <button type="submit">Zapisz zmiany</button>
+    </div>
+</form>
 
 {%endblock content%}

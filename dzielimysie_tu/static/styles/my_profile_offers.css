@@ -174,3 +174,6 @@ body {
     align-items: end;
   }
   
+.offers-container a {
+    text-decoration: none;
+}
