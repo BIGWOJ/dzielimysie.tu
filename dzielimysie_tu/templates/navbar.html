@@ -1,9 +1,13 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'styles/navbar.css' %}">
+<link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'styles/navbar.css' %}"
+/>
 <header>
     <a href="/">
-        <h1 style="color:white;">Logo</h1>
+        <h1 style="color: white">Logo</h1>
     </a>
 
     <nav>
@@ -11,7 +15,9 @@
             <li><a href="{%url 'offers_page' 'grid'%}">Oferty</a></li>
             {% if request.user.is_authenticated %}
             <li><a href="{% url 'following_page' 'offers' %}">Ulubione</a></li>
-            <li><a href="{% url 'user_chats' request.user.id %}">Wiadomości</a></li>
+            <li>
+                <a href="{% url 'user_chats' request.user.id %}">Wiadomości</a>
+            </li>
             {% endif %}
         </ul>
 
@@ -21,13 +27,15 @@
             Dodaj ogłoszenie
         </a>
 
-        <a href="{%url 'user_profile_page' request.user.id 'offers'%}" class="account">
+        <a
+            href="{%url 'user_profile_page' request.user.id 'offers'%}"
+            class="account"
+        >
             Moje konto
         </a>
 
         {%else%}
         <a href="{%url 'login_page'%}" class="account">Zaloguj się</a>
         {%endif%}
-
     </nav>
 </header>
